@@ -110,8 +110,7 @@ class HistorialAnticipoController extends Controller
        }
        
        
-       
-       $pdf = $pdf->loadView('admin.historials.anticipos.historial_anticipo_pdf',compact('historials','datenow','date_end','user'));
+       $pdf = $pdf->loadView('admin.historials.anticipos.historial_anticipo_pdf2',compact('historials','datenow','date_end','user'));
        return $pdf->stream();
                 
    }

@@ -305,7 +305,7 @@ class AnticipoController extends Controller
 
         /*Aplicamos el movimiento contable*/
         $header_voucher  = new HeaderVoucher();
-        $var->setConnection(Auth::user()->database_name);
+        $header_voucher->setConnection(Auth::user()->database_name);
 
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');
@@ -645,7 +645,12 @@ class AnticipoController extends Controller
         $historial_anticipo->registerAction($anticipo,"Se eliminó el Anticipo");
 
         if(isset($anticipo)){
-            $anticipo->delete(); 
+           
+            $anticipo->status = 'X';
+            $anticipo->save();
+           
+            $this->disableMovementsAnticipo($anticipo);
+
             return redirect('/anticipos')->withSuccess('Eliminacion exitosa!!');
         }else{
             return redirect('/anticipos')->withDanger('No se pudo encontrar el anticipo!!');
@@ -661,12 +666,27 @@ class AnticipoController extends Controller
         $historial_anticipo->registerAction($anticipo,"Se eliminó el Anticipo");
 
         if(isset($anticipo)){
-            $anticipo->delete(); 
+           
+            $anticipo->status = 'X';
+            $anticipo->save();
+           
+            $this->disableMovementsAnticipo($anticipo);
+
             return redirect('/anticipos/indexprovider')->withSuccess('Eliminacion exitosa!!');
         }else{
             return redirect('/anticipos/indexprovider')->withDanger('No se pudo encontrar el anticipo!!');
         }
         
+    }
+
+
+    public function disableMovementsAnticipo($anticipo){
+
+        DB::connection(Auth::user()->database_name)->table('detail_vouchers')
+            ->join('header_vouchers', 'header_vouchers.id','=','detail_vouchers.id_header_voucher')
+            ->where('header_vouchers.id_anticipo','=',$anticipo->id)
+            ->update(['detail_vouchers.status' => 'X' , 'header_vouchers.status' => 'X']);
+
     }
    /**
     * Remove the specified resource from storage.
