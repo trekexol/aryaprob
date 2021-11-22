@@ -324,12 +324,11 @@ class AnticipoController extends Controller
             $this->add_movement($header_voucher->id,$account_anticipo->id,$var->id_user,0,$var->amount,$var->rate);
         }
         
+        $historial_anticipo = new HistorialAnticipoController();
+
+        $historial_anticipo->registerAction($var,"Se registro el Anticipo");
 
         if((isset($var->id_client)) || (isset($var->id_quotation))){
-
-            $historial_expense = new HistorialAnticipoController();
-
-            $historial_expense->registerAction($var,"Se registro el Anticipo");
 
             return redirect('/anticipos')->withSuccess('Registro Exitoso!');
         }else{
@@ -423,6 +422,9 @@ class AnticipoController extends Controller
             $this->add_movement($header_voucher->id,$account_anticipo_proveedor->id,$var->id_user,$var->amount,0,$var->rate);
         }
         
+        $historial_anticipo = new HistorialAnticipoController();
+
+        $historial_anticipo->registerAction($var,"Se registro el Anticipo");
 
         if(isset($var->id_client)){
             return redirect('/anticipos')->withSuccess('Registro Exitoso!');
@@ -556,6 +558,10 @@ class AnticipoController extends Controller
 
         $var = Anticipo::on(Auth::user()->database_name)->findOrFail($id);
 
+       
+        $amount_old = $var->amount;
+        $rate_old = $var->rate;
+
         if(request('id_quotation') != null){
             $var->id_quotation = request('id_quotation');
         }
@@ -618,6 +624,11 @@ class AnticipoController extends Controller
        
         $var->save();
 
+        $historial_anticipo = new HistorialAnticipoController();
+
+        $historial_anticipo->registerAction($var,"quotation_product","Actualizó el Anticipo: ".$var->inventories['code']."/ 
+        Monto Viejo: ".number_format($amount_old, 2, ',', '.')." Tasa: ".$rate_old."/ Monto Nuevo: ".number_format($var->amount, 2, ',', '.')." Tasa: ".$var->rate);
+    
         if(isset($var->id_client)){
             return redirect('/anticipos')->withSuccess('Actualizacion Exitosa!');
         }else{
@@ -629,6 +640,10 @@ class AnticipoController extends Controller
     {
         $anticipo = Anticipo::on(Auth::user()->database_name)->find(request('id_anticipo_modal')); 
 
+        $historial_anticipo = new HistorialAnticipoController();
+
+        $historial_anticipo->registerAction($anticipo,"Se eliminó el Anticipo");
+
         if(isset($anticipo)){
             $anticipo->delete(); 
             return redirect('/anticipos')->withSuccess('Eliminacion exitosa!!');
@@ -639,7 +654,11 @@ class AnticipoController extends Controller
     }
     public function delete_anticipo_provider(Request $request)
     {
-        $anticipo = Anticipo::on(Auth::user()->database_name)->find(request('id_anticipo_modal')); 
+        $anticipo = Anticipo::on(Auth::user()->database_name)->find(request('id_anticipo_modal'));
+        
+        $historial_anticipo = new HistorialAnticipoController();
+
+        $historial_anticipo->registerAction($anticipo,"Se eliminó el Anticipo");
 
         if(isset($anticipo)){
             $anticipo->delete(); 
