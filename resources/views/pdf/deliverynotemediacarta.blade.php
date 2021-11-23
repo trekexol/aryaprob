@@ -145,7 +145,7 @@
   $base_imponible = $quotation->base_imponible / ($bcv ?? 1);
   $total_factura = $quotation->total_factura / ($bcv ?? 1);
 
-  $iva = ($quotation->base_imponible * $quotation->iva_percentage)/100;
+  $iva = ($base_imponible * $quotation->iva_percentage)/100;
 
   $total = $total_factura + $iva;
 
@@ -301,7 +301,7 @@
   $base_imponible = $quotation->base_imponible / ($bcv ?? 1);
   $total_factura = $quotation->total_factura / ($bcv ?? 1);
 
-  $iva = ($quotation->base_imponible * $quotation->iva_percentage)/100;
+  $iva = ($base_imponible * $quotation->iva_percentage)/100;
 
   $total = $total_factura + $iva;
 
@@ -458,7 +458,7 @@
         $base_imponible = $quotation->base_imponible / ($bcv ?? 1);
         $total_factura = $quotation->total_factura / ($bcv ?? 1);
 
-        $iva = ($quotation->base_imponible * $quotation->iva_percentage)/100;
+        $iva = ($base_imponible * $quotation->iva_percentage)/100;
 
         $total = $total_factura + $iva;
 
