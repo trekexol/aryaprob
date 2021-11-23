@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Account;
+use App\Http\Controllers\Calculations\CalculationController;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -90,14 +92,46 @@ class BackendController extends Controller
                 }
             }
 
+            $date = Carbon::now();
+            $datenow = $date->format('Y-m-d');    
+            
+           /* $calculate = new CalculationController();
+
+            $totals = [];
+            $mes = 1;
+
+            $accountActivo = Account::on(Auth::user()->database_name)->where('code_one',1)
+            ->where('code_two', 0)
+            ->where('code_three', 0)
+            ->where('code_four', 0)
+            ->where('code_five', 0)
+            ->first();
+
+            
+            
+            $totals[$mes] = $calculate->calculation_one_month($accountActivo,$date->startOfYear()->format('Y-m-d'),$date->endOfMonth()->format('Y-m-d'));
+
+            $mes += 1;
+
+            $totals[$mes] = $calculate->calculation_one_month($accountActivo,$date->addMonth(1)->format('Y-m-d'),$date->endOfMonth()->format('Y-m-d'));
+
+            $mes += 1;
+            
+            $totals[$mes] = $calculate->calculation_one_month($accountActivo,$date->addMonth(1)->format('Y-m-d'),$date->endOfMonth()->format('Y-m-d'));
+           
+*/
             return view('admin.index',compact('account_activo','account_pasivo','account_patrimonio','account_ingresos'
             ,'account_costos','account_gastos','account_cuentas_por_pagar','account_cuentas_por_cobrar','account_prestamos'
-            ,'account_banco1','account_banco1_name','account_banco2','account_banco2_name','account_banco3','account_banco3_name'));
+            ,'account_banco1','account_banco1_name','account_banco2','account_banco2_name','account_banco3','account_banco3_name','date'));
 
            
         }else{
             return view('admin.page_home');
         }
+    }
+
+    public function calculate_all_year(){
+
     }
 
 
