@@ -142,8 +142,8 @@
 
 <?php
 
-  $base_imponible = $quotation->base_imponible;
-  $total_factura = $quotation->total_factura;
+  $base_imponible = $quotation->base_imponible / ($bcv ?? 1);
+  $total_factura = $quotation->total_factura / ($bcv ?? 1);
 
   $iva = ($quotation->base_imponible * $quotation->iva_percentage)/100;
 
@@ -168,7 +168,7 @@
   </tr> 
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Ventas Exentas</th>
-    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format(($retiene_iva ?? 0), 2, ',', '.') }}</th>
+    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format(($retiene_iva ?? 0) / ($bcv ?? 1), 2, ',', '.') }}</th>
   </tr> 
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">I.V.A.{{ $quotation->iva_percentage }}%</th>
@@ -298,8 +298,8 @@
 
   <?php
 
-  $base_imponible = $quotation->base_imponible;
-  $total_factura = $quotation->total_factura;
+  $base_imponible = $quotation->base_imponible / ($bcv ?? 1);
+  $total_factura = $quotation->total_factura / ($bcv ?? 1);
 
   $iva = ($quotation->base_imponible * $quotation->iva_percentage)/100;
 
@@ -325,7 +325,7 @@
   </tr> 
   <tr>
   <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Ventas Exentas</th>
-  <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format(($retiene_iva ?? 0), 2, ',', '.') }}</th>
+  <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format(($retiene_iva ?? 0) / ($bcv ?? 1), 2, ',', '.') }}</th>
   </tr> 
   <tr>
   <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">I.V.A.{{ $quotation->iva_percentage }}%</th>
@@ -455,8 +455,8 @@
 
     <?php
 
-        $base_imponible = $quotation->base_imponible;
-        $total_factura = $quotation->total_factura;
+        $base_imponible = $quotation->base_imponible / ($bcv ?? 1);
+        $total_factura = $quotation->total_factura / ($bcv ?? 1);
 
         $iva = ($quotation->base_imponible * $quotation->iva_percentage)/100;
 
@@ -481,7 +481,7 @@
     </tr> 
     <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Ventas Exentas</th>
-    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format(($retiene_iva ?? 0), 2, ',', '.') }}</th>
+    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format(($retiene_iva ?? 0) / ($bcv ?? 1), 2, ',', '.') }}</th>
     </tr> 
     <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">I.V.A.{{ $quotation->iva_percentage }}%</th>
