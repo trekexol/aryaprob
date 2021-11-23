@@ -64,8 +64,6 @@
                     <th>Dirección</th>
                     <th>Telefono</th>
                   
-                    <th>Dias de Crédito</th>
-                   
                     <th>Vendedor</th>
                     
                     <th></th>
@@ -82,7 +80,6 @@
                                 <td>{{$client->type_code}} {{$client->cedula_rif}}</td>
                                 <td>{{$client->direction}}</td>
                                 <td>{{$client->phone1}}</td>
-                                <td>{{$client->days_credit}}</td>
                                
 
                                 @if (isset($client->vendors['name']))

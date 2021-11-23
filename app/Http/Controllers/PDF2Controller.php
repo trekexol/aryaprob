@@ -505,7 +505,7 @@ class PDF2Controller extends Controller
 
                 foreach($inventories_quotations as $var){
 
-                    $price = bcdiv(($var->price / ($bcv ?? 1)), '1', 2);
+                    $price = bcdiv(($var->price), '1', 2);
                     
                     $precio_beta = substr($price,-2,2);
 

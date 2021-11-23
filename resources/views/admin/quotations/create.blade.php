@@ -146,7 +146,7 @@
                             </div>
                             <label for="rate" class="col-md-1 col-form-label text-md-right">Tasa:</label>
                             <div class="col-md-2">
-                                <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ $quotation->bcv ?? $bcv }}" required autocomplete="rate">
+                                <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ bcdiv($quotation->bcv, '1', 2) ?? bcdiv($bcv, '1', 2) }}" required autocomplete="rate">
                                 @error('rate')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -156,7 +156,7 @@
                             <a href="#" onclick="refreshrate()" title="actualizar tasa"><i class="fa fa-redo-alt"></i></a>  
                             <label  class="col-md-2 col-form-label text-md-right h6">Tasa actual:</label>
                             <div class="col-md-2 col-form-label text-md-left">
-                                <label for="tasaactual" id="tasaacutal">{{ number_format($bcv, 2, ',', '.')}}</label>
+                                <label for="tasaactual" id="tasaacutal">{{ number_format(bcdiv(($bcv), '1', 2), 2, ',', '.')}}</label>
                             </div>
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" class="custom-control-input" id="customSwitches">
