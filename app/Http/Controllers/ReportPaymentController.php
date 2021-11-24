@@ -109,11 +109,12 @@ class ReportPaymentController extends Controller
             $quotation_payments = DB::connection(Auth::user()->database_name)->table('quotations')
             ->join('clients', 'clients.id','=','quotations.id_client')
             ->join('quotation_payments', 'quotation_payments.id_quotation','=','quotations.id')
+            ->leftJoin('accounts', 'accounts.id','=','quotation_payments.id_account')
             ->where('quotations.status','C')
             ->whereRaw("(DATE_FORMAT(quotation_payments.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(quotation_payments.created_at, '%Y-%m-%d') <= ?)", 
                 [$date_begin, $date_end_consult])
             ->where('quotations.id_client',$id_client_or_provider)
-            ->select('quotation_payments.*','quotations.number_invoice as number')
+            ->select('quotation_payments.*','accounts.description as account_description','quotations.number_invoice as number')
             ->get();
 
             $client = Client::on(Auth::user()->database_name)->find($id_client_or_provider);
