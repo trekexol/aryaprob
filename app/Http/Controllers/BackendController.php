@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Account;
 use App\Http\Controllers\Calculations\CalculationController;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -95,34 +96,80 @@ class BackendController extends Controller
             $date = Carbon::now();
             $datenow = $date->format('Y-m-d');    
             
-           /* $calculate = new CalculationController();
+            /*Calculos para el Barchart */
+                $calculate = new CalculationController();
 
-            $totals = [];
-            $mes = 1;
+                $totals = collect(new Account());
+                $totals_per_month = [];
+                $mes = 0;
+                $result = new Account();
 
-            $accountActivo = Account::on(Auth::user()->database_name)->where('code_one',1)
-            ->where('code_two', 0)
-            ->where('code_three', 0)
-            ->where('code_four', 0)
-            ->where('code_five', 0)
-            ->first();
+                $accountActivo = Account::on(Auth::user()->database_name)->where('code_one',1)
+                ->where('code_two', 0)
+                ->where('code_three', 0)
+                ->where('code_four', 0)
+                ->where('code_five', 0)
+                ->first();
+                
+                $totals->push($calculate->calculationOneAccount($accountActivo,$date->startOfYear()->format('Y-m-d'),$date->endOfMonth()->format('Y-m-d')));
 
-            
-            
-            $totals[$mes] = $calculate->calculation_one_month($accountActivo,$date->startOfYear()->format('Y-m-d'),$date->endOfMonth()->format('Y-m-d'));
+                $totals_per_month[$mes] = $totals[$mes]->debe;
+                $mes += 1;
 
-            $mes += 1;
+                while($mes <= 12){
+                    
+                    $result = $calculate->calculationOneAccount($accountActivo,$date->addDay(1)->format('Y-m-d'),$date->endOfMonth()->format('Y-m-d'));
+                    $totals->push($result);
+                
+                    $totals_per_month[$mes] = $totals[$mes]->debe + $totals[$mes]->balance_previus - $totals[$mes]->haber;
+                    $mes += 1;
+                }
+            /*------------------------------------- */
+            $date = Carbon::now();
+            /*Calculos para el PieChart*/
+                $totalIngresoPieChart = 0;
+                $totalCostoPieChart = 0;
+                $totalGastoPieChart = 0;
+                $accountIngresos = Account::on(Auth::user()->database_name)->where('code_one',4)
+                    ->where('code_two', 0)
+                    ->where('code_three', 0)
+                    ->where('code_four', 0)
+                    ->where('code_five', 0)
+                    ->first();
+                $accountCostos= Account::on(Auth::user()->database_name)->where('code_one',5)
+                    ->where('code_two', 0)
+                    ->where('code_three', 0)
+                    ->where('code_four', 0)
+                    ->where('code_five', 0)
+                    ->first();
+                $accountGastos= Account::on(Auth::user()->database_name)->where('code_one',5)
+                    ->where('code_two', 0)
+                    ->where('code_three', 0)
+                    ->where('code_four', 0)
+                    ->where('code_five', 0)
+                    ->first();
 
-            $totals[$mes] = $calculate->calculation_one_month($accountActivo,$date->addMonth(1)->format('Y-m-d'),$date->endOfMonth()->format('Y-m-d'));
+                //dd();
+                
+                $IngresoPieChart = $calculate->calculationOneAccount($accountIngresos,$date->startOfYear(),$date->endOfYear());
 
-            $mes += 1;
-            
-            $totals[$mes] = $calculate->calculation_one_month($accountActivo,$date->addMonth(1)->format('Y-m-d'),$date->endOfMonth()->format('Y-m-d'));
-           
-*/
+                
+
+                $totalIngresoPieChart = $IngresoPieChart->debe + $IngresoPieChart->balance_previus - $IngresoPieChart->haber;
+
+                $CostoPieChart = $calculate->calculationOneAccount($accountCostos,$date->startOfYear(),$date->endOfYear());
+
+                $totalCostoPieChart = $CostoPieChart->debe + $CostoPieChart->balance_previus - $CostoPieChart->haber;
+
+                $GastoPieChart = $calculate->calculationOneAccount($accountGastos,$date->startOfYear(),$date->endOfYear());
+
+                $totalGastoPieChart = $GastoPieChart->debe + $GastoPieChart->balance_previus - $GastoPieChart->haber;
+            /*------------------------------ */
+
             return view('admin.index',compact('account_activo','account_pasivo','account_patrimonio','account_ingresos'
             ,'account_costos','account_gastos','account_cuentas_por_pagar','account_cuentas_por_cobrar','account_prestamos'
-            ,'account_banco1','account_banco1_name','account_banco2','account_banco2_name','account_banco3','account_banco3_name','date'));
+            ,'account_banco1','account_banco1_name','account_banco2','account_banco2_name','account_banco3','account_banco3_name'
+            ,'date','totals_per_month','totalIngresoPieChart','totalCostoPieChart','totalGastoPieChart'));
 
            
         }else{

@@ -69,8 +69,8 @@
               
                   <div class="row justify-content-center ">
                       <div class="card shadow mb-2 col-sm-8"  style="background-color: white">
-                        <div class="card-header py-2" style="background-color: rgb(255, 185, 81)">
-                            <h6 class="m-0 font-weight-bold text-center">Ingresos Correspondientes al periodo 2021</h6>
+                        <div class="card-header py-2" style="background-color: #ff9101">
+                            <h6 class="m-0 font-weight-bold text-center " style="color: #000000">Ingresos Correspondientes al periodo {{$date->format('Y')}}</h6>
                         </div>
                         <div class="card-body">
                             <div class="chart-bar">
@@ -82,8 +82,8 @@
                       <div class="col-sm-3" >
                           <div class="card shadow" style="background-color: white">
                             <!-- Card Header - Dropdown -->
-                            <div class="card-header"  style="background-color: rgb(255, 185, 81)">
-                                <h6 class="m-0 font-weight-bold text-center">Reporte de Ingresos,<br> Egresos y Gastos</h6>
+                            <div class="card-header"  style="background-color: #ff9101">
+                                <h6 class="m-0 font-weight-bold text-center" style="color: #000000">Reporte de Ingresos,<br> Egresos y Gastos</h6>
                             </div>
                             <!-- Card Body -->
                             <div class="card-body" >
@@ -143,13 +143,15 @@
         var myBarChart = new Chart(ctx, {
           type: 'bar',
           data: {
-            labels: ["{{$date->subMonths(5)->format('M')}}", "{{$date->addMonths(1)->format('M')}}", "{{$date->addMonths(1)->format('M')}}", "{{$date->addMonths(1)->format('M')}}", "{{$date->addMonths(1)->format('M')}}", "{{$date->addMonths(1)->format('M')}}"],
+            labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
             datasets: [{
               label: "Revenue",
               backgroundColor: "#4e73df",
               hoverBackgroundColor: "#2e59d9",
               borderColor: "#4e73df",
-              data: [4215, 5312, 6251, 7841, 9821, 14984],
+              data: ["{{ $totals_per_month[0] ?? 0}}","{{ $totals_per_month[1] ?? 0}}","{{ $totals_per_month[2] ?? 0}}","{{ $totals_per_month[3] ?? 0}}"
+                    ,"{{ $totals_per_month[4] ?? 0}}","{{ $totals_per_month[5] ?? 0}}","{{ $totals_per_month[6] ?? 0}}","{{ $totals_per_month[7] ?? 0}}"
+                    ,"{{ $totals_per_month[8] ?? 0}}","{{ $totals_per_month[9] ?? 0}}","{{ $totals_per_month[10] ?? 0}}","{{ $totals_per_month[11] ?? 0}}"],
             }],
           },
           options: {
@@ -172,19 +174,19 @@
                   drawBorder: false
                 },
                 ticks: {
-                  maxTicksLimit: 6
+                  maxTicksLimit: 12
                 },
                 maxBarThickness: 25,
               }],
               yAxes: [{
                 ticks: {
                   min: 0,
-                  max: 15000,
+                  max: "{{max($totals_per_month)}}",
                   maxTicksLimit: 5,
                   padding: 10,
                   // Include a dollar sign in the ticks
                   callback: function(value, index, values) {
-                    return '$' + number_format(value);
+                    return 'Bs ' + number_format(value);
                   }
                 },
                 gridLines: {
@@ -222,7 +224,44 @@
         });
 
     </script>
+    <script>
+        // Set new default font family and font color to mimic Bootstrap's default styling
+        Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+        Chart.defaults.global.defaultFontColor = '#858796';
+
+        // Pie Chart Example
+        var ctx = document.getElementById("myPieChart");
+        var myPieChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: ["Ingresos", "Costos", "Gastos"],
+            datasets: [{
+              data: ["{{ $totalIngresoPieChart ?? 0}}", "{{ $totalCostoPieChart ?? 0}}", "{{ $totalGastoPieChart ?? 0}}"],
+              backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+              hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
+              hoverBorderColor: "rgba(234, 236, 244, 1)",
+            }],
+          },
+          options: {
+            maintainAspectRatio: false,
+            tooltips: {
+              backgroundColor: "rgb(255,255,255)",
+              bodyFontColor: "#858796",
+              borderColor: '#dddfeb',
+              borderWidth: 1,
+              xPadding: 15,
+              yPadding: 15,
+              displayColors: false,
+              caretPadding: 10,
+            },
+            legend: {
+              display: false
+            },
+            cutoutPercentage: 80,
+          },
+        });
+
+    </script>
     <!-- Page level custom scripts -->
     <script src="{{asset('vendor/sb-admin/js/demo/chart-area-demo.js')}}"></script>
-    <script src="{{asset('vendor/sb-admin/js/demo/chart-pie-demo.js')}}"></script>
 @endsection

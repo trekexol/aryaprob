@@ -1181,8 +1181,8 @@ class Report2Controller extends Controller
             if(isset($coin) && $coin == 'bolivares'){
                 if(isset($typeinvoice) && ($typeinvoice == 'notas')){
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
-                    ->join('clients', 'clients.id','=','quotations.id_client')
-                    ->join('vendors', 'vendors.id','=','quotations.id_vendor')
+                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
+                    ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                     ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
                     ->whereIn('quotations.status',[1,'P'])
                     ->where('quotations.amount','<>',null)
@@ -1194,8 +1194,8 @@ class Report2Controller extends Controller
                     ->get();
                 }else if(isset($typeinvoice) && ($typeinvoice == 'facturas')){
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
-                    ->join('clients', 'clients.id','=','quotations.id_client')
-                    ->join('vendors', 'vendors.id','=','quotations.id_vendor')
+                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
+                    ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                     ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
                     ->whereIn('quotations.status',[1,'P'])
                     ->where('quotations.amount','<>',null)
@@ -1208,8 +1208,8 @@ class Report2Controller extends Controller
                 }else
                 {
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
-                                        ->join('clients', 'clients.id','=','quotations.id_client')
-                                        ->join('vendors', 'vendors.id','=','quotations.id_vendor')
+                                         ->leftjoin('clients', 'clients.id','=','quotations.id_client')
+                                        ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                                         ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
                                         ->whereIn('quotations.status',[1,'P'])
                                         ->where('quotations.amount','<>',null)
@@ -1223,8 +1223,8 @@ class Report2Controller extends Controller
                 //PARA CUANDO EL REPORTE ESTE EN DOLARES
                 if(isset($typeinvoice) && ($typeinvoice == 'notas')){
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
-                    ->join('clients', 'clients.id','=','quotations.id_client')
-                    ->join('vendors', 'vendors.id','=','quotations.id_vendor')
+                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
+                    ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                     ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
                     ->whereIn('quotations.status',[1,'P'])
                     ->where('quotations.amount','<>',null)
@@ -1236,8 +1236,8 @@ class Report2Controller extends Controller
                     ->get();
                 }else if(isset($typeinvoice) && ($typeinvoice == 'facturas')){
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
-                    ->join('clients', 'clients.id','=','quotations.id_client')
-                    ->join('vendors', 'vendors.id','=','quotations.id_vendor')
+                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
+                                        ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                     ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
                     ->whereIn('quotations.status',[1,'P'])
                     ->where('quotations.amount','<>',null)
@@ -1250,8 +1250,8 @@ class Report2Controller extends Controller
                 }else
                 {
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
-                                        ->join('clients', 'clients.id','=','quotations.id_client')
-                                        ->join('vendors', 'vendors.id','=','quotations.id_vendor')
+                                         ->leftjoin('clients', 'clients.id','=','quotations.id_client')
+                                        ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                                         ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
                                         ->whereIn('quotations.status',[1,'P'])
                                         ->where('quotations.amount','<>',null)
@@ -1266,8 +1266,8 @@ class Report2Controller extends Controller
             if(isset($coin) && $coin == 'bolivares'){
                 if(isset($typeinvoice) && ($typeinvoice == 'notas')){
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
-                    ->join('clients', 'clients.id','=','quotations.id_client')
-                    ->join('vendors', 'vendors.id','=','quotations.id_vendor')
+                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
+                    ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                     ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
                     ->whereIn('quotations.status',[1,'P'])
                     ->where('quotations.amount','<>',null)
@@ -1279,8 +1279,8 @@ class Report2Controller extends Controller
                     ->get();
                 }else if(isset($typeinvoice) && ($typeinvoice == 'facturas')){
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
-                    ->join('clients', 'clients.id','=','quotations.id_client')
-                    ->join('vendors', 'vendors.id','=','quotations.id_vendor')
+                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
+                    ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                     ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
                     ->whereIn('quotations.status',[1,'P'])
                     ->where('quotations.amount','<>',null)
@@ -1293,23 +1293,23 @@ class Report2Controller extends Controller
                 }else
                 {
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
-                    ->join('clients', 'clients.id','=','quotations.id_client')                    
-                    ->join('vendors', 'vendors.id','=','quotations.id_vendor')
-                                        ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
-                                        ->whereIn('quotations.status',[1,'P'])
-                                        ->where('quotations.amount','<>',null)
-                                        ->where('quotations.date_quotation','<=',$date_consult)
-                                        ->where('quotations.id_vendor',$id_client_or_vendor)
-                                        ->select('quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount) As amount_anticipo'))
-                                        ->groupBy('quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','clients.name','quotations.amount','quotations.amount_with_iva')
-                                        ->get();
+                    ->leftjoin('clients', 'clients.id','=','quotations.id_client')
+                    ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
+                    ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
+                    ->whereIn('quotations.status',[1,'P'])
+                    ->where('quotations.amount','<>',null)
+                    ->where('quotations.date_quotation','<=',$date_consult)
+                    ->where('quotations.id_vendor',$id_client_or_vendor)
+                    ->select('quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount) As amount_anticipo'))
+                    ->groupBy('quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','clients.name','quotations.amount','quotations.amount_with_iva')
+                    ->get();
                 }
             }else{
                 //PARA CUANDO EL REPORTE ESTE EN DOLARES
                 if(isset($typeinvoice) && ($typeinvoice == 'notas')){
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
-                    ->join('clients', 'clients.id','=','quotations.id_client')
-                    ->join('vendors', 'vendors.id','=','quotations.id_vendor')
+                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
+                    ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                     ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
                     ->whereIn('quotations.status',[1,'P'])
                     ->where('quotations.amount','<>',null)
@@ -1321,8 +1321,8 @@ class Report2Controller extends Controller
                     ->get();
                 }else if(isset($typeinvoice) && ($typeinvoice == 'facturas')){
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
-                    ->join('clients', 'clients.id','=','quotations.id_client')
-                    ->join('vendors', 'vendors.id','=','quotations.id_vendor')
+                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
+                    ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                     ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
                     ->whereIn('quotations.status',[1,'P'])
                     ->where('quotations.amount','<>',null)
@@ -1335,24 +1335,25 @@ class Report2Controller extends Controller
                 }else
                 {
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
-                    ->join('clients', 'clients.id','=','quotations.id_client')                    
-                    ->join('vendors', 'vendors.id','=','quotations.id_vendor')
-                                        ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
-                                        ->whereIn('quotations.status',[1,'P'])
-                                        ->where('quotations.amount','<>',null)
-                                        ->where('quotations.date_quotation','<=',$date_consult)
-                                        ->where('quotations.id_vendor',$id_client_or_vendor)
-                                        ->select('quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount / anticipos.rate) As amount_anticipo'))
-                                        ->groupBy('quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','clients.name','quotations.amount','quotations.amount_with_iva')
-                                        ->get();
+                    ->leftjoin('clients', 'clients.id','=','quotations.id_client')
+                    ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
+                    ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
+                    ->whereIn('quotations.status',[1,'P'])
+                    ->where('quotations.amount','<>',null)
+                    ->where('quotations.date_quotation','<=',$date_consult)
+                    ->where('quotations.id_vendor',$id_client_or_vendor)
+                    ->select('quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount / anticipos.rate) As amount_anticipo'))
+                    ->groupBy('quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','clients.name','quotations.amount','quotations.amount_with_iva')
+                    ->get();
                 }
             }
         }else{
+            
             if(isset($coin) && $coin == 'bolivares'){
                 if(isset($typeinvoice) && ($typeinvoice == 'notas')){
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
-                    ->join('clients', 'clients.id','=','quotations.id_client')
-                    ->join('vendors', 'vendors.id','=','quotations.id_vendor')
+                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
+                    ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                     ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
                     ->whereIn('quotations.status',[1,'P'])
                     ->where('quotations.amount','<>',null)
@@ -1363,8 +1364,8 @@ class Report2Controller extends Controller
                     ->get();
                 }else if(isset($typeinvoice) && ($typeinvoice == 'facturas')){
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
-                    ->join('clients', 'clients.id','=','quotations.id_client')
-                    ->join('vendors', 'vendors.id','=','quotations.id_vendor')
+                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
+                    ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                     ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
                     ->whereIn('quotations.status',[1,'P'])
                     ->where('quotations.amount','<>',null)
@@ -1375,9 +1376,10 @@ class Report2Controller extends Controller
                     ->get();
                 }else
                 {
+                   
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
-                                        ->join('clients', 'clients.id','=','quotations.id_client')
-                                        ->join('vendors', 'vendors.id','=','quotations.id_vendor')
+                                        ->leftjoin('clients', 'clients.id','=','quotations.id_client')
+                                        ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                                         ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
                                         ->whereIn('quotations.status',[1,'P'])
                                         ->where('quotations.amount','<>',null)
@@ -1385,13 +1387,15 @@ class Report2Controller extends Controller
                                         ->select('quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount) As amount_anticipo'))
                                         ->groupBy('quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','clients.name','quotations.amount','quotations.amount_with_iva')
                                         ->get();
+
+                    
                 }
             }else{
                 //PARA CUANDO EL REPORTE ESTE EN DOLARES
                 if(isset($typeinvoice) && ($typeinvoice == 'notas')){
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
-                    ->join('clients', 'clients.id','=','quotations.id_client')
-                    ->join('vendors', 'vendors.id','=','quotations.id_vendor')
+                    ->leftjoin('clients', 'clients.id','=','quotations.id_client')
+                    ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                     ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
                     ->whereIn('quotations.status',[1,'P'])
                     ->where('quotations.amount','<>',null)
@@ -1402,8 +1406,8 @@ class Report2Controller extends Controller
                     ->get();
                 }else if(isset($typeinvoice) && ($typeinvoice == 'facturas')){
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
-                    ->join('clients', 'clients.id','=','quotations.id_client')
-                    ->join('vendors', 'vendors.id','=','quotations.id_vendor')
+                    ->leftjoin('clients', 'clients.id','=','quotations.id_client')
+                    ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                     ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
                     ->whereIn('quotations.status',[1,'P'])
                     ->where('quotations.amount','<>',null)
@@ -1415,8 +1419,8 @@ class Report2Controller extends Controller
                 }else
                 {
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
-                                        ->join('clients', 'clients.id','=','quotations.id_client')
-                                        ->join('vendors', 'vendors.id','=','quotations.id_vendor')
+                                        ->leftjoin('clients', 'clients.id','=','quotations.id_client')
+                                        ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                                         ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
                                         ->whereIn('quotations.status',[1,'P'])
                                         ->where('quotations.amount','<>',null)
