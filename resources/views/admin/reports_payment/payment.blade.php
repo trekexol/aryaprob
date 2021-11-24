@@ -27,10 +27,12 @@
 <body>
 
   <br>
-  <h4 style="color: black; text-align: center">Pagos Realizados</h4>
+  
   @if (isset($client))
+    <h4 style="color: black; text-align: center">Cobros Realizados</h4>
     <h4 style="color: black; text-align: center">Cliente: {{ $client->name ?? '' }}</h4>
   @elseif(isset($provider))
+    <h4 style="color: black; text-align: center">Pagos Realizados</h4>
     <h4 style="color: black; text-align: center">Proveedor: {{ $provider->razon_social ?? '' }}</h4>
   @endif
   
@@ -52,6 +54,9 @@
       </tr> 
       @foreach ($quotation_payments as $quotation)
         <?php 
+          if(isset($coin) && ($coin != 'bolivares')){
+              $quotation->amount = $quotation->amount / ($quotation->rate ?? 1);
+          }
           $total_amount += $quotation->amount;
         ?>
         <tr>

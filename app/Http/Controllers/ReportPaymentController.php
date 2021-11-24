@@ -114,7 +114,8 @@ class ReportPaymentController extends Controller
             ->whereRaw("(DATE_FORMAT(quotation_payments.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(quotation_payments.created_at, '%Y-%m-%d') <= ?)", 
                 [$date_begin, $date_end_consult])
             ->where('quotations.id_client',$id_client_or_provider)
-            ->select('quotation_payments.*','accounts.description as account_description','quotations.number_invoice as number')
+            ->select('quotation_payments.*','accounts.description as account_description',
+            'quotations.number_invoice as number')
             ->get();
 
             $client = Client::on(Auth::user()->database_name)->find($id_client_or_provider);
@@ -129,7 +130,8 @@ class ReportPaymentController extends Controller
             ->whereRaw("(DATE_FORMAT(expense_payments.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(expense_payments.created_at, '%Y-%m-%d') <= ?)", 
                 [$date_begin, $date_end_consult])
             ->where('expenses_and_purchases.id_provider',$id_client_or_provider)
-            ->select('expense_payments.*','accounts.description as account_description','expenses_and_purchases.id as number')
+            ->select('expense_payments.*','accounts.description as account_description',
+            'expenses_and_purchases.id as number','expenses_and_purchases.rate as rate')
             ->get();
             
             $provider = Provider::on(Auth::user()->database_name)->find($id_client_or_provider);
