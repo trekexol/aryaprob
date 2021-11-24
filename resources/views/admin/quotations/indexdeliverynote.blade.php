@@ -105,7 +105,7 @@
                             <td class="text-center">
                                 <a href="{{ route('quotations.create',[$quotation->id,$quotation->coin])}}" title="Seleccionar"><i class="fa fa-check"></i></a>
                                 <a href="{{ route('quotations.createdeliverynote',[$quotation->id,$quotation->coin])}}" title="Mostrar"><i class="fa fa-file-alt"></i></a>
-                                <a href="{{ route('quotations.reversar_delivery_note',$quotation->id)}}" title="Borrar"><i class="fa fa-trash text-danger"></i></a>
+                                <a href="#" class="delete" data-id-quotation={{$quotation->id}} data-toggle="modal" data-target="#deleteModal" title="Eliminar"><i class="fa fa-trash text-danger"></i></a>
                             </td>                        
                         
                         </tr>     
@@ -116,7 +116,33 @@
         </div>
     </div>
 </div>
-  
+  <!-- Delete Warning Modal -->
+<div class="modal modal-danger fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="Delete" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Eliminar</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            <form action="{{ route('quotations.reversar_delivery_note') }}" method="post">
+                @csrf
+                @method('DELETE')
+                <input id="id_quotation_modal" type="hidden" class="form-control @error('id_quotation_modal') is-invalid @enderror" name="id_quotation_modal" readonly required autocomplete="id_quotation_modal">
+                       
+                <h5 class="text-center">Seguro que desea eliminar?</h5>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-danger">Eliminar</button>
+            </div>
+            </form>
+        </div>
+    </div>
+  </div>
 @endsection
 
 @section('javascript')
@@ -127,7 +153,13 @@
         "order": [],
         'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]]
     });
-
+    
+    $(document).on('click','.delete',function(){
+         
+         let id_quotation = $(this).attr('data-id-quotation');
+ 
+         $('#id_quotation_modal').val(id_quotation);
+     });
     </script> 
 
 @endsection
