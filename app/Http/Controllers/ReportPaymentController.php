@@ -106,35 +106,36 @@ class ReportPaymentController extends Controller
 
         if(isset($typeperson) && ($typeperson == 'Cliente')){
            
-            $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
+            $quotation_payments = DB::connection(Auth::user()->database_name)->table('quotations')
             ->join('clients', 'clients.id','=','quotations.id_client')
             ->join('quotation_payments', 'quotation_payments.id_quotation','=','quotations.id')
             ->where('quotations.status','C')
             ->whereRaw("(DATE_FORMAT(quotation_payments.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(quotation_payments.created_at, '%Y-%m-%d') <= ?)", 
                 [$date_begin, $date_end_consult])
             ->where('quotations.id_client',$id_client_or_provider)
-            ->select('quotation_payments.*')
+            ->select('quotation_payments.*','quotations.number_invoice as number')
             ->get();
 
             $client = Client::on(Auth::user()->database_name)->find($id_client_or_provider);
             
         }if(isset($typeperson) && ($typeperson == 'Proveedor')){
             
-            $quotations = DB::connection(Auth::user()->database_name)->table('expenses_and_purchases')
+            $quotation_payments = DB::connection(Auth::user()->database_name)->table('expenses_and_purchases')
             ->join('providers', 'providers.id','=','expenses_and_purchases.id_provider')
             ->join('expense_payments', 'expense_payments.id_expense','=','expenses_and_purchases.id')
+            ->leftJoin('accounts', 'accounts.id','=','expense_payments.id_account')
             ->where('expenses_and_purchases.status','C')
             ->whereRaw("(DATE_FORMAT(expense_payments.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(expense_payments.created_at, '%Y-%m-%d') <= ?)", 
                 [$date_begin, $date_end_consult])
             ->where('expenses_and_purchases.id_provider',$id_client_or_provider)
-            ->select('expense_payments.*')
+            ->select('expense_payments.*','accounts.description as account_description','expenses_and_purchases.id as number')
             ->get();
             
             $provider = Provider::on(Auth::user()->database_name)->find($id_client_or_provider);
 
         }else{
             
-            $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
+            $quotation_payments = DB::connection(Auth::user()->database_name)->table('quotations')
             ->join('clients', 'clients.id','=','quotations.id_client')
             ->join('quotation_payments', 'quotation_payments.id_quotation','=','quotations.id')
             ->leftJoin('accounts', 'accounts.id','=','quotation_payments.id_account')
@@ -142,20 +143,20 @@ class ReportPaymentController extends Controller
             ->where('quotation_payments.status','1')
             ->whereRaw("(DATE_FORMAT(quotation_payments.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(quotation_payments.created_at, '%Y-%m-%d') <= ?)", 
                 [$date_begin, $date_end_consult])
-            ->select('quotation_payments.*','accounts.description as account_description')
+            ->select('quotation_payments.*','accounts.description as account_description','quotations.number_invoice as number')
             ->get();
 
             $client = Client::on(Auth::user()->database_name)->find($id_client_or_provider);
         }
        
-        foreach($quotations as $quotation){
+        foreach($quotation_payments as $quotation){
 
             $quotation->payment_type = $global->asignar_payment_type($quotation->payment_type);
 
         }
 
 
-        $pdf = $pdf->loadView('admin.reports_payment.payment',compact('coin','quotations','datenow','date_end','client','provider'));
+        $pdf = $pdf->loadView('admin.reports_payment.payment',compact('coin','quotation_payments','datenow','date_end','client','provider'));
         return $pdf->stream();
                  
     }

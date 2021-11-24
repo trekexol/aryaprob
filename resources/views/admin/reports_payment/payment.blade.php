@@ -43,24 +43,30 @@
   ?>
     <table style="width: 100%;">
       <tr>
-        <th style="text-align: center; width:20%;">Fecha</th>
-        <th style="text-align: center; width:20%;">Tipo Pago</th>
+        <th style="text-align: center; width:10%;">N°</th>
+        <th style="text-align: center; width:8%;">Fecha</th>
+        <th style="text-align: center; width:15%;">Tipo Pago</th>
         <th style="text-align: center; width:20%;">Cuenta</th>
+        <th style="text-align: center; width:20%;">Referencia</th>
         <th style="text-align: center;">Monto</th>
       </tr> 
-      @foreach ($quotations as $quotation)
+      @foreach ($quotation_payments as $quotation)
         <?php 
           $total_amount += $quotation->amount;
         ?>
         <tr>
+          <th style="text-align: center; font-weight: normal;">{{ $quotation->number ?? ''}}</th>
           <th style="text-align: center; font-weight: normal;">{{ date_format(date_create($quotation->created_at),"d-m-Y") }}</th>
           <th style="text-align: center; font-weight: normal;">{{ $quotation->payment_type ?? ''}}</th>
           <th style="text-align: center; font-weight: normal;">{{ $quotation->account_description ?? ''}}</th>
+          <th style="text-align: center; font-weight: normal;">{{ $quotation->reference ?? ''}}</th>
           <th style="text-align: right; font-weight: normal;">{{ number_format(($quotation->amount ?? 0), 2, ',', '.') }}</th>
         </tr> 
       @endforeach 
 
       <tr>
+        <th style="text-align: center; font-weight: normal; border-color: white;"></th>
+        <th style="text-align: center; font-weight: normal; border-color: white;"></th>
         <th style="text-align: center; font-weight: normal; border-color: white;"></th>
         <th style="text-align: center; font-weight: normal; border-color: white;"></th>
         <th style="text-align: center; font-weight: normal; border-color: white; border-right-color: black;"></th>

@@ -92,7 +92,7 @@ class PaymentController extends Controller
 
     public function pdf($id_payment,$coin)
     {
-        
+       
         $pdf = App::make('dompdf.wrapper');
 
         $date = Carbon::now();
