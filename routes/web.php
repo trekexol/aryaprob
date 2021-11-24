@@ -445,7 +445,7 @@ Route::group(["prefix"=>'quotations'],function(){
 
     Route::get('reversarquotationmultipayment/{id}/{id_header?}','QuotationController@reversar_quotation_multipayment')->name('quotations.reversar_quotation_multipayment');
 
-    Route::get('reversardeliverynote/{id_quotation}','DeliveryNoteController@reversar_delivery_note')->name('quotations.reversar_delivery_note');
+    Route::delete('reversardeliverynote','DeliveryNoteController@reversar_delivery_note')->name('quotations.reversar_delivery_note');
 
 });
 

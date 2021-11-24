@@ -140,8 +140,9 @@ class DeliveryNoteController extends Controller
          
     }
 
-    public function reversar_delivery_note($id_quotation)
+    public function reversar_delivery_note(Request $request)
     { 
+        $id_quotation = $request->id_quotation_modal;
         
         $quotation = Quotation::on(Auth::user()->database_name)->findOrFail($id_quotation);
 

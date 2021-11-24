@@ -812,7 +812,7 @@ class QuotationController extends Controller
 
                 $this-> discountAmountsForEliminationProduct($quotation_product);
         }else{
-            dd("ae");
+            
             $quotation_product->status = 'X'; 
             $quotation_product->save(); 
         }
