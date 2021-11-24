@@ -147,6 +147,7 @@ class QuotationController extends Controller
                                 ->join('inventories', 'products.id', '=', 'inventories.product_id')
                                 ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
                                 ->where('quotation_products.id_quotation',$id_quotation)
+                                ->whereIn('quotation_products.status',['1','C'])
                                 ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.id as quotation_products_id','inventories.code as code','quotation_products.discount as discount',
                                 'quotation_products.amount as amount_quotation')
                                 ->get(); 
@@ -229,6 +230,7 @@ class QuotationController extends Controller
                                 ->join('inventories', 'products.id', '=', 'inventories.product_id')
                                 ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
                                 ->where('quotation_products.id_quotation',$id_quotation)
+                                ->whereIn('quotation_products.status',['1','C'])
                                 ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.id as quotation_products_id','inventories.code as code','quotation_products.discount as discount',
                                 'quotation_products.amount as amount_quotation')
                                 ->get(); 
@@ -807,8 +809,12 @@ class QuotationController extends Controller
                 })
                 ->where('quotation_products.id',$quotation_product->id)
                 ->update(['inventories.amount' => DB::raw('inventories.amount+quotation_products.amount'), 'quotation_products.status' => 'X']);
+
+                $this-> discountAmountsForEliminationProduct($quotation_product);
         }else{
-            $quotation_product->delete(); 
+            dd("ae");
+            $quotation_product->status = 'X'; 
+            $quotation_product->save(); 
         }
 
         $historial_quotation = new HistorialQuotationController();
@@ -817,6 +823,18 @@ class QuotationController extends Controller
 
         return redirect('/quotations/register/'.request('id_quotation_modal').'/'.request('coin_modal').'')->withDanger('Eliminacion exitosa!!');
         
+    }
+
+    public function discountAmountsForEliminationProduct($quotation_product){
+        
+        if($quotation_product->retiene_iva == '1'){
+            dd("entro");
+            Quotation::on(Auth::user()->database_name)
+                ->join('quotation_products','quotation_products.id_quotation','quotation.id')
+                ->where('quotation.id',$quotation_product->id_quotation)
+                ->update(['quotation.amount' => DB::raw('quotation.amount-(quotation_products.price * quotation_products.amount)'),
+                        'quotation.amount_with_iva' => DB::raw('quotation.amount_with_iva-(quotation_products.price * quotation_products.amount)')]);
+        }
     }
 
     public function deleteQuotation(Request $request)
