@@ -13,16 +13,16 @@ use Illuminate\Support\Facades\Auth;
 class CalculationController extends Controller
 {
 
-    public function calculation_one_month($account,$date_begin,$date_end)
+    public function calculationOneAccount($account,$date_begin,$date_end)
     {
        
-       return $this->verificate_account($account,$date_begin,$date_end);
+       return $this->verificateAccount($account,$date_begin,$date_end);
 
     }
 
 
 
-    public function verificate_account($account,$date_begin,$date_end){
+    public function verificateAccount($account,$date_begin,$date_end){
 
         
         if($account->code_one != 0)
@@ -253,12 +253,17 @@ class CalculationController extends Controller
                 $account->debe = $total_debe->total;
                 $account->haber = $total_haber->total;           
                 $account->balance_previus = $total_balance;
-                dd($account);
+                
             }
             }
 
-           
-            return $account;
+            $account_new = new Account();
+            
+            $account_new->debe = $account->debe;
+            $account_new->haber = $account->haber;           
+            $account_new->balance_previus = $account->balance_previus;
+
+            return $account_new;
         }else{
             return redirect('/accounts')->withDanger('El codigo uno es igual a cero!');
         }
