@@ -219,6 +219,9 @@ class PDF2Controller extends Controller
                 $retiene_islr = 0;
 
                 foreach($inventories_quotations as $var){
+                    if(isset($coin) && ($coin != 'bolivares')){
+                        $var->price =  bcdiv(($var->price / ($var->rate ?? 1)), '1', 2);
+                    }
                     //Se calcula restandole el porcentaje de descuento (discount)
                     $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
 
@@ -242,12 +245,13 @@ class PDF2Controller extends Controller
                 
                 }
                 
+                $quotation->iva_percentage = $iva;
                 $quotation->amount = $total;
                 $quotation->base_imponible = $base_imponible;
                 $quotation->amount_iva = $base_imponible * $quotation->iva_percentage / 100;
                 $quotation->amount_with_iva = $quotation->amount + $quotation->amount_iva;
                 
-                $quotation->iva_percentage = $iva;
+                
                 $quotation->date_delivery_note = $date;
                 $quotation->save();
 
@@ -375,12 +379,11 @@ class PDF2Controller extends Controller
 
                 
                 }
-                
+                $quotation->iva_percentage = $iva;
                 $quotation->amount = $total;
                 $quotation->base_imponible = $base_imponible;
                 $quotation->amount_iva = $base_imponible * $quotation->iva_percentage / 100;
                 $quotation->amount_with_iva = $quotation->amount + $quotation->amount_iva;
-                $quotation->iva_percentage = $iva;
                 $quotation->date_order = $date;
                 $quotation->save();
 
@@ -505,51 +508,39 @@ class PDF2Controller extends Controller
 
                 foreach($inventories_quotations as $var){
 
-                    $price = bcdiv(($var->price), '1', 2);
-                    
-                    $precio_beta = substr($price,-2,2);
-
-                    if ($precio_beta >= 97) {
-                        $price = ceil($price);
-                      }
-                      if ($precio_beta < 3) {
-                        $price = floor($price);
-                      }
+                    if(isset($coin) && ($coin != 'bolivares')){
+                        $var->price =  bcdiv(($var->price / ($var->rate ?? 1)), '1', 2);
+                    }
 
                     //Se calcula restandole el porcentaje de descuento (discount)
-                    $percentage = (($price * $var->amount_quotation) * $var->discount)/100;
+                    $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
 
-                    $total += ($price * $var->amount_quotation) - $percentage;
+                    $total += ($var->price * $var->amount_quotation) - $percentage;
                     //----------------------------- 
 
                     if($var->retiene_iva_quotation == 0){
 
-                        $base_imponible += ($price * $var->amount_quotation) - $percentage; 
+                        $base_imponible += ($var->price * $var->amount_quotation) - $percentage; 
 
                     }else{
-                        $retiene_iva += ($price * $var->amount_quotation) - $percentage; 
+                        $retiene_iva += ($var->price * $var->amount_quotation) - $percentage; 
                     }
 
                     if($var->retiene_islr_quotation == 1){
 
-                        $retiene_islr += ($price * $var->amount_quotation) - $percentage; 
+                        $retiene_islr += ($var->price * $var->amount_quotation) - $percentage; 
 
                     }
 
                 
                 }
-                
+                $quotation->iva_percentage = $iva;
                 $quotation->amount = $total;
                 $quotation->base_imponible = $base_imponible;
                 $quotation->amount_iva = $base_imponible * $quotation->iva_percentage / 100;
                 $quotation->amount_with_iva = $quotation->amount + $quotation->amount_iva;
-                $quotation->iva_percentage = $iva;
                 $quotation->date_delivery_note = $date;
                 $quotation->save();
-
-
-                $quotation->total_factura = $total;
-                //$quotation->base_imponible = $base_imponible;
 
 
                 /*Aqui revisamos el porcentaje de retencion de iva que tiene el cliente, para aplicarlo a productos que retengan iva */

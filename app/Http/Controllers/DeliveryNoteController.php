@@ -48,7 +48,7 @@ class DeliveryNoteController extends Controller
 
 
     public function createdeliverynote($id_quotation,$coin)
-    {
+    {   
         
          $quotation = null;
              
@@ -82,6 +82,9 @@ class DeliveryNoteController extends Controller
             $retiene_islr = 0;
 
             foreach($inventories_quotations as $var){
+                if(isset($coin) && ($coin != 'bolivares')){
+                    $var->price =  bcdiv(($var->price / ($var->rate ?? 1)), '1', 2);
+                }
                 //Se calcula restandole el porcentaje de descuento (discount)
                     $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
 
