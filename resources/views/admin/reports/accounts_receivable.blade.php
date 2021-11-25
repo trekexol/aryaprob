@@ -74,11 +74,19 @@
         $tipo = 'Factura';
       }
 
-      
+      if(isset($quotation->date_billing)){
+        $quotation->date_billing = date_format(date_create($quotation->date_billing),"d-m-Y");
+      }
+      if(isset($quotation->date_delivery_note)){
+        $quotation->date_delivery_note = date_format(date_create($quotation->date_delivery_note),"d-m-Y");
+      }
+      if(isset($quotation->date_quotation)){
+        $quotation->date_quotation = date_format(date_create($quotation->date_quotation),"d-m-Y");
+      }
     
     ?>
     <tr>
-      <th style="text-align: center; font-weight: normal;">{{ $quotation->date_quotation ?? ''}}</th>
+      <th style="text-align: center; font-weight: normal;">{{ $quotation->date_billing ?? $quotation->date_delivery_note ?? $quotation->date_quotation ?? ''}}</th>
       <th style="text-align: center; font-weight: normal;">{{ $tipo }}</th>
       <th style="text-align: center; font-weight: normal;">{{ $quotation->number_invoice ?? $quotation->number_delivery_note}}</th>
       <th style="text-align: center; font-weight: normal;">{{ $quotation->serie ?? ''}}</th>
