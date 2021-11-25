@@ -441,7 +441,7 @@ Route::group(["prefix"=>'quotations'],function(){
     Route::delete('deleteproduct','QuotationController@deleteProduct')->name('quotations.deleteProduct');
     Route::delete('deletequotation','QuotationController@deleteQuotation')->name('quotations.deleteQuotation');
 
-    Route::get('reversarquotation{id}','QuotationController@reversar_quotation')->name('quotations.reversarQuotation');
+    Route::delete('reversarquotation','QuotationController@reversar_quotation')->name('quotations.reversarQuotation');
 
     Route::get('reversarquotationmultipayment/{id}/{id_header?}','QuotationController@reversar_quotation_multipayment')->name('quotations.reversar_quotation_multipayment');
 
