@@ -244,16 +244,28 @@ class PDF2Controller extends Controller
 
                 
                 }
+
+                $rate = null;
                 
+                if(isset($coin) && ($coin != 'bolivares')){
+                    $rate = $quotation->bcv;
+                }
                 $quotation->iva_percentage = $iva;
-                $quotation->amount = $total;
-                $quotation->base_imponible = $base_imponible;
+                $quotation->amount = $total * ($rate ?? 1);
+                $quotation->base_imponible = $base_imponible * ($rate ?? 1);
                 $quotation->amount_iva = $base_imponible * $quotation->iva_percentage / 100;
-                $quotation->amount_with_iva = $quotation->amount + $quotation->amount_iva;
+                $quotation->amount_with_iva = ($quotation->amount + $quotation->amount_iva) * ($rate ?? 1);
                 
                 
                 $quotation->date_delivery_note = $date;
                 $quotation->save();
+
+                if(isset($coin) && ($coin != 'bolivares')){
+                    $quotation->amount = $total / ($rate ?? 1);
+                    $quotation->base_imponible = $base_imponible / ($rate ?? 1);
+                    $quotation->amount_iva = $base_imponible / $quotation->iva_percentage / 100;
+                    $quotation->amount_with_iva = ($quotation->amount + $quotation->amount_iva) / ($rate ?? 1);
+                }
 
 
                 $quotation->total_factura = $total;
@@ -534,14 +546,27 @@ class PDF2Controller extends Controller
 
                 
                 }
+
+                if(isset($coin) && ($coin != 'bolivares')){
+                    $rate = $quotation->bcv;
+                }
+
                 $quotation->iva_percentage = $iva;
-                $quotation->amount = $total;
-                $quotation->base_imponible = $base_imponible;
+                $quotation->amount = $total * ($rate ?? 1);
+                $quotation->base_imponible = $base_imponible * ($rate ?? 1);
                 $quotation->amount_iva = $base_imponible * $quotation->iva_percentage / 100;
-                $quotation->amount_with_iva = $quotation->amount + $quotation->amount_iva;
+                $quotation->amount_with_iva = ($quotation->amount + $quotation->amount_iva) * ($rate ?? 1);
+                
+                
                 $quotation->date_delivery_note = $date;
                 $quotation->save();
 
+                if(isset($coin) && ($coin != 'bolivares')){
+                    $quotation->amount = $total / ($rate ?? 1);
+                    $quotation->base_imponible = $base_imponible / ($rate ?? 1);
+                    $quotation->amount_iva = $base_imponible / $quotation->iva_percentage / 100;
+                    $quotation->amount_with_iva = ($quotation->amount + $quotation->amount_iva) / ($rate ?? 1);
+                }
 
                 /*Aqui revisamos el porcentaje de retencion de iva que tiene el cliente, para aplicarlo a productos que retengan iva */
                 $client = Client::on(Auth::user()->database_name)->find($quotation->id_client);
