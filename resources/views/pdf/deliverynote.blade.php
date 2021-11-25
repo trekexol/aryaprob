@@ -177,7 +177,7 @@
       </tr> 
       <tr>
         <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">TOTAL Bs</th>
-        <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($total_bs, 2, ',', '.') }}</th>
+        <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($total * $quotation->bcv, 2, ',', '.') }}</th>
       </tr> 
     @endif
     
