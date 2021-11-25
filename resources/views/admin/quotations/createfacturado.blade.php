@@ -214,8 +214,8 @@
                                 </button>
                                 <div class="dropdown-menu animated--fade-in"
                                     aria-labelledby="dropdownMenuButton">
-                                    <a onclick="pdf_media();" id="btnfacturar" name="btnfacturar" class="dropdown-item" title="facturar">Imprimir Factura Media Carta</a>  
-                                    <a href="{{ route('quotations.reversarQuotation',$quotation->id) }}" class="dropdown-item">Reversar Compra</a> 
+                                    <a href="#" onclick="pdf_media();" id="btnfacturar" name="btnfacturar" class="dropdown-item bg-light" title="imprimir">Imprimir Factura Media Carta</a>  
+                                    <a href="#" class="dropdown-item bg-light delete" data-id-quotation={{$quotation->id}} data-toggle="modal" data-target="#reversarModal" title="Eliminar">Reversar Compra</a> 
                                 </div>
                             </div> 
                            
@@ -258,6 +258,33 @@
         </div>
     </div>
 </div>
+
+<!-- Delete Warning Modal -->
+<div class="modal modal-danger fade" id="reversarModal" tabindex="-1" role="dialog" aria-labelledby="reversar" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Eliminar Factura</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('quotations.reversarQuotation') }}" method="post">
+                @csrf
+                @method('DELETE')
+                <div class="modal-body">
+                    <h5 class="text-center">Seguro quiere reversar la factura?</h5>
+                    <input id="id_quotation_modal" type="hidden" class="form-control @error('id_quotation_modal') is-invalid @enderror" name="id_quotation_modal" readonly required autocomplete="id_quotation_modal">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection
 
 
@@ -268,6 +295,8 @@
             $( document ).ready(function() {
                 $('#deleteModal').modal('toggle')
             });
+
+
         </script>
     @endif
 
@@ -276,6 +305,12 @@
             $("#coin").on('change',function(){
                 coin = $(this).val();
                 window.location = "{{route('quotations.createfacturado', [$quotation->id,''])}}"+"/"+coin;
+            });
+
+            $(document).on('click','.delete',function(){
+                let id_quotation = $(this).attr('data-id-quotation');
+
+                $('#id_quotation_modal').val(id_quotation);
             });
             function pdf() {
                 

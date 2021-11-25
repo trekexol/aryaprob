@@ -930,15 +930,17 @@ class QuotationController extends Controller
         
     }
 
-    public function reversar_quotation($id_quotation)
+    public function reversar_quotation(Request $request)
     { 
         
+        $id_quotation = $request->id_quotation_modal;
+
         $quotation = Quotation::on(Auth::user()->database_name)->findOrFail($id_quotation);
 
         $exist_multipayment = Multipayment::on(Auth::user()->database_name)
                             ->where('id_quotation',$quotation->id)
                             ->first();
-
+                            
         if(empty($exist_multipayment)){
             if($quotation != 'X'){
                 $detail = DetailVoucher::on(Auth::user()->database_name)->where('id_invoice',$id_quotation)
@@ -960,9 +962,10 @@ class QuotationController extends Controller
                 $historial_quotation->registerAction($quotation,"quotation","Se Reversó la Factura");
             }
         }else{
+            
             return redirect('/quotations/facturado/'.$quotation->id.'/bolivares/'.$exist_multipayment->id_header.'');
         }
-
+       
         return redirect('invoices')->withSuccess('Reverso de Factura Exitosa!');
 
     }
