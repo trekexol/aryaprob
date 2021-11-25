@@ -20,8 +20,8 @@ class CreateQuotationProductsTable extends Migration
 
             $table->integer('amount');
             $table->decimal('discount',64,2);
-            $table->decimal('price',64,2);
-            $table->decimal('rate',64,3);
+            $table->decimal('price',64,3);
+            $table->decimal('rate',64,2);
 
             $table->boolean('retiene_iva');
             $table->boolean('retiene_islr');

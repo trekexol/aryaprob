@@ -74,7 +74,7 @@ class PDF2Controller extends Controller
 
                 $company = Company::on(Auth::user()->database_name)->find(1);
                 
-                 $pdf = $pdf->loadView('pdf.factura',compact('company','quotation','inventories_quotations','payment_quotations','bcv'));
+                 $pdf = $pdf->loadView('pdf.factura',compact('company','quotation','inventories_quotations','payment_quotations','bcv','coin'));
                  return $pdf->stream();
          
                 }else{

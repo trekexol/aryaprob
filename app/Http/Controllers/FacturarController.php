@@ -646,7 +646,7 @@ class FacturarController extends Controller
                             }
                         }if($payment_type == 2){
                     
-                            $account_contado = Account::on(Auth::user()->database_name)->where('description', 'like', 'Caja Chica')->first(); 
+                            $account_contado = Account::on(Auth::user()->database_name)->where('description', 'like', 'Caja Chica%')->first(); 
 
                             $var->id_account = $account_contado->id;
                         }

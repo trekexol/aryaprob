@@ -30,7 +30,7 @@ class CreateQuotationsTable extends Migration
             $table->date('date_delivery_note')->nullable();
             $table->date('date_order')->nullable();
 
-            $table->decimal('anticipo',64,2)->nullable();
+            $table->decimal('anticipo',64,3)->nullable();
             $table->integer('iva_percentage')->nullable();
             $table->string('observation',150)->nullable();
             $table->string('note',150)->nullable();
@@ -39,12 +39,12 @@ class CreateQuotationsTable extends Migration
 
             $table->decimal('bcv',64,3)->nullable()->comment = 'Tasa de cambio a bolivares del banco central de venezuela';
 
-            $table->decimal('retencion_iva',64,2)->nullable();
-            $table->decimal('retencion_islr',64,2)->nullable();
-            $table->decimal('base_imponible',64,2)->nullable();
-            $table->decimal('amount',64,2)->nullable();
-            $table->decimal('amount_iva',64,2)->nullable();
-            $table->decimal('amount_with_iva',64,2)->nullable();
+            $table->decimal('retencion_iva',64,3)->nullable();
+            $table->decimal('retencion_islr',64,3)->nullable();
+            $table->decimal('base_imponible',64,3)->nullable();
+            $table->decimal('amount',64,3)->nullable();
+            $table->decimal('amount_iva',64,3)->nullable();
+            $table->decimal('amount_with_iva',64,3)->nullable();
             
 
 
