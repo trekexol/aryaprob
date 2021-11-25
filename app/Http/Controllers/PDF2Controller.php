@@ -202,6 +202,7 @@ class PDF2Controller extends Controller
                 $inventories_quotations = DB::connection(Auth::user()->database_name)->table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
                                                                 ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
                                                                 ->where('quotation_products.id_quotation',$quotation->id)
+                                                                ->whereIn('quotation_products.status',['1','C'])
                                                                 ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.discount as discount',
                                                                 'quotation_products.amount as amount_quotation','quotation_products.retiene_iva as retiene_iva_quotation'
                                                                 ,'quotation_products.retiene_islr as retiene_islr_quotation')
@@ -356,6 +357,7 @@ class PDF2Controller extends Controller
                 $inventories_quotations = DB::connection(Auth::user()->database_name)->table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
                                                                 ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
                                                                 ->where('quotation_products.id_quotation',$quotation->id)
+                                                                ->whereIn('quotation_products.status',['1','C'])
                                                                 ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.discount as discount',
                                                                 'quotation_products.amount as amount_quotation','quotation_products.retiene_iva as retiene_iva_quotation'
                                                                 ,'quotation_products.retiene_islr as retiene_islr_quotation')
@@ -373,6 +375,9 @@ class PDF2Controller extends Controller
                 $retiene_islr = 0;
 
                 foreach($inventories_quotations as $var){
+                    if(isset($coin) && ($coin != 'bolivares')){
+                        $var->price =  bcdiv(($var->price / ($var->rate ?? 1)), '1', 2);
+                    }
                     //Se calcula restandole el porcentaje de descuento (discount)
                     $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
 
@@ -393,13 +398,30 @@ class PDF2Controller extends Controller
 
                 
                 }
+                $rate = null;
+                
+                if(isset($coin) && ($coin != 'bolivares')){
+                    $rate = $quotation->bcv;
+                }
                 $quotation->iva_percentage = $iva;
-                $quotation->amount = $total;
-                $quotation->base_imponible = $base_imponible;
+                $quotation->amount = $total * ($rate ?? 1);
+                $quotation->base_imponible = $base_imponible * ($rate ?? 1);
                 $quotation->amount_iva = $base_imponible * $quotation->iva_percentage / 100;
-                $quotation->amount_with_iva = $quotation->amount + $quotation->amount_iva;
-                $quotation->date_order = $date;
+                $quotation->amount_with_iva = ($quotation->amount + $quotation->amount_iva);
+                
+                
+                
+                $quotation->date_delivery_note = $date;
                 $quotation->save();
+
+                if(isset($coin) && ($coin != 'bolivares')){
+                   
+                    $quotation->amount =  $quotation->amount / ($rate ?? 1);
+                    $quotation->base_imponible = $quotation->base_imponible / ($rate ?? 1);
+                    $quotation->amount_iva = $quotation->base_imponible / $quotation->iva_percentage / 100;
+                    $quotation->amount_with_iva = ( $quotation->amount_with_iva) / ($rate ?? 1);
+                }
+
 
 
                 $quotation->total_factura = $total;
@@ -488,6 +510,7 @@ class PDF2Controller extends Controller
                 $inventories_quotations = DB::connection(Auth::user()->database_name)->table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
                                                                 ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
                                                                 ->where('quotation_products.id_quotation',$quotation->id)
+                                                                ->whereIn('quotation_products.status',['1','C'])
                                                                 ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.discount as discount',
                                                                 'quotation_products.amount as amount_quotation','quotation_products.retiene_iva as retiene_iva_quotation'
                                                                 ,'quotation_products.retiene_islr as retiene_islr_quotation')
@@ -623,6 +646,7 @@ class PDF2Controller extends Controller
                 $inventories_expenses = DB::connection(Auth::user()->database_name)->table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
                                                            ->join('expenses_details', 'inventories.id', '=', 'expenses_details.id_inventory')
                                                            ->where('expenses_details.id_expense',$expense->id)
+                                                           ->where('expenses_details.status',['1','C'])
                                                            ->select('products.*','expenses_details.price as price','expenses_details.rate as rate',
                                                            'expenses_details.amount as amount_expense','expenses_details.exento as retiene_iva_expense'
                                                            ,'expenses_details.islr as retiene_islr_expense')
