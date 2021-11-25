@@ -155,15 +155,15 @@ class BackendController extends Controller
 
                 
 
-                $totalIngresoPieChart = $IngresoPieChart->debe + $IngresoPieChart->balance_previus - $IngresoPieChart->haber;
+                $totalIngresoPieChart = abs($IngresoPieChart->debe + $IngresoPieChart->balance_previus - $IngresoPieChart->haber);
 
                 $CostoPieChart = $calculate->calculationOneAccount($accountCostos,$date->startOfYear(),$date->endOfYear());
 
-                $totalCostoPieChart = $CostoPieChart->debe + $CostoPieChart->balance_previus - $CostoPieChart->haber;
+                $totalCostoPieChart = abs($CostoPieChart->debe + $CostoPieChart->balance_previus - $CostoPieChart->haber);
 
                 $GastoPieChart = $calculate->calculationOneAccount($accountGastos,$date->startOfYear(),$date->endOfYear());
 
-                $totalGastoPieChart = $GastoPieChart->debe + $GastoPieChart->balance_previus - $GastoPieChart->haber;
+                $totalGastoPieChart = abs($GastoPieChart->debe + $GastoPieChart->balance_previus - $GastoPieChart->haber);
             /*------------------------------ */
 
             return view('admin.index',compact('account_activo','account_pasivo','account_patrimonio','account_ingresos'

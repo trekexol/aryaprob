@@ -809,8 +809,8 @@ class QuotationController extends Controller
                 })
                 ->where('quotation_products.id',$quotation_product->id)
                 ->update(['inventories.amount' => DB::raw('inventories.amount+quotation_products.amount'), 'quotation_products.status' => 'X']);
-
-                $this-> discountAmountsForEliminationProduct($quotation_product);
+               
+               // $this-> discountAmountsForEliminationProduct($quotation_product);
         }else{
             
             $quotation_product->status = 'X'; 
@@ -825,17 +825,17 @@ class QuotationController extends Controller
         
     }
 
-    public function discountAmountsForEliminationProduct($quotation_product){
+   /* public function discountAmountsForEliminationProduct($quotation_product){
         
         if($quotation_product->retiene_iva == '1'){
-            dd("entro");
+           
             Quotation::on(Auth::user()->database_name)
-                ->join('quotation_products','quotation_products.id_quotation','quotation.id')
-                ->where('quotation.id',$quotation_product->id_quotation)
-                ->update(['quotation.amount' => DB::raw('quotation.amount-(quotation_products.price * quotation_products.amount)'),
-                        'quotation.amount_with_iva' => DB::raw('quotation.amount_with_iva-(quotation_products.price * quotation_products.amount)')]);
+                ->join('quotation_products','quotation_products.id_quotation','quotations.id')
+                ->where('quotations.id',$quotation_product->id_quotation)
+                ->update(['quotations.amount' => DB::raw('quotations.amount-(quotation_products.price * quotation_products.amount)'),
+                        'quotations.amount_with_iva' => DB::raw('quotations.amount_with_iva-(quotation_products.price * quotation_products.amount)')]);
         }
-    }
+    }*/
 
     public function deleteQuotation(Request $request)
     {

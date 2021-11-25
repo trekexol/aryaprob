@@ -315,18 +315,15 @@
                                             @foreach ($inventories_quotations as $var)
 
                                             <?php
-                                            $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
-
-                                            $total_less_percentage = ($var->price * $var->amount_quotation) - $percentage;
-
-                                                if($coin == 'bolivares'){
-                                                    $var->rate = null;
+                                                if($coin != 'bolivares'){
+                                                    $var->price = bcdiv(($var->price / ($var->rate ?? 1)), '1', 2);
                                                 }
+                                                
+                                                $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
 
-                                                if(isset($var->rate)){
-                                                    $product_Bs = $total_less_percentage / $var->rate;
-                                                }
-                                            
+                                                $total_less_percentage = ($var->price * $var->amount_quotation) - $percentage;
+
+
                                             ?>
                                                 <tr>
                                                 <td style="text-align: right">{{ $var->code}}</td>
@@ -337,13 +334,11 @@
                                                 @endif
                                                 
                                                 <td style="text-align: right">{{ $var->amount_quotation}}</td>
-                                                <td style="text-align: right">{{number_format($var->price / ($var->rate ?? 1), 2, ',', '.')}}</td>
+                                                <td style="text-align: right">{{number_format($var->price, 2, ',', '.')}}</td>
                                                 <td style="text-align: right">{{number_format($var->discount, 0, '', '.')}}%</td>
-                                                @if(isset($var->rate))
-                                                    <td style="text-align: right">{{number_format($product_Bs, 2, ',', '.')}}</td>
-                                                @else
-                                                    <td style="text-align: right">{{number_format($total_less_percentage, 2, ',', '.')}}</td>
-                                                @endif
+                                                
+                                                <td style="text-align: right">{{number_format($total_less_percentage, 2, ',', '.')}}</td>
+                                               
 
                                                 <?php
                                                     $suma += $total_less_percentage;
@@ -358,9 +353,7 @@
                                             @endforeach
 
                                             <?php
-                                                if(isset($var->rate)){
-                                                    $suma = $suma / $var->rate;
-                                                }
+                                                
                                             ?>
                                             <tr>
                                                 <td style="text-align: right">-------------</td>
