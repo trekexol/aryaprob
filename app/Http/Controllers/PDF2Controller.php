@@ -579,17 +579,19 @@ class PDF2Controller extends Controller
                 $quotation->iva_percentage = $iva;
                 $quotation->amount = $total * ($rate ?? 1);
                 $quotation->base_imponible = $base_imponible * ($rate ?? 1);
-                $quotation->amount_iva = $base_imponible * $quotation->iva_percentage / 100;
+                $quotation->amount_iva = ($base_imponible * $quotation->iva_percentage / 100) * ($rate ?? 1);
+               
                 $quotation->amount_with_iva = ($quotation->amount + $quotation->amount_iva);
                 
                 
                 $quotation->date_delivery_note = $date;
                 $quotation->save();
 
+               
                 if(isset($coin) && ($coin != 'bolivares')){
                     $quotation->amount =  $quotation->amount / ($rate ?? 1);
                     $quotation->base_imponible = $quotation->base_imponible / ($rate ?? 1);
-                    $quotation->amount_iva = $quotation->base_imponible / $quotation->iva_percentage / 100;
+                    $quotation->amount_iva =    $quotation->amount_iva / ($rate ?? 1);
                     $quotation->amount_with_iva = ( $quotation->amount_with_iva) / ($rate ?? 1);
                 }
 

@@ -135,7 +135,7 @@
 
   $iva = ($base_imponible * $quotation->iva_percentage)/100;
 
-  $total = $total_factura + $iva;
+  $total = $total_factura;
 
 ?>
 
@@ -273,7 +273,7 @@
 
     $iva = ($base_imponible * $quotation->iva_percentage)/100;
 
-    $total = $total_factura + $iva;
+    $total = $total_factura;
 ?>
 
 
@@ -412,7 +412,7 @@
 
       $iva = ($base_imponible * $quotation->iva_percentage)/100;
 
-      $total = $total_factura + $iva;
+      $total = $total_factura;
     ?>
 
     <table style="width: 100%;">
