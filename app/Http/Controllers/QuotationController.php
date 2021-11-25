@@ -534,6 +534,10 @@ class QuotationController extends Controller
     
         $var->save();
 
+        if(isset($quotation->date_delivery_note) || isset($quotation->date_billing)){
+            $this->recalculateQuotation($quotation->id);
+        }
+
         $historial_quotation = new HistorialQuotationController();
 
         $historial_quotation->registerAction($var,"quotation_product","Registró un Producto");
@@ -757,6 +761,11 @@ class QuotationController extends Controller
         
             $var->save();
 
+            
+            if(isset($var->quotations['date_delivery_note']) || isset($var->quotations['date_billing'])){
+                $this->recalculateQuotation($var->id_quotation);
+            }
+
             $historial_quotation = new HistorialQuotationController();
 
             $historial_quotation->registerAction($var,"quotation_product","Actualizó el Producto: ".$var->inventories['code']."/ 
@@ -800,7 +809,8 @@ class QuotationController extends Controller
         $quotation_product = QuotationProduct::on(Auth::user()->database_name)->find(request('id_quotation_product_modal')); 
         
         if(isset($quotation_product) && $quotation_product->status == "C"){
-            QuotationProduct::on(Auth::user()->database_name)
+            
+                QuotationProduct::on(Auth::user()->database_name)
                 ->join('inventories','inventories.id','quotation_products.id_inventory')
                 ->join('products','products.id','inventories.product_id')
                 ->where(function ($query){
@@ -810,7 +820,7 @@ class QuotationController extends Controller
                 ->where('quotation_products.id',$quotation_product->id)
                 ->update(['inventories.amount' => DB::raw('inventories.amount+quotation_products.amount'), 'quotation_products.status' => 'X']);
                
-               // $this-> discountAmountsForEliminationProduct($quotation_product);
+                $this->recalculateQuotation($quotation_product->id_quotation);
         }else{
             
             $quotation_product->status = 'X'; 
@@ -825,17 +835,80 @@ class QuotationController extends Controller
         
     }
 
-   /* public function discountAmountsForEliminationProduct($quotation_product){
-        
-        if($quotation_product->retiene_iva == '1'){
+    public function recalculateQuotation($id_quotation)
+    {
+        $quotation = null;
+                 
+        if(isset($id_quotation)){
+             $quotation = Quotation::on(Auth::user()->database_name)->findOrFail($id_quotation);
+        }else{
+            return redirect('/quotations')->withDanger('No llega el numero de la cotizacion');
+        } 
+ 
+         if(isset($quotation)){
            
-            Quotation::on(Auth::user()->database_name)
-                ->join('quotation_products','quotation_products.id_quotation','quotations.id')
-                ->where('quotations.id',$quotation_product->id_quotation)
-                ->update(['quotations.amount' => DB::raw('quotations.amount-(quotation_products.price * quotation_products.amount)'),
-                        'quotations.amount_with_iva' => DB::raw('quotations.amount_with_iva-(quotation_products.price * quotation_products.amount)')]);
+            $inventories_quotations = DB::connection(Auth::user()->database_name)->table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
+                                                            ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
+                                                            ->where('quotation_products.id_quotation',$quotation->id)
+                                                            ->whereIn('quotation_products.status',['1','C'])
+                                                            ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.discount as discount',
+                                                            'quotation_products.amount as amount_quotation','quotation_products.retiene_iva as retiene_iva_quotation'
+                                                            ,'quotation_products.retiene_islr as retiene_islr_quotation')
+                                                            ->get(); 
+
+            $total= 0;
+            $base_imponible= 0;
+            $price_cost_total= 0;
+
+            //este es el total que se usa para guardar el monto de todos los productos que estan exentos de iva, osea retienen iva
+            $total_retiene_iva = 0;
+            $retiene_iva = 0;
+
+            $total_retiene_islr = 0;
+            $retiene_islr = 0;
+
+            foreach($inventories_quotations as $var){
+                if(isset($coin) && ($coin != 'bolivares')){
+                    $var->price =  bcdiv(($var->price / ($var->rate ?? 1)), '1', 2);
+                }
+                //Se calcula restandole el porcentaje de descuento (discount)
+                $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
+
+                $total += ($var->price * $var->amount_quotation) - $percentage;
+                //----------------------------- 
+
+                if($var->retiene_iva_quotation == 0){
+
+                    $base_imponible += ($var->price * $var->amount_quotation) - $percentage; 
+
+                }else{
+                    $retiene_iva += ($var->price * $var->amount_quotation) - $percentage; 
+                }
+
+                if($var->retiene_islr_quotation == 1){
+
+                    $retiene_islr += ($var->price * $var->amount_quotation) - $percentage; 
+
+                }
+
+            
+            }
+
+            $rate = null;
+            
+            if(isset($coin) && ($coin != 'bolivares')){
+                $rate = $quotation->bcv;
+            }
+           
+            $quotation->amount = $total * ($rate ?? 1);
+            $quotation->base_imponible = $base_imponible * ($rate ?? 1);
+            $quotation->amount_iva = $base_imponible * $quotation->iva_percentage / 100;
+            $quotation->amount_with_iva = ($quotation->amount + $quotation->amount_iva);
+            
+            $quotation->save();
+           
         }
-    }*/
+    }
 
     public function deleteQuotation(Request $request)
     {
