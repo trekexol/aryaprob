@@ -128,6 +128,7 @@ class ReportPaymentController extends Controller
             ->where('quotations.id_client',$id_client_or_provider)
             ->select('quotation_payments.*','accounts.description as account_description',
             'quotations.number_invoice as number')
+            ->orderBy('quotations.number_invoice','desc')
             ->get();
 
             $client = Client::on(Auth::user()->database_name)->find($id_client_or_provider);
@@ -144,12 +145,13 @@ class ReportPaymentController extends Controller
             ->where('expenses_and_purchases.id_provider',$id_client_or_provider)
             ->select('expense_payments.*','accounts.description as account_description',
             'expenses_and_purchases.id as number','expenses_and_purchases.rate as rate')
+            ->orderBy('expenses_and_purchases.date','desc')
             ->get();
             
             $provider = Provider::on(Auth::user()->database_name)->find($id_client_or_provider);
 
         }if(isset($typeperson) && ($typeperson == 'Vendedor')){
-            
+           
             $quotation_payments = DB::connection(Auth::user()->database_name)->table('quotations')
             ->join('clients', 'clients.id','=','quotations.id_client')
             ->join('quotation_payments', 'quotation_payments.id_quotation','=','quotations.id')
@@ -160,6 +162,7 @@ class ReportPaymentController extends Controller
             ->where('quotations.id_vendor',$id_client_or_provider)
             ->select('quotation_payments.*','accounts.description as account_description',
             'quotations.number_invoice as number')
+            ->orderBy('quotations.number_invoice','desc')
             ->get();
 
             $vendor = Vendor::on(Auth::user()->database_name)->find($id_client_or_provider);
@@ -175,6 +178,7 @@ class ReportPaymentController extends Controller
             ->whereRaw("(DATE_FORMAT(quotation_payments.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(quotation_payments.created_at, '%Y-%m-%d') <= ?)", 
                 [$date_begin, $date_end_consult])
             ->select('quotation_payments.*','accounts.description as account_description','quotations.number_invoice as number')
+            ->orderBy('quotations.number_invoice','desc')
             ->get();
 
             $client = Client::on(Auth::user()->database_name)->find($id_client_or_provider);

@@ -10,6 +10,7 @@
 
                 <input type="hidden" name="id_client" value="{{$client->id ?? null}}" readonly>
                 <input type="hidden" name="id_provider" value="{{$provider->id ?? null}}" readonly>
+                <input type="hidden" name="id_vendor" value="{{$vendor->id ?? null}}" readonly>
 
                 <div class="card-header text-center h4">
                         Pagos Realizados
@@ -102,7 +103,7 @@
                        
                     </form>
                         <div class="embed-responsive embed-responsive-16by9">
-                            <iframe class="embed-responsive-item" src="{{ route('reportspayment.payment_pdf',[$coin ?? 'bolivares',$date_begin ?? $datenow,$date_end ?? $datenow,$typeperson ?? 'ninguno',$client->id ?? $provider->id ?? null]) }}" allowfullscreen></iframe>
+                            <iframe class="embed-responsive-item" src="{{ route('reportspayment.payment_pdf',[$coin ?? 'bolivares',$date_begin ?? $datenow,$date_end ?? $datenow,$typeperson ?? 'ninguno',$client->id ?? $provider->id ?? $vendor->id ?? null]) }}" allowfullscreen></iframe>
                           </div>
                         
                         </div>
