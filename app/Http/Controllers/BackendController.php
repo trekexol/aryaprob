@@ -30,7 +30,7 @@ class BackendController extends Controller
         
         if($users_role == 1){
 
-            $accounts = $this->calculation('bolivares');
+            $accounts = $this->calculation($coin ?? 'bolivares');
             $account_activo = 0;
             $account_pasivo = 0;
             $account_patrimonio = 0;
