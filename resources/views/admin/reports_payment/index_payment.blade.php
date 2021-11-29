@@ -64,16 +64,24 @@
                                 <select class="form-control" name="type" id="type">
                                     @if (isset($client))
                                         <option value="todo">Todo</option>
-                                        <option selected value="cliente">Por Cliente</option>
-                                        <option value="provider">Por Proveedor</option>
+                                        <option selected value="cliente">Cliente</option>
+                                        <option value="provider">Proveedor</option>
+                                        <option value="vendor">Vendedor</option>
                                     @elseif (isset($provider))
                                         <option value="todo">Todo</option>
-                                        <option value="cliente">Por Cliente</option>
-                                        <option selected value="provider">Por Proveedor</option>
+                                        <option value="cliente">Cliente</option>
+                                        <option selected value="provider">Proveedor</option>
+                                        <option value="vendor">Vendedor</option>
+                                    @elseif (isset($vendor))
+                                        <option value="todo">Todo</option>
+                                        <option value="cliente">Cliente</option>
+                                        <option value="provider">Proveedor</option>
+                                        <option selected value="vendor">Vendedor</option>
                                     @else
                                         <option selected value="todo">Todo</option>
-                                        <option value="cliente">Por Cliente</option>
-                                        <option value="provider">Por Proveedor</option>
+                                        <option value="cliente">Cliente</option>
+                                        <option value="provider">Proveedor</option>
+                                        <option value="vendor">Vendedor</option>
                                     @endif
                                 </select>
                             </div>
@@ -84,11 +92,14 @@
                             @if (isset($provider))
                                 <label id="provider_label2" name="id_provider" value="{{ $provider->id }}" for="providers" class="col-sm-3">{{ $provider->razon_social ?? ''}}</label>
                             @endif
-                            
+                            @if (isset($vendor))
+                                <label id="vendor_label2" name="id_vendor" value="{{ $vendor->id }}" for="vendors" class="col-sm-3">{{ $vendor->name ?? ''}} {{ $vendor->surname ?? ''}}</label>
+                            @endif
                             <div id="client_label3" class="form-group col-sm-1">
-                                <a id="route_select" href="{{ route('reportspayment.select_client') }}" title="Seleccionar Cliente"><i class="fa fa-eye"></i></a>  
+                                <a id="route_select" href="{{ route('reportspayment.select_client') }}" title="Seleccionar"><i class="fa fa-eye"></i></a>  
                             </div>
-                            </div>
+                        </div>
+                       
                     </form>
                         <div class="embed-responsive embed-responsive-16by9">
                             <iframe class="embed-responsive-item" src="{{ route('reportspayment.payment_pdf',[$coin ?? 'bolivares',$date_begin ?? $datenow,$date_end ?? $datenow,$typeperson ?? 'ninguno',$client->id ?? $provider->id ?? null]) }}" allowfullscreen></iframe>
@@ -148,7 +159,13 @@
                 $("#client_label1").show();
                 $("#client_label2").show();
                 $("#client_label3").show();
+            }else if(type == 'vendor'){
+                document.getElementById("route_select").href = "{{ route('reportspayment.select_vendor') }}";
+                $("#client_label1").show();
+                $("#client_label2").show();
+                $("#client_label3").show();
             }else{
+                document.getElementById("route_select").href = "{{ route('reportspayment.select_client') }}";
                 $("#client_label1").show();
                 $("#client_label2").show();
                 $("#client_label3").show();

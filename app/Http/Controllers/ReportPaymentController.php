@@ -24,6 +24,7 @@ class ReportPaymentController extends Controller
             $datenow = $date->format('Y-m-d');   
             $client = null; 
             $provider = null; 
+            $vendor = null; 
 
 
             if(isset($typeperson) && $typeperson == 'Cliente'){
@@ -34,13 +35,17 @@ class ReportPaymentController extends Controller
                 if(isset($id)){
                     $provider   = Provider::on(Auth::user()->database_name)->find($id);
                 }
+            }else if (isset($typeperson) && $typeperson == 'Vendedor'){
+                if(isset($id)){
+                    $vendor   = Vendor::on(Auth::user()->database_name)->find($id);
+                }
             }
             
         }elseif($users_role == '2'){
             return view('admin.index');
         }
 
-        return view('admin.reports_payment.index_payment',compact('client','datenow','typeperson','provider'));
+        return view('admin.reports_payment.index_payment',compact('client','datenow','typeperson','provider','vendor'));
       
     }
 
@@ -51,9 +56,11 @@ class ReportPaymentController extends Controller
         $type = request('type');
         $id_client = request('id_client');
         $id_provider = request('id_provider');
+        $id_vendor = request('id_vendor');
         $coin = request('coin');
         $client = null;
         $provider = null;
+        $vendor = null;
         $typeperson = 'ninguno';
 
         $date = Carbon::now();
@@ -68,9 +75,13 @@ class ReportPaymentController extends Controller
                 $provider    = Provider::on(Auth::user()->database_name)->find($id_provider);
                 $typeperson = 'Proveedor';
             }
+            if(isset($id_vendor)){
+                $vendor    = Vendor::on(Auth::user()->database_name)->find($id_vendor);
+                $typeperson = 'Vendedor';
+            }
         }
 
-        return view('admin.reports_payment.index_payment',compact('datenow','coin','date_begin','date_end','client','provider','typeperson'));
+        return view('admin.reports_payment.index_payment',compact('datenow','coin','date_begin','date_end','client','provider','vendor','typeperson'));
     }
 
     function payment_pdf($coin,$date_begin,$date_end,$typeperson,$id_client_or_provider = null)
@@ -102,6 +113,7 @@ class ReportPaymentController extends Controller
 
         $client = null;
         $provider = null;
+        $vendor = null;
         
 
         if(isset($typeperson) && ($typeperson == 'Cliente')){
@@ -136,6 +148,22 @@ class ReportPaymentController extends Controller
             
             $provider = Provider::on(Auth::user()->database_name)->find($id_client_or_provider);
 
+        }if(isset($typeperson) && ($typeperson == 'Vendedor')){
+            
+            $quotation_payments = DB::connection(Auth::user()->database_name)->table('quotations')
+            ->join('clients', 'clients.id','=','quotations.id_client')
+            ->join('quotation_payments', 'quotation_payments.id_quotation','=','quotations.id')
+            ->leftJoin('accounts', 'accounts.id','=','quotation_payments.id_account')
+            ->where('quotations.status','C')
+            ->whereRaw("(DATE_FORMAT(quotation_payments.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(quotation_payments.created_at, '%Y-%m-%d') <= ?)", 
+                [$date_begin, $date_end_consult])
+            ->where('quotations.id_vendor',$id_client_or_provider)
+            ->select('quotation_payments.*','accounts.description as account_description',
+            'quotations.number_invoice as number')
+            ->get();
+
+            $vendor = Vendor::on(Auth::user()->database_name)->find($id_client_or_provider);
+            
         }else{
             
             $quotation_payments = DB::connection(Auth::user()->database_name)->table('quotations')
@@ -159,7 +187,7 @@ class ReportPaymentController extends Controller
         }
 
 
-        $pdf = $pdf->loadView('admin.reports_payment.payment',compact('coin','quotation_payments','datenow','date_end','client','provider'));
+        $pdf = $pdf->loadView('admin.reports_payment.payment',compact('coin','quotation_payments','datenow','date_end','client','provider','vendor'));
         return $pdf->stream();
                  
     }
@@ -169,6 +197,13 @@ class ReportPaymentController extends Controller
         $clients    = Client::on(Auth::user()->database_name)->get();
     
         return view('admin.reports_payment.selectclient',compact('clients'));
+    }
+
+    public function select_vendor()
+    {
+        $vendors    = Vendor::on(Auth::user()->database_name)->get();
+    
+        return view('admin.reports_payment.selectvendor',compact('vendors'));
     }
 
    

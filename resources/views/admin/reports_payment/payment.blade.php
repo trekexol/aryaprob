@@ -31,6 +31,9 @@
   @if (isset($client))
     <h4 style="color: black; text-align: center">Cobros Realizados</h4>
     <h4 style="color: black; text-align: center">Cliente: {{ $client->name ?? '' }}</h4>
+  @elseif(isset($vendor))
+    <h4 style="color: black; text-align: center">Cobros Realizados</h4>
+    <h4 style="color: black; text-align: center">Vendedor: {{ $vendor->name ?? '' }} {{ $vendor->surname ?? '' }}</h4>
   @elseif(isset($provider))
     <h4 style="color: black; text-align: center">Pagos Realizados</h4>
     <h4 style="color: black; text-align: center">Proveedor: {{ $provider->razon_social ?? '' }}</h4>

@@ -931,6 +931,7 @@ Route::group(["prefix"=>'reportspayment'],function(){
 
     Route::get('selectclient','ReportPaymentController@select_client')->name('reportspayment.select_client');
     Route::get('selectprovider','ReportPaymentController@select_provider')->name('reportspayment.select_provider');
+    Route::get('selectvendor','ReportPaymentController@select_vendor')->name('reportspayment.select_vendor');
 });
 
 
