@@ -122,12 +122,13 @@ class ReportPaymentController extends Controller
             ->join('clients', 'clients.id','=','quotations.id_client')
             ->join('quotation_payments', 'quotation_payments.id_quotation','=','quotations.id')
             ->leftJoin('accounts', 'accounts.id','=','quotation_payments.id_account')
+            ->leftJoin('vendors', 'vendors.id','=','quotations.id_vendor')
             ->where('quotations.status','C')
             ->whereRaw("(DATE_FORMAT(quotation_payments.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(quotation_payments.created_at, '%Y-%m-%d') <= ?)", 
                 [$date_begin, $date_end_consult])
             ->where('quotations.id_client',$id_client_or_provider)
             ->select('quotation_payments.*','accounts.description as account_description',
-            'quotations.number_invoice as number')
+            'quotations.number_invoice as number','vendors.name as name_vendor','vendors.surname as surname_vendor')
             ->orderBy('quotations.number_invoice','desc')
             ->get();
 
@@ -173,11 +174,12 @@ class ReportPaymentController extends Controller
             ->join('clients', 'clients.id','=','quotations.id_client')
             ->join('quotation_payments', 'quotation_payments.id_quotation','=','quotations.id')
             ->leftJoin('accounts', 'accounts.id','=','quotation_payments.id_account')
+            ->leftJoin('vendors', 'vendors.id','=','quotations.id_vendor')
             ->where('quotations.status','C')
             ->where('quotation_payments.status','1')
             ->whereRaw("(DATE_FORMAT(quotation_payments.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(quotation_payments.created_at, '%Y-%m-%d') <= ?)", 
                 [$date_begin, $date_end_consult])
-            ->select('quotation_payments.*','accounts.description as account_description','quotations.number_invoice as number')
+            ->select('quotation_payments.*','accounts.description as account_description','quotations.number_invoice as number','vendors.name as name_vendor','vendors.surname as surname_vendor')
             ->orderBy('quotations.number_invoice','desc')
             ->get();
 

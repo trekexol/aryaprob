@@ -36,7 +36,7 @@ Route::post('asignacnioasd','UserController@assigndatabase')->name('assigndataba
 
 Auth::routes();
 
-Route::get('/home', 'BackendController@index')->name('home');
+Route::get('/home/{coin?}', 'BackendController@index')->name('home');
 
 Route::group(["prefix"=>'users'],function(){
     Route::get('/','UserController@index')->name('users');
