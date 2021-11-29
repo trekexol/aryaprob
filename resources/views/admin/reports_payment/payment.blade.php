@@ -83,7 +83,9 @@
         <th style="text-align: center; font-weight: normal; border-color: white;"></th>
         <th style="text-align: center; font-weight: normal; border-color: white;"></th>
         <th style="text-align: center; font-weight: normal; border-color: white;"></th>
+        @if (empty($vendor) && empty($provider))
         <th style="text-align: center; font-weight: normal; border-color: white;"></th>
+        @endif
         <th style="text-align: center; font-weight: normal; border-color: white; border-right-color: black;"></th>
         
         <th style="text-align: right; font-weight: normal;">{{ number_format(($total_amount ?? 0), 2, ',', '.') }}</th>
