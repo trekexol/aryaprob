@@ -22,7 +22,7 @@ class BackendController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index($coin = null)
     {
         $user       =   auth()->user();
         $users_role =   $user->role_id;
@@ -169,7 +169,7 @@ class BackendController extends Controller
             return view('admin.index',compact('account_activo','account_pasivo','account_patrimonio','account_ingresos'
             ,'account_costos','account_gastos','account_cuentas_por_pagar','account_cuentas_por_cobrar','account_prestamos'
             ,'account_banco1','account_banco1_name','account_banco2','account_banco2_name','account_banco3','account_banco3_name'
-            ,'date','totals_per_month','totalIngresoPieChart','totalCostoPieChart','totalGastoPieChart'));
+            ,'date','totals_per_month','totalIngresoPieChart','totalCostoPieChart','totalGastoPieChart','coin'));
 
            
         }else{

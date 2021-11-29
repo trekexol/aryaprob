@@ -53,6 +53,9 @@
         <th style="text-align: center; width:15%;">Tipo Pago</th>
         <th style="text-align: center; width:20%;">Cuenta</th>
         <th style="text-align: center; width:20%;">Referencia</th>
+        @if (empty($vendor) && empty($provider))
+        <th style="text-align: center; width:20%;">Vendedor</th>
+        @endif
         <th style="text-align: center;">Monto</th>
       </tr> 
       @foreach ($quotation_payments as $quotation)
@@ -68,6 +71,9 @@
           <th style="text-align: center; font-weight: normal;">{{ $quotation->payment_type ?? ''}}</th>
           <th style="text-align: center; font-weight: normal;">{{ $quotation->account_description ?? ''}}</th>
           <th style="text-align: center; font-weight: normal;">{{ $quotation->reference ?? ''}}</th>
+          @if (empty($vendor) && empty($provider))
+            <th style="text-align: center; font-weight: normal;">{{ $quotation->name_vendor ?? ''}}{{ $quotation->surname_vendor ?? ''}}</th>
+          @endif
           <th style="text-align: right; font-weight: normal;">{{ number_format(($quotation->amount ?? 0), 2, ',', '.') }}</th>
         </tr> 
       @endforeach 
@@ -77,7 +83,9 @@
         <th style="text-align: center; font-weight: normal; border-color: white;"></th>
         <th style="text-align: center; font-weight: normal; border-color: white;"></th>
         <th style="text-align: center; font-weight: normal; border-color: white;"></th>
+        <th style="text-align: center; font-weight: normal; border-color: white;"></th>
         <th style="text-align: center; font-weight: normal; border-color: white; border-right-color: black;"></th>
+        
         <th style="text-align: right; font-weight: normal;">{{ number_format(($total_amount ?? 0), 2, ',', '.') }}</th>
       </tr> 
     </table>
