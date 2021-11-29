@@ -461,7 +461,7 @@ class PDF2Controller extends Controller
         
     }
 
-    function deliverynotemediacarta($id_quotation,$coin,$iva,$date)
+    function deliverynotemediacarta($id_quotation,$coin,$iva,$date_delivery)
     {
       
 
@@ -584,7 +584,7 @@ class PDF2Controller extends Controller
                 $quotation->amount_with_iva = ($quotation->amount + $quotation->amount_iva);
                 
                 
-                $quotation->date_delivery_note = $date;
+                $quotation->date_delivery_note = $date_delivery;
                 $quotation->save();
 
                
