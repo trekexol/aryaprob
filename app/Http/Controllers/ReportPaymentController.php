@@ -29,15 +29,15 @@ class ReportPaymentController extends Controller
 
             if(isset($typeperson) && $typeperson == 'Cliente'){
                 if(isset($id)){
-                    $client     = Client::on(Auth::user()->database_name)->find($id);
+                    $client = Client::on(Auth::user()->database_name)->find($id);
                 }
             }else if (isset($typeperson) && $typeperson == 'Proveedor'){
                 if(isset($id)){
-                    $provider   = Provider::on(Auth::user()->database_name)->find($id);
+                    $provider = Provider::on(Auth::user()->database_name)->find($id);
                 }
             }else if (isset($typeperson) && $typeperson == 'Vendedor'){
                 if(isset($id)){
-                    $vendor   = Vendor::on(Auth::user()->database_name)->find($id);
+                    $vendor = Vendor::on(Auth::user()->database_name)->find($id);
                 }
             }
             

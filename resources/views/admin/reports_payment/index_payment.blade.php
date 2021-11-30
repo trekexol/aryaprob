@@ -13,7 +13,7 @@
                 <input type="hidden" name="id_vendor" value="{{$vendor->id ?? null}}" readonly>
 
                 <div class="card-header text-center h4">
-                        Pagos Realizados
+                        Pagos Realizados;
                 </div>
 
                 <div class="card-body">
@@ -118,6 +118,31 @@
 @section('javascript')
 
     <script>
+
+     /*if(type == 'todo'){
+                $("#client_label1").hide();
+                $("#client_label2").hide();
+                $("#client_label3").hide();
+            }else if(type == 'provider'){
+               
+                $("#client_label1").show();
+                $("#client_label2").show();
+                $("#client_label3").show();
+            }else if(type == 'vendor'){
+                
+                $("#client_label1").show();
+                $("#client_label2").show();
+                $("#client_label3").show();
+            }else{
+               
+                $("#client_label1").show();
+                $("#client_label2").show();
+                $("#client_label3").show();
+            } */
+
+
+
+
     $('#dataTable').DataTable({
         "ordering": false,
         "order": [],
@@ -128,44 +153,74 @@
     $(".sidebar").toggleClass("toggled");
     if ($(".sidebar").hasClass("toggled")) {
         $('.sidebar .collapse').collapse('hide');
+
     };
 
     let client  = "<?php echo $client->name ?? 0 ?>";  
     let vendor  = "<?php echo $vendor->name ?? 0 ?>"; 
+    let provider  = "<?php echo $provider->name ?? 0 ?>";
+
+
 
     if(client != 0){
+        document.getElementById("route_select").href = "{{ route('reportspayment.select_client') }}";
         $("#client_label1").show();
         $("#client_label2").show();
         $("#client_label3").show();
-    }else if(vendor != 0){
+    }
+    if(vendor != 0){
+        document.getElementById("route_select").href = "{{ route('reportspayment.select_vendor') }}";
         $("#client_label1").show();
         $("#client_label2").show();
         $("#client_label3").show();
-    }else{
-        $("#client_label1").hide();
-        $("#client_label2").hide();
-        $("#client_label3").hide();
     }
     
+    if(provider != 0){
+        document.getElementById("route_select").href = "{{ route('reportspayment.select_provider') }}";
+        $("#client_label1").show();
+        $("#client_label2").show();
+        $("#client_label3").show();
+    }
+           
+           type = $('#type').val();
+          
+          
+          if(type == 'todo'){
+                $("#client_label1").hide();
+                $("#client_label2").hide();
+                $("#client_label3").hide();
+          }
+          if(type == 'provider'){
+            document.getElementById("route_select").href = "{{ route('reportspayment.select_provider') }}";
+            $("#client_label1").show();
+            $("#client_label2").show();
+            $("#client_label3").show();
+          }
+
 
     $("#type").on('change',function(){
             type = $(this).val();
             
             if(type == 'todo'){
+                document.getElementById("route_select").href = "#";
                 $("#client_label1").hide();
                 $("#client_label2").hide();
                 $("#client_label3").hide();
-            }else if(type == 'provider'){
+            }
+            if(type == 'provider'){
                 document.getElementById("route_select").href = "{{ route('reportspayment.select_provider') }}";
                 $("#client_label1").show();
                 $("#client_label2").show();
                 $("#client_label3").show();
-            }else if(type == 'vendor'){
+            }
+            if(type == 'vendor'){
                 document.getElementById("route_select").href = "{{ route('reportspayment.select_vendor') }}";
                 $("#client_label1").show();
                 $("#client_label2").show();
                 $("#client_label3").show();
-            }else{
+            }
+            
+            if(type == 'cliente'){
                 document.getElementById("route_select").href = "{{ route('reportspayment.select_client') }}";
                 $("#client_label1").show();
                 $("#client_label2").show();
