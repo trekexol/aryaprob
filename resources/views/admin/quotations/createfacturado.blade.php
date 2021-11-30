@@ -108,7 +108,7 @@
                             <label for="observation" class="col-md-2 col-form-label text-md-right">Retencion IVA:</label>
 
                             <div class="col-md-3">
-                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ number_format($quotation->retencion_iva / ($bcv ?? 1), 2, ',', '.') ?? 0 }}" readonly required autocomplete="observation">
+                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ number_format(bcdiv(($quotation->retencion_iva), '1', 2)/ ($bcv ?? 1), 2, ',', '.') ?? 0 }}" readonly required autocomplete="observation">
 
                                 @error('observation')
                                     <span class="invalid-feedback" role="alert">

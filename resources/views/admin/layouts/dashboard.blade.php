@@ -100,7 +100,7 @@
      </div>
  </div>
 
-
+ 
    <!-- END SCRIPTS INDEX -->
         <!-- Bootstrap core JavaScript-->
         <script src="{{asset('vendor/sb-admin/vendor/jquery/jquery.min.js')}}"></script>
@@ -115,9 +115,7 @@
         <!-- Page level plugins -->
         <script src="{{asset('vendor/sb-admin/vendor/chart.js/Chart.min.js')}}"></script>
 
-        <!-- Page level custom scripts -->
-        <script src="{{asset('vendor/sb-admin/js/demo/chart-area-demo.js')}}"></script>
-        <script src="{{asset('vendor/sb-admin/js/demo/chart-pie-demo.js')}}"></script>
+        
     <!-- END SCRIPTS INDEX -->
 
      <!-- SCRIPTS FOR TABLES-->
@@ -134,7 +132,7 @@
         <!-- Para las mascaras -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous"></script>
 
-
+  @yield('piechart')
   @yield('javascript1')
   @yield('javascript2')
   @yield('javascript')
@@ -162,6 +160,7 @@
   @yield('validacion_vendor')
   @yield('javascript_iva_payment')
   @yield('imports')
+  
 
   <script>
     function soloNumeros(idCampo){
