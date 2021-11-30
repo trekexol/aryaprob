@@ -30,6 +30,10 @@ class BackendController extends Controller
         
         if($users_role == 1){
 
+            if(empty($coin)){
+                $coin = 'bolivares';
+            }
+
             $accounts = $this->calculation($coin ?? 'bolivares');
             $account_activo = 0;
             $account_pasivo = 0;
@@ -111,17 +115,17 @@ class BackendController extends Controller
                 ->where('code_five', 0)
                 ->first();
                 
-                $totals->push($calculate->calculationOneAccount($accountActivo,$date->startOfYear()->format('Y-m-d'),$date->endOfMonth()->format('Y-m-d')));
-
-                $totals_per_month[$mes] = $totals[$mes]->debe;
+                $totals->push($calculate->calculate_account($accountActivo,$coin,$date->startOfYear()->format('Y-m-d'),$date->endOfMonth()->format('Y-m-d')));
+               
+                $totals_per_month[$mes] = $totals[$mes]->debe ?? null;
                 $mes += 1;
 
                 while($mes <= 12){
                     
-                    $result = $calculate->calculationOneAccount($accountActivo,$date->addDay(1)->format('Y-m-d'),$date->endOfMonth()->format('Y-m-d'));
+                    $result = $calculate->calculate_account($accountActivo,$coin,$date->addDay(1)->format('Y-m-d'),$date->endOfMonth()->format('Y-m-d'));
                     $totals->push($result);
                 
-                    $totals_per_month[$mes] = $totals[$mes]->debe + $totals[$mes]->balance_previus - $totals[$mes]->haber;
+                    $totals_per_month[$mes] = ($totals[$mes]->debe ?? 0) + ($totals[$mes]->balance_previus ?? 0) - ($totals[$mes]->haber ?? 0);
                     $mes += 1;
                 }
             /*------------------------------------- */
@@ -142,29 +146,27 @@ class BackendController extends Controller
                     ->where('code_four', 0)
                     ->where('code_five', 0)
                     ->first();
-                $accountGastos= Account::on(Auth::user()->database_name)->where('code_one',5)
+                $accountGastos= Account::on(Auth::user()->database_name)->where('code_one',6)
                     ->where('code_two', 0)
                     ->where('code_three', 0)
                     ->where('code_four', 0)
                     ->where('code_five', 0)
                     ->first();
 
-                //dd();
-                
-                $IngresoPieChart = $calculate->calculationOneAccount($accountIngresos,$date->startOfYear(),$date->endOfYear());
-
-                
+                $IngresoPieChart = $calculate->calculate_account($accountIngresos,$coin,$date->startOfYear()->format("Y-m-d"),$date->endOfYear()->format("Y-m-d"));
 
                 $totalIngresoPieChart = abs($IngresoPieChart->debe + $IngresoPieChart->balance_previus - $IngresoPieChart->haber);
 
-                $CostoPieChart = $calculate->calculationOneAccount($accountCostos,$date->startOfYear(),$date->endOfYear());
+                $CostoPieChart = $calculate->calculate_account($accountCostos,$coin,$date->startOfYear()->format("Y-m-d"),$date->endOfYear()->format("Y-m-d"));
 
                 $totalCostoPieChart = abs($CostoPieChart->debe + $CostoPieChart->balance_previus - $CostoPieChart->haber);
 
-                $GastoPieChart = $calculate->calculationOneAccount($accountGastos,$date->startOfYear(),$date->endOfYear());
+                $GastoPieChart = $calculate->calculate_account($accountGastos,$coin,$date->startOfYear()->format("Y-m-d"),$date->endOfYear()->format("Y-m-d"));
 
                 $totalGastoPieChart = abs($GastoPieChart->debe + $GastoPieChart->balance_previus - $GastoPieChart->haber);
             /*------------------------------ */
+
+           
 
             return view('admin.index',compact('account_activo','account_pasivo','account_patrimonio','account_ingresos'
             ,'account_costos','account_gastos','account_cuentas_por_pagar','account_cuentas_por_cobrar','account_prestamos'
@@ -177,10 +179,7 @@ class BackendController extends Controller
         }
     }
 
-    public function calculate_all_year(){
-
-    }
-
+    
 
     public function calculation_old($coin)
     {
