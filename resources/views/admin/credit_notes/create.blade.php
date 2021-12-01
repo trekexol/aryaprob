@@ -327,7 +327,7 @@
                                             ?>
                                                 <tr>
                                                 <td style="text-align: right">{{ $var->code}}</td>
-                                                @if(isset($var->retiene_iva) && ($var->retiene_iva == 1))
+                                                @if($var->retiene_iva == 1)
                                                     <td style="text-align: right">{{ $var->description}} (E)</td>
                                                 @else
                                                     <td style="text-align: right">{{ $var->description}}</td>
