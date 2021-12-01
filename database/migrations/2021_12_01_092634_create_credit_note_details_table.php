@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateQuotationProductsTable extends Migration
+class CreateCreditNoteDetailsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateQuotationProductsTable extends Migration
      */
     public function up()
     {
-        Schema::create('quotation_products', function (Blueprint $table) {
+        Schema::create('credit_note_details', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('id_quotation');
+            $table->unsignedBigInteger('id_credit_note');
             $table->unsignedBigInteger('id_inventory');
 
             $table->integer('amount');
@@ -23,12 +23,12 @@ class CreateQuotationProductsTable extends Migration
             $table->decimal('price',64,4);
             $table->decimal('rate',64,2);
 
-            $table->boolean('retiene_iva');
-            $table->boolean('retiene_islr');
+            $table->boolean('exento');
+            $table->boolean('islr');
 
             $table->string('status',1);
 
-            $table->foreign('id_quotation')->references('id')->on('quotations');
+            $table->foreign('id_credit_note')->references('id')->on('credit_notes');
             $table->foreign('id_inventory')->references('id')->on('inventories');
             $table->timestamps();
         });
@@ -41,6 +41,6 @@ class CreateQuotationProductsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('quotation_products');
+        Schema::dropIfExists('credit_note_details');
     }
 }

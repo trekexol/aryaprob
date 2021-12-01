@@ -110,7 +110,7 @@
                             <label for="rate" id="rate_label" class="col-md-2 col-form-label text-md-right">Tasa del Dia</label>
 
                             <div class="col-md-4">
-                                <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ $rate }}" autocomplete="rate">
+                                <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ number_format($rate ?? 0, 2, ',', '.')}}" autocomplete="rate">
 
                                 @error('rate')
                                     <span class="invalid-feedback" role="alert">
