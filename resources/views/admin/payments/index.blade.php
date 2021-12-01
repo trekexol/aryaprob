@@ -74,6 +74,7 @@
             <tr> 
                 <th class="text-center">Fecha</th>
                 <th class="text-center">Nº</th>
+                <th class="text-center">Nº Factura</th>
                 <th class="text-center">Referencia</th>
                 <th class="text-center">Tipo de Pago</th>
                 <th class="text-center">Monto</th>
@@ -91,6 +92,7 @@
                             <td class="text-center font-weight-bold">
                                 <a href="{{ route('payments.movement',$payment_quotation->id_quotation ?? -1) }}" title="Ver Movimiento" class="font-weight-bold text-dark">{{ $payment_quotation->id }}</a>
                             </td>
+                            <td class="text-center font-weight-bold">{{$payment_quotation->number_invoice ?? ''}}</td>
                             
                             <td class="text-center font-weight-bold">{{ $payment_quotation->reference}}</td>
                             <td class="text-center font-weight-bold">{{ $payment_quotation->type}}</td>

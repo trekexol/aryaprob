@@ -31,10 +31,14 @@ class PaymentController extends Controller
         $datebeginyear = $date->firstOfYear()->format('Y-m-d');
         
         $payment_quotations = QuotationPayment::on(Auth::user()->database_name)
+                                ->join('quotations','quotations.id','quotation_payments.id_quotation')
                                 ->whereRaw(
-                                    "(DATE_FORMAT(created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(created_at, '%Y-%m-%d') <= ?)", 
+                                    "(DATE_FORMAT(quotation_payments.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(quotation_payments.created_at, '%Y-%m-%d') <= ?)", 
                                     [$datebeginyear, $datenow])
-                                ->where('status','1')->orderBy('created_at','desc')->get();
+                                ->where('quotation_payments.status','1')
+                                ->select('quotation_payments.*','quotations.number_invoice as number_invoice')
+                                ->orderBy('quotation_payments.created_at','desc')
+                                ->get();
 
         foreach($payment_quotations as $payment_quotation){
 
