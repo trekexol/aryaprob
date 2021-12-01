@@ -23,10 +23,10 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header text-center font-weight-bold h3">Registro de Cotización</div>
+                <div class="card-header text-center font-weight-bold h3">Registro de Nota de Crédito</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('quotations.store') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('creditnotes.store') }}" enctype="multipart/form-data">
                         @csrf
                        
                         <input id="id_user" type="hidden" class="form-control @error('id_user') is-invalid @enderror" name="id_user" value="{{ Auth::user()->id }}" required autocomplete="id_user">
@@ -35,11 +35,11 @@
                        
                         
                         <div class="form-group row">
-                            <label for="date_quotation" class="col-md-2 col-form-label text-md-right">Fecha de Cotización</label>
+                            <label for="date_creditnote" class="col-md-2 col-form-label text-md-right">Fecha</label>
                             <div class="col-md-3">
-                                <input id="date_quotation" type="date" class="form-control @error('date_quotation') is-invalid @enderror" name="date_quotation" value="{{ $datenow }}" required autocomplete="date_quotation">
+                                <input id="date_creditnote" type="date" class="form-control @error('date_creditnote') is-invalid @enderror" name="date_creditnote" value="{{ $datenow }}" required autocomplete="date_creditnote">
     
-                                @error('date_quotation')
+                                @error('date_creditnote')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -59,11 +59,8 @@
                             
                             
                         </div>
-
                         <div class="form-group row">
-                           
-                            
-                            <label for="clients" class="col-md-2 col-form-label text-md-right">Cliente</label>
+                            <label for="clients" class="col-md-2 col-form-label text-md-right">Factura (Opcional)</label>
                             <div class="col-md-3">
                                 <input id="client" type="text" class="form-control @error('client') is-invalid @enderror" name="client" value="{{ $client->name ?? '' }}" readonly required autocomplete="client">
     
@@ -74,7 +71,7 @@
                                 @enderror
                             </div>
                             <div class="form-group col-md-1">
-                                <a href="{{ route('quotations.selectclient') }}" title="Seleccionar Cliente"><i class="fa fa-eye"></i></a>  
+                                <a href="{{ route('creditnotes.selectclient') }}" title="Seleccionar Cliente"><i class="fa fa-eye"></i></a>  
                             </div>
                             <label for="transports" class="col-md-2 col-form-label text-md-right">Transporte / Tipo de Entrega</label>
 
@@ -90,6 +87,22 @@
                            
                         </div>
 
+                        <div class="form-group row">
+                            <label for="clients" class="col-md-2 col-form-label text-md-right">Cliente</label>
+                            <div class="col-md-3">
+                                <input id="client" type="text" class="form-control @error('client') is-invalid @enderror" name="client" value="{{ $client->name ?? '' }}" readonly required autocomplete="client">
+    
+                                @error('client')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-1">
+                                <a href="{{ route('creditnotes.selectclient') }}" title="Seleccionar Cliente"><i class="fa fa-eye"></i></a>  
+                            </div>
+                        </div>
+
                         
                         <div class="form-group row">
                            <label for="vendors" class="col-md-2 col-form-label text-md-right">Vendedor</label>
@@ -103,7 +116,7 @@
                                     @enderror
                             </div>
                             <div class="form-group col-md-1">
-                                <a href="{{ route('quotations.selectvendor',$client->id ?? -1) }}" title="Seleccionar Vendedor"><i class="fa fa-eye"></i></a>  
+                                <a href="{{ route('creditnotes.selectvendor',$client->id ?? -1) }}" title="Seleccionar Vendedor"><i class="fa fa-eye"></i></a>  
                             </div>
                            
                         </div>

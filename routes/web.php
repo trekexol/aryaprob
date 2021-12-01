@@ -964,3 +964,49 @@ Route::group(["prefix"=>'historialanticipo'],function(){
     Route::post('store','Historial\HistorialAnticipoController@store')->name('historial_anticipo.store');
     Route::get('pdf/{date_begin}/{date_end}/{id_user?}','Historial\HistorialAnticipoController@pdf')->name('historial_anticipo.pdf');
 });
+
+Route::group(["prefix"=>'creditnotes'],function(){
+    Route::get('/','CreditNoteController@index')->name('creditnotes');
+    Route::get('register/{id_creditnote}/{coin}','CreditNoteController@create')->name('creditnotes.create');
+    Route::post('store','CreditNoteController@store')->name('creditnotes.store');
+    
+    Route::delete('{id}/delete','CreditNoteController@destroy')->name('creditnotes.delete');
+
+    Route::get('registercreditnote','CreditNoteController@createcreditnote')->name('creditnotes.createcreditnote');
+
+    Route::get('registercreditnote/{id_client}','CreditNoteController@createcreditnoteclient')->name('creditnotes.createcreditnoteclient');
+    Route::get('selectclient','CreditNoteController@selectclient')->name('creditnotes.selectclient');
+
+    Route::get('registercreditnote/{id_client}/{id_vendor}','CreditNoteController@createcreditnotevendor')->name('creditnotes.createcreditnotevendor');
+    Route::get('selectvendor/{id_client}','CreditNoteController@selectvendor')->name('creditnotes.selectvendor');
+
+
+    Route::get('selectproduct/{id_creditnote}/{coin}/{type}','CreditNoteController@selectproduct')->name('creditnotes.selectproduct');
+    Route::get('registerproduct/{id_creditnote}/{coin}/{id_product}','CreditNoteController@createproduct')->name('creditnotes.createproduct');
+
+
+    Route::post('storeproduct','CreditNoteController@storeproduct')->name('creditnotes.storeproduct');
+
+    Route::get('facturar/{id_creditnote}/{coin}','FacturarController@createfacturar')->name('creditnotes.createfacturar');
+
+    Route::post('storefactura','FacturarController@storefactura')->name('creditnotes.storefactura');
+    Route::get('facturado/{id_creditnote}/{coin}/{reverso?}','FacturarController@createfacturado')->name('creditnotes.createfacturado');
+
+    Route::get('listinventory/{var?}','CreditNoteController@listinventory')->name('creditnotes.listinventory');
+
+
+    Route::get('creditnoteproduct/{id}/{coin}/edit','CreditNoteController@editcreditnoteproduct')->name('creditnotes.productedit');
+    Route::patch('productupdate/{id}/update','CreditNoteController@updatecreditnoteproduct')->name('creditnotes.productupdate');
+
+   
+    Route::get('facturarafter/{id_creditnote}/{coin}','FacturarController@createfacturar_after')->name('creditnotes.createfacturar_after');
+
+    Route::get('refreshrate/{id_creditnote}/{coin}/{rate}','CreditNoteController@refreshrate')->name('creditnotes.refreshrate');
+
+    Route::delete('deleteproduct','CreditNoteController@deleteProduct')->name('creditnotes.deleteProduct');
+    Route::delete('deletecreditnote','CreditNoteController@deletecreditnote')->name('creditnotes.deletecreditnote');
+
+    Route::delete('reversarcreditnote','CreditNoteController@reversar_creditnote')->name('creditnotes.reversarcreditnote');
+
+
+});

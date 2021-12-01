@@ -375,12 +375,6 @@ class QuotationController extends Controller
     }
     
 
-    /**
-        * Store a newly created resource in storage.
-        *
-        * @param  \Illuminate\Http\Request  $request
-        * @return \Illuminate\Http\Response
-        */
     public function store(Request $request)
     {
     
@@ -545,27 +539,7 @@ class QuotationController extends Controller
 
         return redirect('quotations/register/'.$var->id_quotation.'/'.$coin.'')->withSuccess('Producto agregado Exitosamente!');
     }
-    /**
-        * Display the specified resource.
-        *
-        * @param  int  $id
-        * @return \Illuminate\Http\Response
-        */
-
    
-
-
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-        * Show the form for editing the specified resource.
-        *
-        * @param  int  $id
-        * @return \Illuminate\Http\Response
-        */
     public function edit($id)
     {
         $quotation = quotation::on(Auth::user()->database_name)->find($id);
@@ -609,14 +583,6 @@ class QuotationController extends Controller
     
     }
     
-
-    /**
-        * Update the specified resource in storage.
-        *
-        * @param  \Illuminate\Http\Request  $request
-        * @param  int  $id
-        * @return \Illuminate\Http\Response
-        */
     public function update(Request $request, $id)
     {
 
@@ -695,14 +661,14 @@ class QuotationController extends Controller
 
 
         return redirect('/quotations')->withSuccess('Actualizacion Exitosa!');
-        }
+    }
 
 
 
         
 
-        public function updatequotationproduct(Request $request, $id)
-        { 
+    public function updatequotationproduct(Request $request, $id)
+    { 
 
            
             $data = request()->validate([
@@ -773,36 +739,31 @@ class QuotationController extends Controller
         
             return redirect('/quotations/register/'.$var->id_quotation.'/'.$coin.'')->withSuccess('Actualizacion Exitosa!');
         
-        }
+    }
 
 
-        public function refreshrate($id_quotation,$coin,$rate)
-        { 
-            $sin_formato_rate = str_replace(',', '.', str_replace('.', '', $rate));
+    public function refreshrate($id_quotation,$coin,$rate)
+    { 
+        $sin_formato_rate = str_replace(',', '.', str_replace('.', '', $rate));
 
-            $quotation = Quotation::on(Auth::user()->database_name)->find($id_quotation);
+        $quotation = Quotation::on(Auth::user()->database_name)->find($id_quotation);
 
-            QuotationProduct::on(Auth::user()->database_name)->where('id_quotation',$id_quotation)
-                                    ->update(['rate' => $sin_formato_rate]);
+        QuotationProduct::on(Auth::user()->database_name)->where('id_quotation',$id_quotation)
+                                ->update(['rate' => $sin_formato_rate]);
+    
+
+        Quotation::on(Auth::user()->database_name)->where('id',$id_quotation)
+                                ->update(['bcv' => $sin_formato_rate]);
+
+        $historial_quotation = new HistorialQuotationController();
+
+        $historial_quotation->registerAction($quotation,"quotation","Actualizó la tasa: ".$rate." / tasa antigua: ".number_format($quotation->bcv, 2, ',', '.'));
         
+        return redirect('/quotations/register/'.$id_quotation.'/'.$coin.'')->withSuccess('Actualizacion de Tasa Exitosa!');
+    
+    }
 
-            Quotation::on(Auth::user()->database_name)->where('id',$id_quotation)
-                                    ->update(['bcv' => $sin_formato_rate]);
-
-            $historial_quotation = new HistorialQuotationController();
-
-            $historial_quotation->registerAction($quotation,"quotation","Actualizó la tasa: ".$rate." / tasa antigua: ".number_format($quotation->bcv, 2, ',', '.'));
-            
-            return redirect('/quotations/register/'.$id_quotation.'/'.$coin.'')->withSuccess('Actualizacion de Tasa Exitosa!');
-        
-        }
-
-    /**
-        * Remove the specified resource from storage.
-        *
-        * @param  int  $id
-        * @return \Illuminate\Http\Response
-        */
+ 
     public function deleteProduct(Request $request)
     {
         
