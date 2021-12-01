@@ -232,7 +232,7 @@ class QuotationController extends Controller
                                 ->where('quotation_products.id_quotation',$id_quotation)
                                 ->whereIn('quotation_products.status',['1','C'])
                                 ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.id as quotation_products_id','inventories.code as code','quotation_products.discount as discount',
-                                'quotation_products.amount as amount_quotation')
+                                'quotation_products.amount as amount_quotation','quotation_products.retiene_iva as retiene_iva')
                                 ->get(); 
                 
                 if(isset($id_inventory)){
