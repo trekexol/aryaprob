@@ -969,15 +969,11 @@ Route::group(["prefix"=>'creditnotes'],function(){
     Route::get('/','CreditNoteController@index')->name('creditnotes');
     Route::get('register/{id_creditnote}/{coin}','CreditNoteController@create')->name('creditnotes.create');
     Route::post('store','CreditNoteController@store')->name('creditnotes.store');
-    
     Route::delete('{id}/delete','CreditNoteController@destroy')->name('creditnotes.delete');
 
-    Route::get('registercreditnote','CreditNoteController@createcreditnote')->name('creditnotes.createcreditnote');
-
-    Route::get('registercreditnote/{id_client}','CreditNoteController@createcreditnoteclient')->name('creditnotes.createcreditnoteclient');
+   
+    Route::get('registercreditnote/{id_invoice?}/{id_client?}/{id_vendor?}','CreditNoteController@createcreditnote')->name('creditnotes.createcreditnote');
     Route::get('selectclient','CreditNoteController@selectclient')->name('creditnotes.selectclient');
-
-    Route::get('registercreditnote/{id_client}/{id_vendor}','CreditNoteController@createcreditnotevendor')->name('creditnotes.createcreditnotevendor');
     Route::get('selectvendor/{id_client}','CreditNoteController@selectvendor')->name('creditnotes.selectvendor');
 
 
@@ -1008,5 +1004,6 @@ Route::group(["prefix"=>'creditnotes'],function(){
 
     Route::delete('reversarcreditnote','CreditNoteController@reversar_creditnote')->name('creditnotes.reversarcreditnote');
 
+    Route::get('selectinvoice','CreditNoteController@selectinvoice')->name('creditnotes.selectinvoice');
 
 });

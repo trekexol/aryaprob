@@ -56,23 +56,8 @@
                                     </span>
                                 @enderror
                             </div>
-                            
-                            
                         </div>
                         <div class="form-group row">
-                            <label for="clients" class="col-md-2 col-form-label text-md-right">Factura (Opcional)</label>
-                            <div class="col-md-3">
-                                <input id="client" type="text" class="form-control @error('client') is-invalid @enderror" name="client" value="{{ $client->name ?? '' }}" readonly required autocomplete="client">
-    
-                                @error('client')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            <div class="form-group col-md-1">
-                                <a href="{{ route('creditnotes.selectclient') }}" title="Seleccionar Cliente"><i class="fa fa-eye"></i></a>  
-                            </div>
                             <label for="transports" class="col-md-2 col-form-label text-md-right">Transporte / Tipo de Entrega</label>
 
                             <div class="col-md-3">
@@ -81,10 +66,34 @@
                                 @foreach($transports as $var)
                                     <option value="{{ $var->id }}">{{ $var->placa }}</option>
                                 @endforeach
-                              
                             </select>
                             </div> 
-                           
+                            <label for="transports" class="col-md-2 col-form-label text-md-right">Transporte / Tipo de Entrega</label>
+
+                            <div class="col-md-3">
+                                <select class="form-control" id="id_transport" name="id_transport">
+                                    <option selected value="-1">Ninguno</option>
+                                    @foreach($transports as $var)
+                                        <option value="{{ $var->id }}">{{ $var->placa }}</option>
+                                    @endforeach
+                                
+                                </select>
+                            </div> 
+                        </div> 
+                        <div class="form-group row">
+                            <label for="invoices" class="col-md-2 col-form-label text-md-right">Factura (Opcional)</label>
+                            <div class="col-md-3">
+                                <input id="invoice" type="text" class="form-control @error('invoice') is-invalid @enderror" name="invoice" value="{{ $invoice->number_invoice ?? '' }}" readonly required autocomplete="invoice">
+    
+                                @error('invoice')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-1">
+                                <a href="{{ route('creditnotes.selectinvoice') }}" title="Seleccionar Factura"><i class="fa fa-eye"></i></a>  
+                            </div>
                         </div>
 
                         <div class="form-group row">

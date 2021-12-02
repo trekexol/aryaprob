@@ -148,11 +148,7 @@
             'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]]
         } );
 
-        $("body").toggleClass("sidebar-toggled");
-        $(".sidebar").toggleClass("toggled");
-        if ($(".sidebar").hasClass("toggled")) {
-            $('.sidebar .collapse').collapse('hide');
-        };
+        
        
         function pdf(id_payment) {
             var nuevaVentana= window.open("{{ route('payments.pdf',['',''])}}"+"/"+id_payment+"/"+'bolivares',"ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");   

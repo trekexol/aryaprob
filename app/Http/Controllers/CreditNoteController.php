@@ -11,6 +11,7 @@ use App\Inventory;
 use App\Multipayment;
 use App\CreditNote;
 use App\CreditCoteDetail;
+use App\Quotation;
 use App\Transport;
 use App\Vendor;
 use Carbon\Carbon;
@@ -52,73 +53,33 @@ class CreditNoteController extends Controller
     * @return \Illuminate\Http\Response
     */
     
-    public function createcreditnote()
+    public function createcreditnote($id_invoice = null,$id_client = null,$id_vendor = null)
     {
         $transports     = Transport::on(Auth::user()->database_name)->get();
 
         $date = Carbon::now();
-        $datenow = $date->format('Y-m-d');    
+        $datenow = $date->format('Y-m-d');   
+        
+        $invoice = null;
+                
+        if(isset($id_invoice) && is_numeric($id_invoice)){
+            $invoice = Quotation::on(Auth::user()->database_name)->find($id_invoice);
+        }
 
-        return view('admin.credit_notes.createcreditnote',compact('datenow','transports'));
-    }
-
-    public function createcreditnoteclient($id_client)
-    {
         $client = null;
                 
-        if(isset($id_client)){
+        if(isset($id_client) && is_numeric($id_client)){
             $client = Client::on(Auth::user()->database_name)->find($id_client);
         }
-        if(isset($client)){
 
-        /* $vendors     = Vendor::on(Auth::user()->database_name)->get();*/
-
-            $transports     = Transport::on(Auth::user()->database_name)->get();
-
-            $date = Carbon::now();
-            $datenow = $date->format('Y-m-d');    
-
-            return view('admin.credit_notes.createcreditnote',compact('client','datenow','transports'));
-
-        }else{
-            return redirect('/creditnotes')->withDanger('El Cliente no existe');
-        } 
-    }
-
-    public function createcreditnotevendor($id_client,$id_vendor)
-    {
-        $client = null;
+        $vendor = null;
                 
-        if(isset($id_client)){
-            $client = Client::on(Auth::user()->database_name)->find($id_client);
+        if(isset($id_vendor) && is_numeric($id_vendor)){
+            $vendor = Vendor::on(Auth::user()->database_name)->find($id_vendor);
         }
-        if(isset($client)){
 
-            $vendor = null;
-                
-            if(isset($id_vendor)){
-                $vendor = Vendor::on(Auth::user()->database_name)->find($id_vendor);
-            }
-            if(isset($vendor)){
-
-                /* $vendors     = Vendor::on(Auth::user()->database_name)->get();*/
-
-                $transports     = Transport::on(Auth::user()->database_name)->get();
-
-                $date = Carbon::now();
-                $datenow = $date->format('Y-m-d');    
-
-                return view('admin.credit_notes.createcreditnote',compact('client','vendor','datenow','transports'));
-
-            }else{
-                return redirect('/creditnotes')->withDanger('El Vendedor no existe');
-            } 
-
-        }else{
-            return redirect('/creditnotes')->withDanger('El Cliente no existe');
-        } 
+        return view('admin.credit_notes.createcreditnote',compact('client','vendor','invoice','datenow','transports'));
     }
-
 
 
     public function create($id_creditnote,$coin)
@@ -345,8 +306,6 @@ class CreditNoteController extends Controller
             if($id_client != -1){
 
                 $vendors     = vendor::on(Auth::user()->database_name)->get();
-
-                
         
                 return view('admin.credit_notes.selectvendor',compact('vendors','id_client'));
 
@@ -362,6 +321,19 @@ class CreditNoteController extends Controller
         $clients     = Client::on(Auth::user()->database_name)->orderBy('name','asc')->get();
     
         return view('admin.credit_notes.selectclient',compact('clients'));
+    }
+    
+    public function selectInvoice()
+    {
+        $quotations     = Quotation::on(Auth::user()->database_name)
+                                    ->orderBy('number_invoice' ,'desc')
+                                    ->where('date_billing','<>',null)
+                                    ->where('status','C')
+                                    ->get();
+
+        $route = 'creditnotes.createcreditnote';
+    
+        return view('admin.selects.selectinvoice',compact('quotations','route'));
     }
     
 
