@@ -506,11 +506,7 @@
         window.location = "{{route('accounts', ['',''])}}"+"/"+coin+"/"+level;
     });
 
-        $("body").toggleClass("sidebar-toggled");
-        $(".sidebar").toggleClass("toggled");
-        if ($(".sidebar").hasClass("toggled")) {
-            $('.sidebar .collapse').collapse('hide');
-        };
+        
     
     </script> 
 

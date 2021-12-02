@@ -77,11 +77,8 @@
         'aLengthMenu': [[-1, 50, 100, 150, 200], ["Todo",50, 100, 150, 200]]
     });
 
-    $("body").toggleClass("sidebar-toggled");
-    $(".sidebar").toggleClass("toggled");
-    if ($(".sidebar").hasClass("toggled")) {
-        $('.sidebar .collapse').collapse('hide');
-    };
+    
+    
     
     </script> 
 

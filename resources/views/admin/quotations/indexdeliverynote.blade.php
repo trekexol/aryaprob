@@ -157,11 +157,7 @@
         'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]]
     });
 
-    $("body").toggleClass("sidebar-toggled");
-        $(".sidebar").toggleClass("toggled");
-        if ($(".sidebar").hasClass("toggled")) {
-            $('.sidebar .collapse').collapse('hide');
-        };
+    
 
     
     $(document).on('click','.delete',function(){
