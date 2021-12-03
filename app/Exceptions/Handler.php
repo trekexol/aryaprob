@@ -50,6 +50,8 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        return redirect('home')->withDanger('Ocurrio una Falla, contacte al Servicio Técnico !!');
+
         return parent::render($request, $exception);
     }
 }
