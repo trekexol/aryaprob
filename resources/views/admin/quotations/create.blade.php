@@ -44,7 +44,7 @@
                             </div>
                             <label for="client" class="col-md-2 col-form-label text-md-right">Cliente:</label>
                             <div class="col-md-4">
-                                <input id="client" type="text" class="form-control @error('client') is-invalid @enderror" name="client" value="{{ $quotation->clients['name'] ?? $datenow }}" readonly required autocomplete="client">
+                                <input id="client" type="text" class="form-control @error('client') is-invalid @enderror" name="client" value="{{ $quotation->clients['name'] ?? '' }}" readonly required autocomplete="client">
                                 @error('client')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>

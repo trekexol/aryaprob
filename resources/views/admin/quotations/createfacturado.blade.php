@@ -171,7 +171,7 @@
                                     </span>
                                 @enderror
                             </div>
-                            <label id="coinlabel" for="coin" class="col-md-1 col-form-label text-md-right">Taza:</label> 
+                            <label id="coinlabel" for="coin" class="col-md-1 col-form-label text-md-right">Tasa:</label> 
                             <div class="col-md-2">
                                 <input id="monto_taza" type="text" class="form-control" name="monto_taza" value="{{ number_format( $quotation->bcv ?? 1, 2,',', '.') }}" readonly> <!--By dacson-->
                             </div>                              

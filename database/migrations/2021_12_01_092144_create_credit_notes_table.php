@@ -15,7 +15,7 @@ class CreateCreditNotesTable extends Migration
     {
         Schema::create('credit_notes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('id_client');
+            $table->unsignedBigInteger('id_client')->nullable();
             $table->unsignedBigInteger('id_user');
             $table->unsignedBigInteger('id_vendor')->nullable();
             $table->unsignedBigInteger('id_transport')->nullable();

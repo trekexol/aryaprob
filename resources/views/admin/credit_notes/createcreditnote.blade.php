@@ -30,16 +30,17 @@
                         @csrf
                        
                         <input id="id_user" type="hidden" class="form-control @error('id_user') is-invalid @enderror" name="id_user" value="{{ Auth::user()->id }}" required autocomplete="id_user">
-                        <input id="id_client" type="hidden" class="form-control @error('id_client') is-invalid @enderror" name="id_client" value="{{ $client->id ?? -1  }}" required autocomplete="id_client">
+                        <input id="id_client" type="hidden" class="form-control @error('id_client') is-invalid @enderror" name="id_client" value="{{ $client->id ?? null  }}" required autocomplete="id_client">
                         <input id="id_vendor" type="hidden" class="form-control @error('id_vendor') is-invalid @enderror" name="id_vendor" value="{{ $vendor->id ?? $client->id_vendor ?? null  }}" required autocomplete="id_vendor">
+                        <input id="id_invoice" type="hidden" class="form-control @error('id_invoice') is-invalid @enderror" name="id_invoice" value="{{ $invoice->id ?? null  }}" required autocomplete="id_invoice">
                        
                         
                         <div class="form-group row">
-                            <label for="date_creditnote" class="col-md-2 col-form-label text-md-right">Fecha</label>
+                            <label for="date" class="col-md-2 col-form-label text-md-right">Fecha</label>
                             <div class="col-md-3">
-                                <input id="date_creditnote" type="date" class="form-control @error('date_creditnote') is-invalid @enderror" name="date_creditnote" value="{{ $datenow }}" required autocomplete="date_creditnote">
+                                <input id="date_begin" type="date" class="form-control @error('date') is-invalid @enderror" name="date" value="{{ $datenow }}" required autocomplete="date">
     
-                                @error('date_creditnote')
+                                @error('date')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -47,7 +48,7 @@
                             </div>
                             <label for="serie" class="col-md-3 col-form-label text-md-right">N° de Control/Serie:</label>
 
-                            <div class="col-md-3">
+                            <div class="col-md-3 ">
                                 <input id="serie" type="text" class="form-control @error('serie') is-invalid @enderror" name="serie" value="{{ old('serie') }}" autocomplete="serie">
 
                                 @error('serie')
@@ -58,17 +59,14 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="transports" class="col-md-2 col-form-label text-md-right">Transporte / Tipo de Entrega</label>
-
+                            <label for="invoices" class="col-md-2 col-form-label text-md-right">Asignar a</label>
                             <div class="col-md-3">
-                            <select class="form-control" id="id_transport" name="id_transport">
-                                <option selected value="-1">Ninguno</option>
-                                @foreach($transports as $var)
-                                    <option value="{{ $var->id }}">{{ $var->placa }}</option>
-                                @endforeach
-                            </select>
+                                <select class="form-control" id="type" name="type">
+                                    <option id="typeinvoice" selected value="Factura">Factura</option>
+                                    <option id="typeclient" value="Cliente">Cliente</option>
+                                </select>
                             </div> 
-                            <label for="transports" class="col-md-2 col-form-label text-md-right">Transporte / Tipo de Entrega</label>
+                            <label for="transports" class="col-md-2 offset-sm-1 col-form-label text-md-right">Transporte / Tipo de Entrega</label>
 
                             <div class="col-md-3">
                                 <select class="form-control" id="id_transport" name="id_transport">
@@ -80,8 +78,8 @@
                                 </select>
                             </div> 
                         </div> 
-                        <div class="form-group row">
-                            <label for="invoices" class="col-md-2 col-form-label text-md-right">Factura (Opcional)</label>
+                        <div id="invoiceform" class="form-group row">
+                            <label for="invoices" class="col-md-2 col-form-label text-md-right">Factura</label>
                             <div class="col-md-3">
                                 <input id="invoice" type="text" class="form-control @error('invoice') is-invalid @enderror" name="invoice" value="{{ $invoice->number_invoice ?? '' }}" readonly required autocomplete="invoice">
     
@@ -96,7 +94,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        <div id="clientform" class="form-group row">
                             <label for="clients" class="col-md-2 col-form-label text-md-right">Cliente</label>
                             <div class="col-md-3">
                                 <input id="client" type="text" class="form-control @error('client') is-invalid @enderror" name="client" value="{{ $client->name ?? '' }}" readonly required autocomplete="client">
@@ -113,7 +111,7 @@
                         </div>
 
                         
-                        <div class="form-group row">
+                        <div id="vendorform" class="form-group row">
                            <label for="vendors" class="col-md-2 col-form-label text-md-right">Vendedor</label>
                             <div class="col-md-3">
                                 <input id="id_vendor" type="text" class="form-control @error('id_vendor') is-invalid @enderror" name="vendor" value="{{ $vendor->name ?? $client->vendors['name'] ?? '' }}" readonly required autocomplete="id_vendor">
@@ -161,12 +159,14 @@
                         
                         <br>
                        
-                        <div class="form-group">
-                            <div class="col-md-3 offset-md-4">
+                        <div class="form-group row">
+                            <div class="col-sm-3 offset-sm-4">
                                 <button type="submit" class="btn btn-info">
-                                   
-                                  Crear Cotización
+                                  Registrar
                                 </button>
+                            </div>
+                            <div class="col-sm-2">
+                                <a href="{{ route('creditnotes') }}" id="btnvolver" name="btnvolver" class="btn btn-danger" title="volver">Volver</a>  
                             </div>
                         </div>
                         </form>      
@@ -180,9 +180,36 @@
 @endsection
 @section('validacion')
     <script>    
-	$(function(){
-        soloAlfaNumerico('code_comercial');
-        soloAlfaNumerico('description');
-    });
+        $(function(){
+            soloAlfaNumerico('code_comercial');
+            soloAlfaNumerico('description');
+        });
+
+        $("#clientform").hide();
+        $("#vendorform").hide();
+
+        if("{{isset($client)}}"){
+            $("#invoiceform").hide();
+            $("#clientform").show();
+            $("#vendorform").show();
+            document.getElementById("typeclient").selected = true;
+        }
+
+
+        $("#type").on('change',function(){
+           
+            var type = $(this).val();
+
+            if(type == "Factura"){
+                $("#invoiceform").show();
+                $("#clientform").hide();
+                $("#vendorform").hide();
+            }else{
+                $("#invoiceform").hide();
+                $("#clientform").show();
+                $("#vendorform").show();
+            }
+            
+       });
     </script>
 @endsection
