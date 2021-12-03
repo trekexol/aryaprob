@@ -25,39 +25,40 @@
     <div class="row justify-content-center" >
         <div class="col-md-12" >
             <div class="card">
-                <div class="card-header" ><h3>Registro de Cotización</h3></div>
+                <div class="card-header" ><h3>Registro de Nota de Crédito</h3></div>
 
                 <div class="card-body" >
                    
                        
                        
                         <div class="form-group row">
-                            <label for="date_quotation" class="col-md-2 col-form-label text-md-right">Fecha de Cotización:</label>
+                            <label for="date_creditnote" class="col-md-2 col-form-label text-md-right">Fecha:</label>
                             <div class="col-md-4">
-                                <input id="date_quotation" type="date" class="form-control @error('date_quotation') is-invalid @enderror" name="date_quotation" value="{{ $quotation->date_quotation ?? $datenow }}" readonly required autocomplete="date_quotation">
+                                <input id="date_creditnote" type="date" class="form-control @error('date_creditnote') is-invalid @enderror" name="date_creditnote" value="{{ $creditnote->date_creditnote ?? $datenow }}" readonly required autocomplete="date_creditnote">
     
-                                @error('date_quotation')
+                                @error('date_creditnote')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
                             </div>
-                            <label for="client" class="col-md-2 col-form-label text-md-right">Cliente:</label>
-                            <div class="col-md-4">
-                                <input id="client" type="text" class="form-control @error('client') is-invalid @enderror" name="client" value="{{ $quotation->clients['name'] ?? $datenow }}" readonly required autocomplete="client">
-                                @error('client')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
+                           
+                                <label for="client" class="col-md-2 col-form-label text-md-right">Cliente:</label>
+                                <div class="col-md-4">
+                                    <input id="client" type="text" class="form-control @error('client') is-invalid @enderror" name="client" value="{{ $creditnote->clients['name'] ?? $creditnote->quotations->clients['name'] ?? '' }}" readonly required autocomplete="client">
+                                    @error('client')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
                         </div>
 
                         <div class="form-group row">
                             <label for="serie" class="col-md-2 col-form-label text-md-right">N° de Control/Serie:</label>
 
                             <div class="col-md-3">
-                                <input id="serie" type="text" class="form-control @error('serie') is-invalid @enderror" name="serie" value="{{ $quotation->serie ?? '' }}" readonly required autocomplete="serie">
+                                <input id="serie" type="text" class="form-control @error('serie') is-invalid @enderror" name="serie" value="{{ $creditnote->serie ?? '' }}" readonly required autocomplete="serie">
 
                                 @error('serie')
                                     <span class="invalid-feedback" role="alert">
@@ -65,22 +66,24 @@
                                     </span>
                                 @enderror
                             </div>
+                           
                             <label for="vendor" class="col-md-3 col-form-label text-md-right">Vendedor:</label>
                             <div class="col-md-4">
-                                <input id="vendor" type="text" class="form-control @error('vendor') is-invalid @enderror" name="vendor" value="{{ $quotation->vendors['name'] ?? old('vendor') }}" readonly required autocomplete="vendor">
+                                <input id="vendor" type="text" class="form-control @error('vendor') is-invalid @enderror" name="vendor" value="{{ $creditnote->vendors['name'] ?? $creditnote->quotations->vendors['name']  ?? '' }}" readonly required autocomplete="vendor">
                                 @error('vendor')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
                             </div>
+                            
                         </div>
                         
                         
                         <div class="form-group row">
                             <label for="transports" class="col-md-2 col-form-label text-md-right">Transporte/ Tipo de Entrega:</label>
                             <div class="col-md-4">
-                                <input id="transport" type="text" class="form-control @error('transport') is-invalid @enderror" name="transport" value="{{ $quotation->transports['placa'] ?? old('transport') }}" readonly required autocomplete="transport"> 
+                                <input id="transport" type="text" class="form-control @error('transport') is-invalid @enderror" name="transport" value="{{ $creditnote->transports['placa'] ?? old('transport') }}" readonly required autocomplete="transport"> 
                            
                                 @error('transport')
                                     <span class="invalid-feedback" role="alert">
@@ -91,7 +94,7 @@
                             <label for="observation" class="col-md-2 col-form-label text-md-right">Observaciones:</label>
 
                             <div class="col-md-4">
-                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ $quotation->observation ?? old('observation') }}" readonly required autocomplete="observation">
+                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ $creditnote->observation ?? old('observation') }}" readonly required autocomplete="observation">
 
                                 @error('observation')
                                     <span class="invalid-feedback" role="alert">
@@ -102,29 +105,27 @@
                         </div>
                        
                         <div class="form-group row">
-                            <label for="note" class="col-md-2 col-form-label text-md-right">Nota Pie de Factura:</label>
-
+                            <label for="invoice" class="col-md-2 col-form-label text-md-right">Factura:</label>
                             <div class="col-md-4">
-                                <input id="note" type="text" class="form-control @error('note') is-invalid @enderror" name="note" value="{{ $quotation->note ?? old('note') }}" readonly required autocomplete="note">
-
-                                @error('note')
+                                <input id="invoice" type="text" class="form-control @error('invoice') is-invalid @enderror" name="invoice" value="{{ $creditnote->quotations['number_invoice'] ?? '' }}" readonly required autocomplete="invoice">
+                                @error('invoice')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
                             </div>
-                            <label  class="col-md-2 col-form-label text-md-right"><h6>Total de la<br> Cotización:</h6></label>
+                            <label  class="col-md-2 col-form-label text-md-right"><h6>Total: </h6></label>
                             <div class="col-md-2 col-form-label text-md-left">
                                 <label for="totallabel" id="total"><h3></h3></label>
                             </div>
 
                         </div>
-                        <form id="formSendProduct" method="POST" action="{{ route('quotations.storeproduct') }}" enctype="multipart/form-data" onsubmit="return validacion()">
+                        <form id="formSendProduct" method="POST" action="{{ route('creditnotes.storeproduct') }}" enctype="multipart/form-data" onsubmit="return validacion()">
                             @csrf
-                            <input id="id_quotation" type="hidden" class="form-control @error('id_quotation') is-invalid @enderror" name="id_quotation" value="{{ $quotation->id ?? -1}}" readonly required autocomplete="id_quotation">
+                            <input id="id_creditnote" type="hidden" class="form-control @error('id_creditnote') is-invalid @enderror" name="id_creditnote" value="{{ $creditnote->id ?? -1}}" readonly required autocomplete="id_creditnote">
                             <input id="id_inventory" type="hidden" class="form-control @error('id_inventory') is-invalid @enderror" name="id_inventory" value="{{ $inventory->id ?? -1 }}" readonly required autocomplete="id_inventory">
                             <input id="coinhidden" type="hidden" class="form-control @error('coin') is-invalid @enderror" name="coin" value="{{ $coin ?? 'bolivares' }}" readonly required autocomplete="coin">
-                            <input id="bcv" type="hidden" class="form-control @error('bcv') is-invalid @enderror" name="bcv" value="{{ $bcv ?? $bcv_quotation_product }}" readonly required autocomplete="bcv">
+                            <input id="bcv" type="hidden" class="form-control @error('bcv') is-invalid @enderror" name="bcv" value="{{ $bcv ?? $bcv_creditnote_product }}" readonly required autocomplete="bcv">
                             <input id="id_user" type="hidden" class="form-control @error('id_user') is-invalid @enderror" name="id_user" value="{{ Auth::user()->id }}" readonly required autocomplete="id_user">
                        
                         
@@ -146,7 +147,7 @@
                             </div>
                             <label for="rate" class="col-md-1 col-form-label text-md-right">Tasa:</label>
                             <div class="col-md-2">
-                                <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ bcdiv($quotation->bcv, '1', 2) ?? bcdiv($bcv, '1', 2) }}" required autocomplete="rate">
+                                <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ bcdiv($creditnote->bcv, '1', 2) ?? bcdiv($bcv, '1', 2) }}" required autocomplete="rate">
                                 @error('rate')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -177,7 +178,7 @@
                                         
                                         <a href="" title="Buscar Producto Por Codigo" onclick="searchCode()"><i class="fa fa-search"></i></a>  
                                     
-                                            <a href="{{ route('quotations.selectproduct',[$quotation->id,$coin,'productos']) }}" title="Productos"><i class="fa fa-eye"></i></a>  
+                                            <a href="{{ route('creditnotes.selectproduct',[$creditnote->id,$coin,'productos']) }}" title="Productos"><i class="fa fa-eye"></i></a>  
                                         
                                     </div>
                                     
@@ -245,10 +246,10 @@
                                         @endif
                                     </div>
                                     <div class="form-group col-md-2">
-                                        @if(isset($inventory->products['price']) && (isset($quotation->bcv)) && ($inventory->products['money'] != 'Bs') && ($coin == 'bolivares')) 
+                                        @if(isset($inventory->products['price']) && (isset($creditnote->bcv)) && ($inventory->products['money'] != 'Bs') && ($coin == 'bolivares')) 
                                             <?php 
                                                 
-                                                $product_Bs = $inventory->products['price'] * $quotation->bcv;
+                                                $product_Bs = $inventory->products['price'] * $creditnote->bcv;
                                                
                                             ?>
                                             <label for="cost" >Precio</label>
@@ -306,22 +307,22 @@
                                     </thead>
                                     
                                     <tbody>
-                                        @if (empty($inventories_quotations))
+                                        @if (empty($inventories_creditnotes))
                                         @else
                                         <?php
                                             $suma = 0.00;
                                         ?>
                                        
-                                            @foreach ($inventories_quotations as $var)
+                                            @foreach ($inventories_creditnotes as $var)
 
                                             <?php
                                                 if($coin != 'bolivares'){
                                                     $var->price = bcdiv(($var->price / ($var->rate ?? 1)), '1', 2);
                                                 }
                                                 
-                                                $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
+                                                $percentage = (($var->price * $var->amount_creditnote) * $var->discount)/100;
 
-                                                $total_less_percentage = ($var->price * $var->amount_quotation) - $percentage;
+                                                $total_less_percentage = ($var->price * $var->amount_creditnote) - $percentage;
 
 
                                             ?>
@@ -333,7 +334,7 @@
                                                     <td style="text-align: right">{{ $var->description}}</td>
                                                 @endif
                                                 
-                                                <td style="text-align: right">{{ $var->amount_quotation}}</td>
+                                                <td style="text-align: right">{{ $var->amount_creditnote}}</td>
                                                 <td style="text-align: right">{{number_format($var->price, 2, ',', '.')}}</td>
                                                 <td style="text-align: right">{{number_format($var->discount, 0, '', '.')}}%</td>
                                                 
@@ -345,8 +346,8 @@
                                                     
                                                 ?>
                                                     <td style="text-align: right">
-                                                        <a href="{{ route('quotations.productedit',[$var->quotation_products_id,$coin]) }}" title="Editar"><i class="fa fa-edit"></i></a>  
-                                                        <a href="#" class="delete" data-id={{$var->quotation_products_id}} data-description={{$var->description}} data-id-quotation={{$quotation->id}} data-coin={{$coin}} data-toggle="modal" data-target="#deleteModal" title="Eliminar"><i class="fa fa-trash text-danger"></i></a>  
+                                                        <a href="{{ route('creditnotes.productedit',[$var->creditnote_products_id,$coin]) }}" title="Editar"><i class="fa fa-edit"></i></a>  
+                                                        <a href="#" class="delete" data-id={{$var->creditnote_products_id}} data-description={{$var->description}} data-id-creditnote={{$creditnote->id}} data-coin={{$coin}} data-toggle="modal" data-target="#deleteModal" title="Eliminar"><i class="fa fa-trash text-danger"></i></a>  
                                                     </td>
                                             
                                                 </tr>
@@ -372,30 +373,13 @@
                                 </div>
                             </div>
                             <div class="form-group row mb-0">
-                                @if(!isset($quotation->date_delivery_note))
-                                    <div class="col-md-4">
-                                        @if($suma == 0)
-                                            <a onclick="validate()" id="btnSendNote" name="btnfacturar" class="btn btn-info" title="facturar">Nota de Entrega</a>  
-                                        @else
-                                            <a onclick="deliveryNoteSend()" id="btnSendNote" name="btnfacturar" class="btn btn-info" title="facturar">Nota de Entrega</a>  
-                                        @endif
-                                    </div>
-                                @else
-                                    <div class="col-md-1">
-                                    </div>
-                                @endif
                                 <div class="col-md-4">
                                     @if($suma == 0)
                                         <a onclick="validate()" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Facturar</a>
-                                        @if (empty($quotation->date_order))
-                                            <a onclick="validate()" id="btnorder" name="btnorder" class="btn btn-danger" title="order">Pedido</a>  
-                                        @endif  
-                                        
+                                     
                                     @else
-                                        <a href="{{ route('quotations.createfacturar',[$quotation->id,$coin]) }}" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Facturar</a>  
-                                        @if (empty($quotation->date_order))
-                                            <a href="{{ route('orders.create_order',[$quotation->id,$coin]) }}" id="btnorder" name="btnorder" class="btn btn-danger" title="order">Pedido</a>  
-                                        @endif
+                                        <a href="{{ route('creditnotes.createfacturar',[$creditnote->id,$coin]) }}" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Facturar</a>  
+                                      
                                     @endif
                                 </div>
                                
@@ -417,11 +401,11 @@
                 </button>
             </div>
             <div class="modal-body">
-            <form action="{{ route('quotations.deleteProduct') }}" method="post">
+            <form action="{{ route('creditnotes.deleteProduct') }}" method="post">
                 @csrf
                 @method('DELETE')
-                <input id="id_quotation_product_modal" type="hidden" class="form-control @error('id_quotation_product_modal') is-invalid @enderror" name="id_quotation_product_modal" readonly required autocomplete="id_quotation_product_modal">
-                <input id="id_quotation_modal" type="hidden" class="form-control @error('id_quotation_modal') is-invalid @enderror" name="id_quotation_modal" readonly required autocomplete="id_quotation_modal">
+                <input id="id_creditnote_product_modal" type="hidden" class="form-control @error('id_creditnote_product_modal') is-invalid @enderror" name="id_creditnote_product_modal" readonly required autocomplete="id_creditnote_product_modal">
+                <input id="id_creditnote_modal" type="hidden" class="form-control @error('id_creditnote_modal') is-invalid @enderror" name="id_creditnote_modal" readonly required autocomplete="id_creditnote_modal">
                 <input id="coin_modal" type="hidden" class="form-control @error('coin_modal') is-invalid @enderror" name="coin_modal" readonly required autocomplete="coin_modal">
                        
                 <h5 class="text-center">Seguro que desea eliminar?</h5>
@@ -438,7 +422,7 @@
 
 @endsection
 
-@section('quotation_create')
+@section('creditnote_create')
     
     <script>
      
@@ -502,12 +486,12 @@
 
         $(document).on('click','.delete',function(){
          let id = $(this).attr('data-id');
-         let id_quotation = $(this).attr('data-id-quotation');
+         let id_creditnote = $(this).attr('data-id-creditnote');
          let coin = $(this).attr('data-coin');
          let description = $(this).attr('data-description');
 
-         $('#id_quotation_product_modal').val(id);
-         $('#id_quotation_modal').val(id_quotation);
+         $('#id_creditnote_product_modal').val(id);
+         $('#id_creditnote_modal').val(id_creditnote);
          $('#coin_modal').val(coin);
          $('#description_modal').val(description);
         });
@@ -525,7 +509,7 @@
 
         $("#coin").on('change',function(){
             coin = $(this).val();
-            window.location = "{{route('quotations.create', [$quotation->id,''])}}"+"/"+coin;
+            window.location = "{{route('creditnotes.create', [$creditnote->id,''])}}"+"/"+coin;
         });
 
 
@@ -535,16 +519,11 @@
         }
         
     }
-    function deliveryNoteSend() {
-       
-            window.location = "{{route('quotations.createdeliverynote', [$quotation->id,$coin])}}";
-            
-    }
-
+   
     function refreshrate() {
        
         let rate = document.getElementById("rate").value; 
-        window.location = "{{ route('quotations.refreshrate',[$quotation->id,$coin,'']) }}"+"/"+rate;
+        window.location = "{{ route('creditnotes.refreshrate',[$creditnote->id,$coin,'']) }}"+"/"+rate;
        
     }
 
@@ -584,7 +563,7 @@
             if(reference_id != ""){
                 $.ajax({
                 
-                url:"{{ route('quotations.listinventory') }}" + '/' + reference_id,
+                url:"{{ route('creditnotes.listinventory') }}" + '/' + reference_id,
                 beforSend:()=>{
                     alert('consultando datos');
                 },
@@ -595,11 +574,11 @@
                         response.forEach((item, index, object)=>{
                             let {id,description,date} = item;
                           
-                           window.location = "{{route('quotations.createproduct', [$quotation->id,$coin,''])}}"+"/"+id;
+                           window.location = "{{route('creditnotes.createproduct', [$creditnote->id,$coin,''])}}"+"/"+id;
                            
                         });
                     }else{
-                        window.location = "{{route('quotations.create', [$quotation->id,$coin,''])}}";
+                        window.location = "{{route('creditnotes.create', [$creditnote->id,$coin,''])}}";
                        //alert('No se Encontro este numero de Referencia');
                     }
                    
@@ -626,7 +605,7 @@
             let reference_id = document.getElementById("code").value; 
             if(reference_id != ""){
                 $.ajax({
-                url:"{{ route('quotations.listinventory') }}" + '/' + reference_id,
+                url:"{{ route('creditnotes.listinventory') }}" + '/' + reference_id,
                 beforSend:()=>{
                     alert('consultando datos');
                 },
@@ -636,12 +615,12 @@
                         response.forEach((item, index, object)=>{
                             let {id,description,date} = item;
                           
-                           window.location = "{{route('quotations.createproduct', [$quotation->id,$coin,''])}}"+"/"+id;
+                           window.location = "{{route('creditnotes.createproduct', [$creditnote->id,$coin,''])}}"+"/"+id;
                            
                         });
                     }else{
 
-                          window.location = "{{route('quotations.create', [$quotation->id,$coin,''])}}";
+                          window.location = "{{route('creditnotes.create', [$creditnote->id,$coin,''])}}";
                        //alert('No se Encontro este numero de Referencia');
                     }
                    

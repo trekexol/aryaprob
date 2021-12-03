@@ -108,20 +108,7 @@
                            
                         </div>
                        
-                        <div class="form-group row">
-                            <label for="note" class="col-md-2 col-form-label text-md-right">Nota Pie de Factura </label>
-
-                            <div class="col-md-4">
-                                <input id="note" type="text" class="form-control @error('note') is-invalid @enderror" name="note" value="{{ old('note') }}"  autocomplete="note">
-
-                                @error('note')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                           
-                        </div>
+                       
                         <div class="form-group row">
                            
                             <label for="observation" class="col-md-2 col-form-label text-md-right">Observaciones</label>
@@ -139,12 +126,14 @@
                         
                         <br>
                        
-                        <div class="form-group">
-                            <div class="col-md-3 offset-md-4">
+                        <div class="form-group row">
+                            <div class="col-sm-3 offset-sm-4">
                                 <button type="submit" class="btn btn-info">
-                                   
                                   Crear Cotización
                                 </button>
+                            </div>
+                            <div class="col-sm-2">
+                                <a href="{{ route('quotations') }}" id="btnvolver" name="btnvolver" class="btn btn-danger" title="volver">Volver</a>  
                             </div>
                         </div>
                         </form>      

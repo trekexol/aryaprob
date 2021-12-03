@@ -269,9 +269,8 @@ class QuotationController extends Controller
                         }
                         $bcv = null;
                     }
-                    $llego ='llego';
-
-                    return view('admin.quotations.create',compact('llego','bcv_quotation_product','quotation','inventories_quotations','inventory','bcv','datenow','coin'));
+                   
+                    return view('admin.quotations.create',compact('bcv_quotation_product','quotation','inventories_quotations','inventory','bcv','datenow','coin'));
 
                 }else{
                     return redirect('/quotations')->withDanger('El Producto no existe');

@@ -77,14 +77,14 @@
                     @foreach ($inventories as $var)
                         <tr>
                             <td>
-                                <a href="{{ route('quotations.createproduct',[$id_quotation,$coin,$var->id_inventory]) }}" title="Seleccionar"><i class="fa fa-check"></i></a>
+                                <a href="{{ route('creditnotes.createproduct',[$id_creditnote,$coin,$var->id_inventory]) }}" title="Seleccionar"><i class="fa fa-check"></i></a>
                             </td>
                             <td>{{ $var->code_comercial }}</td>
                             <td>{{ $var->description}}</td>
                             <td>{{ $var->amount ?? 0}}</td>
                            
                             @if($var->money != 'Bs')
-                                <td style="text-align: right">{{number_format($var->price * $bcv_quotation_product, 2, ',', '.')}}</td>
+                                <td style="text-align: right">{{number_format($var->price * $bcv_creditnote_product, 2, ',', '.')}}</td>
                                 <td style="text-align: right">{{number_format($var->price, 2, ',', '.')}}</td> 
                             @else
                                 <td style="text-align: right">{{number_format($var->price, 2, ',', '.')}}</td> 
@@ -120,7 +120,7 @@
 
         $("#type").on('change',function(){
             type = $(this).val();
-            window.location = "{{route('quotations.selectproduct', [$id_quotation,$coin,''])}}"+"/"+type;
+            window.location = "{{route('creditnotes.selectproduct', [$id_creditnote,$coin,''])}}"+"/"+type;
         });
 
 
