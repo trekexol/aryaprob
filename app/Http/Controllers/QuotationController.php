@@ -420,7 +420,7 @@ class QuotationController extends Controller
                     $bcv = $company->rate;
                 }
 
-                $var->bcv = $bcv;
+                $var->bcv = bcdiv($bcv, '1', 2);;
 
                 $var->coin = 'bolivares';
         
@@ -489,8 +489,7 @@ class QuotationController extends Controller
 
         if($var->id_inventory == -1){
             return redirect('quotations/register/'.$var->id_quotation.'')->withDanger('No se encontro el producto!');
-            /*echo '<script type="text/javascript">alert("no encontrado sin cantidad");</script>';
-            return;*/
+           
         }
 
         $amount = request('amount');
