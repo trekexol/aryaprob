@@ -420,7 +420,7 @@ class QuotationController extends Controller
                     $bcv = $company->rate;
                 }
 
-                $var->bcv = bcdiv($bcv, '1', 2);;
+                $var->bcv = bcdiv($bcv, '1', 2);
 
                 $var->coin = 'bolivares';
         

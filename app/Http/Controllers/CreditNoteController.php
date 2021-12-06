@@ -100,8 +100,8 @@ class CreditNoteController extends Controller
                                 ->join('credit_note_details', 'inventories.id', '=', 'credit_note_details.id_inventory')
                                 ->where('credit_note_details.id_credit_note',$id_creditnote)
                                 ->whereIn('credit_note_details.status',['1','C'])
-                                ->select('products.*','credit_note_details.price as price','credit_note_details.rate as rate','credit_note_details.id as credit_note_details_id','inventories.code as code','credit_note_details.discount as discount',
-                                'credit_note_details.amount as amount_creditnote','credit_note_details.exento as retiene_iva')
+                                ->select('products.*','credit_note_details.price as price','credit_note_details.id_inventory as id_inventory','credit_note_details.rate as rate','credit_note_details.id as credit_note_details_id','inventories.code as code','credit_note_details.discount as discount',
+                                'credit_note_details.amount as amount_creditnote','credit_note_details.exento as exento')
                                 ->get(); 
             
                 
@@ -379,7 +379,7 @@ class CreditNoteController extends Controller
                     $bcv = $company->rate;
                 }
 
-                $var->rate = $bcv;
+                $var->rate = bcdiv($bcv, '1', 2);
 
                 $var->coin = 'bolivares';
         
@@ -417,47 +417,37 @@ class CreditNoteController extends Controller
         $var = new CreditNoteDetail();
         $var->setConnection(Auth::user()->database_name);
 
-        $var->id_creditnote = request('id_creditnote');
+        $var->id_credit_note = request('id_creditnote');
         
         $var->id_inventory = request('id_inventory');
 
         $islr = request('islr');
         if($islr == null){
-            $var->retiene_islr = false;
+            $var->islr = false;
         }else{
-            $var->retiene_islr = true;
+            $var->islr = true;
         }
 
         $exento = request('exento');
         if($exento == null){
-            $var->retiene_iva = false;
+            $var->exento = false;
         }else{
-            $var->retiene_iva = true;
+            $var->exento = true;
         }
 
         $coin = request('coin');
 
-        $creditnote = CreditNote::on(Auth::user()->database_name)->find($var->id_creditnote);
+        $creditnote = CreditNote::on(Auth::user()->database_name)->find($var->id_credit_note);
 
-        $var->rate = $creditnote->bcv;
+        $var->rate = $creditnote->rate;
 
         if($var->id_inventory == -1){
-            return redirect('creditnotes/register/'.$var->id_creditnote.'')->withDanger('No se encontro el producto!');
+            return redirect('creditnotes/register/'.$var->id_credit_note.'')->withDanger('No se encontro el producto!');
            
         }
 
         $amount = request('amount');
         $cost = str_replace(',', '.', str_replace('.', '',request('cost')));
-
-        $global = new GlobalController();
-        
-        $value_return = $global->check_amount($creditnote->id,$var->id_inventory,$amount);
-
-        if($value_return != 'exito'){
-                return redirect('creditnotes/registerproduct/'.$var->id_creditnote.'/'.$coin.'/'.$var->id_inventory.'')->withDanger('La cantidad de este producto excede a la cantidad puesta en inventario!');
-        }
-
-        
 
         if($coin == 'dolares'){
             $cost_sin_formato = ($cost) * $var->rate;
@@ -473,7 +463,7 @@ class CreditNoteController extends Controller
         $var->discount = request('discount');
 
         if(($var->discount < 0) || ($var->discount > 100)){
-            return redirect('creditnotes/register/'.$var->id_creditnote.'/'.$coin.'/'.$var->id_inventory.'')->withDanger('El descuento debe estar entre 0% y 100%!');
+            return redirect('creditnotes/register/'.$var->id_credit_note.'/'.$coin.'/'.$var->id_inventory.'')->withDanger('El descuento debe estar entre 0% y 100%!');
         }
         
         $var->status =  1;
@@ -485,7 +475,7 @@ class CreditNoteController extends Controller
         }
 
 
-        return redirect('creditnotes/register/'.$var->id_creditnote.'/'.$coin.'')->withSuccess('Producto agregado Exitosamente!');
+        return redirect('creditnotes/register/'.$var->id_credit_note.'/'.$coin.'')->withSuccess('Producto agregado Exitosamente!');
     }
    
     public function edit($id)
@@ -652,16 +642,16 @@ class CreditNoteController extends Controller
 
             $islr = request('islr');
             if($islr == null){
-                $var->retiene_islr = false;
+                $var->islr = false;
             }else{
-                $var->retiene_islr = true;
+                $var->islr = true;
             }
 
             $exento = request('exento');
             if($exento == null){
-                $var->retiene_iva = false;
+                $var->exento = false;
             }else{
-                $var->retiene_iva = true;
+                $var->exento = true;
             }
 
             if($value_return != 'exito'){
@@ -671,10 +661,6 @@ class CreditNoteController extends Controller
         
             $var->save();
 
-            
-            if(isset($var->creditnotes['date_delivery_note']) || isset($var->creditnotes['date_billing'])){
-                $this->recalculatecreditnote($var->id_creditnote);
-            }
 
           
             return redirect('/creditnotes/register/'.$var->id_creditnote.'/'.$coin.'')->withSuccess('Actualizacion Exitosa!');
@@ -749,7 +735,7 @@ class CreditNoteController extends Controller
                                                             ->whereIn('creditnote_products.status',['1','C'])
                                                             ->select('products.*','creditnote_products.price as price','creditnote_products.rate as rate','creditnote_products.discount as discount',
                                                             'creditnote_products.amount as amount_creditnote','creditnote_products.retiene_iva as retiene_iva_creditnote'
-                                                            ,'creditnote_products.retiene_islr as retiene_islr_creditnote')
+                                                            ,'creditnote_products.islr as islr_creditnote')
                                                             ->get(); 
 
             $total= 0;
@@ -760,8 +746,8 @@ class CreditNoteController extends Controller
             $total_retiene_iva = 0;
             $retiene_iva = 0;
 
-            $total_retiene_islr = 0;
-            $retiene_islr = 0;
+            $total_islr = 0;
+            $islr = 0;
 
             foreach($inventories_creditnotes as $var){
                 if(isset($coin) && ($coin != 'bolivares')){
@@ -781,9 +767,9 @@ class CreditNoteController extends Controller
                     $retiene_iva += ($var->price * $var->amount_creditnote) - $percentage; 
                 }
 
-                if($var->retiene_islr_creditnote == 1){
+                if($var->islr_creditnote == 1){
 
-                    $retiene_islr += ($var->price * $var->amount_creditnote) - $percentage; 
+                    $islr += ($var->price * $var->amount_creditnote) - $percentage; 
 
                 }
 

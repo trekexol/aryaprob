@@ -147,7 +147,7 @@
                             </div>
                             <label for="rate" class="col-md-1 col-form-label text-md-right">Tasa:</label>
                             <div class="col-md-2">
-                                <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ bcdiv($creditnote->bcv, '1', 2) ?? bcdiv($bcv, '1', 2) }}" required autocomplete="rate">
+                                <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ number_format(bcdiv($creditnote->rate ?? $bcv, '1', 2) , 2, ',', '.') }}" required autocomplete="rate">
                                 @error('rate')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -328,7 +328,7 @@
                                             ?>
                                                 <tr>
                                                 <td style="text-align: right">{{ $var->code}}</td>
-                                                @if($var->retiene_iva == 1)
+                                                @if($var->exento == 1)
                                                     <td style="text-align: right">{{ $var->description}} (E)</td>
                                                 @else
                                                     <td style="text-align: right">{{ $var->description}}</td>
@@ -346,8 +346,8 @@
                                                     
                                                 ?>
                                                     <td style="text-align: right">
-                                                        <a href="{{ route('creditnotes.productedit',[$var->creditnote_products_id,$coin]) }}" title="Editar"><i class="fa fa-edit"></i></a>  
-                                                        <a href="#" class="delete" data-id={{$var->creditnote_products_id}} data-description={{$var->description}} data-id-creditnote={{$creditnote->id}} data-coin={{$coin}} data-toggle="modal" data-target="#deleteModal" title="Eliminar"><i class="fa fa-trash text-danger"></i></a>  
+                                                        <a href="{{ route('creditnotes.productedit',[$var->id_inventory,$coin]) }}" title="Editar"><i class="fa fa-edit"></i></a>  
+                                                        <a href="#" class="delete" data-id={{$var->id_inventory}} data-description={{$var->description}} data-id-creditnote={{$creditnote->id}} data-coin={{$coin}} data-toggle="modal" data-target="#deleteModal" title="Eliminar"><i class="fa fa-trash text-danger"></i></a>  
                                                     </td>
                                             
                                                 </tr>
@@ -373,12 +373,12 @@
                                 </div>
                             </div>
                             <div class="form-group row mb-0">
-                                <div class="col-md-4">
+                                <div class="col-sm-4">
                                     @if($suma == 0)
-                                        <a onclick="validate()" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Facturar</a>
+                                        <a onclick="validate()" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Generar Nota de Credito</a>
                                      
                                     @else
-                                        <a href="{{ route('creditnotes.createfacturar',[$creditnote->id,$coin]) }}" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Facturar</a>  
+                                        <a href="{{ route('creditnotes.createfacturar',[$creditnote->id,$coin]) }}" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Generar Nota de Credito</a>  
                                       
                                     @endif
                                 </div>
