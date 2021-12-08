@@ -2878,7 +2878,7 @@ class Report2Controller extends Controller
 
 
         /*-------------------------- */
-        return $bcv;
+       return bcdiv($bcv, '1', 2);
 
     }
 

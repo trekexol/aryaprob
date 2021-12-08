@@ -15,19 +15,19 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header"><h2>Editar Producto Cotizado</h2></div>
+                    <div class="card-header"><h2>Editar Producto</h2></div>
     
                     <div class="card-body">
-            <form  method="POST"   action="{{ route('quotations.productupdate',$quotation_product->id) }}" enctype="multipart/form-data" onsubmit="return validacion()">
+            <form  method="POST"   action="{{ route('creditnotes.productupdate',$creditnote_product->id) }}" enctype="multipart/form-data" onsubmit="return validacion()">
                 @method('PATCH')
                 @csrf()
 
-                    <input id="rate_quotation" type="hidden" class="form-control @error('rate_quotation') is-invalid @enderror" name="rate_quotation" value="{{ $quotation_product->rate ?? -1}}" readonly required autocomplete="rate_quotation"> 
+                    <input id="rate_creditnote" type="hidden" class="form-control @error('rate_creditnote') is-invalid @enderror" name="rate_creditnote" value="{{ $creditnote_product->rate ?? -1}}" readonly required autocomplete="rate_creditnote"> 
                      
                     <div class="form-group row">
                         <label for="description" class="col-md-2 col-form-label text-md-right">Código</label>
                         <div class="col-md-3">
-                            <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ $quotation_product->inventories['code'] ?? old('code') }}" readonly required autocomplete="code" autofocus>
+                            <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ $creditnote_product->inventories['code'] ?? old('code') }}" readonly required autocomplete="code" autofocus>
                         </div>
                         <label for="description"  class="col-md-3 col-form-label text-md-right">Descripción</label>
                         <div class="col-md-3">
@@ -56,11 +56,11 @@
                     <div class="form-group row">
                         <label for="price" class="col-md-2 col-form-label text-md-right">Precio</label>
                         <div class="col-md-3">
-                            <input id="price" type="text" class="form-control @error('price') is-invalid @enderror" name="price" value="{{ number_format($quotation_product->price / ($rate ?? 1), 2, ',', '.')}}"  required autocomplete="price">
+                            <input id="price" type="text" class="form-control @error('price') is-invalid @enderror" name="price" value="{{ number_format($creditnote_product->price / ($rate ?? 1), 2, ',', '.')}}"  required autocomplete="price">
                         </div>  
                         <label for="rate" class="col-md-3 col-form-label text-md-right">Tasa</label>
                         <div class="col-md-3">
-                            <input id="rate" type="text" readonly class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ number_format($quotation_product->rate, 2, ',', '.')}}"  required autocomplete="rate">
+                            <input id="rate" type="text" readonly class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ number_format($creditnote_product->rate, 2, ',', '.')}}"  required autocomplete="rate">
                         </div>  
                         
                     </div>
@@ -70,7 +70,7 @@
                                     <label for="amount" class="col-md-2 col-form-label text-md-right">Cantidad</label>
         
                                     <div class="col-md-2">
-                                        <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" name="amount" value="{{ number_format($quotation_product->amount, 0, ',', '.') }}" required autocomplete="amount">
+                                        <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" name="amount" value="{{ number_format($creditnote_product->amount, 0, ',', '.') }}" required autocomplete="amount">
         
                                         @error('amount')
                                             <span class="invalid-feedback" role="alert">
@@ -81,7 +81,7 @@
                                     <label for="gridCheck" class="col-md-1 col-form-label text-md-right">Exento</label>
                                     <div class="col-md-1">
                                         <div class="form-check">
-                                            @if($quotation_product->retiene_iva == 1)
+                                            @if($creditnote_product->exento == 1)
                                                 <input class="form-check-input" type="checkbox" name="exento" checked id="gridCheck">
                                             @else
                                                 <input class="form-check-input" type="checkbox" name="exento" id="gridCheck">
@@ -91,7 +91,7 @@
                                      <label for="gridCheck2" class="col-md-1 col-form-label text-md-right">Islr</label>  
                                      <div class="col-md-1">
                                             <div class="form-check">
-                                                @if($quotation_product->retiene_islr == 1)
+                                                @if($creditnote_product->islr == 1)
                                                     <input class="form-check-input" type="checkbox" name="islr" checked id="gridCheck2">
                                                 @else
                                                     <input class="form-check-input" type="checkbox" name="islr" id="gridCheck2">
@@ -102,7 +102,7 @@
                                      <label for="discount" class="col-md-2 col-form-label text-md-right">Descuento</label>
                     
                                      <div class="col-md-1">
-                                         <input id="discount" type="text" class="form-control @error('discount') is-invalid @enderror" name="discount" value="{{ number_format($quotation_product->discount, 0, ',', '.') }}" required autocomplete="discount">
+                                         <input id="discount" type="text" class="form-control @error('discount') is-invalid @enderror" name="discount" value="{{ number_format($creditnote_product->discount, 0, ',', '.') }}" required autocomplete="discount">
             
                                          @error('discount')
                                              <span class="invalid-feedback" role="alert">
@@ -121,7 +121,7 @@
                                     </div>
                                 </form>
                                     <div class="col-md-2">
-                                        <a href="{{ route('quotations.create',[$quotation_product->id_quotation,$coin]) }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
+                                        <a href="{{ route('creditnotes.create',[$creditnote_product->id_credit_note,$coin]) }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
                                     </div>
                                 </div>
                             
@@ -155,10 +155,10 @@
             var price = document.getElementById("price").value;
             var price_new_format = price.replace(/[$.]/g,'').replace(/[,]/g,'.');
             if(coin == 'bolivares'){
-                var total = price_new_format * document.getElementById("rate_quotation").value;
+                var total = price_new_format * document.getElementById("rate_creditnote").value;
                 document.getElementById("price").value = total.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});;        
             }else{
-                var total = price_new_format / document.getElementById("rate_quotation").value;
+                var total = price_new_format / document.getElementById("rate_creditnote").value;
                 document.getElementById("price").value = total.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});;        
             }
         });

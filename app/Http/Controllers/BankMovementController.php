@@ -1626,7 +1626,7 @@ public function search_bcv()
 
 
     /*-------------------------- */
-    return $bcv;
+   return bcdiv($bcv, '1', 2);
 
 }
 

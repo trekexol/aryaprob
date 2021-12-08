@@ -84,7 +84,7 @@
                             <td>{{ $var->amount ?? 0}}</td>
                            
                             @if($var->money != 'Bs')
-                                <td style="text-align: right">{{number_format($var->price * $bcv_creditnote_product, 2, ',', '.')}}</td>
+                                <td style="text-align: right">{{number_format($var->price * $rate, 2, ',', '.')}}</td>
                                 <td style="text-align: right">{{number_format($var->price, 2, ',', '.')}}</td> 
                             @else
                                 <td style="text-align: right">{{number_format($var->price, 2, ',', '.')}}</td> 

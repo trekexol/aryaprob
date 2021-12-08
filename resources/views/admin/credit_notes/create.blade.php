@@ -147,7 +147,7 @@
                             </div>
                             <label for="rate" class="col-md-1 col-form-label text-md-right">Tasa:</label>
                             <div class="col-md-2">
-                                <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ bcdiv($creditnote->bcv, '1', 2) ?? bcdiv($bcv, '1', 2) }}" required autocomplete="rate">
+                                <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ number_format(bcdiv($creditnote->rate ?? 0, '1', 2), 2, ',', '.') }}" required autocomplete="rate">
                                 @error('rate')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -246,10 +246,10 @@
                                         @endif
                                     </div>
                                     <div class="form-group col-md-2">
-                                        @if(isset($inventory->products['price']) && (isset($creditnote->bcv)) && ($inventory->products['money'] != 'Bs') && ($coin == 'bolivares')) 
+                                        @if(isset($inventory->products['price']) && (isset($creditnote->rate)) && ($inventory->products['money'] != 'Bs') && ($coin == 'bolivares')) 
                                             <?php 
                                                 
-                                                $product_Bs = $inventory->products['price'] * $creditnote->bcv;
+                                                $product_Bs = $inventory->products['price'] * $creditnote->rate;
                                                
                                             ?>
                                             <label for="cost" >Precio</label>
@@ -328,7 +328,7 @@
                                             ?>
                                                 <tr>
                                                 <td style="text-align: right">{{ $var->code}}</td>
-                                                @if($var->retiene_iva == 1)
+                                                @if($var->exento == '1')
                                                     <td style="text-align: right">{{ $var->description}} (E)</td>
                                                 @else
                                                     <td style="text-align: right">{{ $var->description}}</td>
@@ -346,8 +346,8 @@
                                                     
                                                 ?>
                                                     <td style="text-align: right">
-                                                        <a href="{{ route('creditnotes.productedit',[$var->creditnote_products_id,$coin]) }}" title="Editar"><i class="fa fa-edit"></i></a>  
-                                                        <a href="#" class="delete" data-id={{$var->creditnote_products_id}} data-description={{$var->description}} data-id-creditnote={{$creditnote->id}} data-coin={{$coin}} data-toggle="modal" data-target="#deleteModal" title="Eliminar"><i class="fa fa-trash text-danger"></i></a>  
+                                                        <a href="{{ route('creditnotes.productedit',[$var->credit_note_details_id,$coin]) }}" title="Editar"><i class="fa fa-edit"></i></a>  
+                                                        <a href="#" class="delete" data-id={{$var->credit_note_details_id}} data-description={{$var->description}} data-id-creditnote={{$creditnote->id}} data-coin={{$coin}} data-toggle="modal" data-target="#deleteModal" title="Eliminar"><i class="fa fa-trash text-danger"></i></a>  
                                                     </td>
                                             
                                                 </tr>
@@ -509,7 +509,7 @@
 
         $("#coin").on('change',function(){
             coin = $(this).val();
-            window.location = "{{route('creditnotes.create', [$creditnote->id,''])}}"+"/"+coin;
+            window.location = "{{route('creditnotes.create', [$creditnote->id,'',''])}}"+"/"+coin+"/"+"{{$inventory->id ?? ''}}";
         });
 
 
