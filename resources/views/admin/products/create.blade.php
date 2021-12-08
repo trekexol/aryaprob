@@ -269,10 +269,7 @@
             
         });
 
-	$(function(){
-        soloAlfaNumerico('code_comercial');
-       
-    });
+	
     </script>
 @endsection
 

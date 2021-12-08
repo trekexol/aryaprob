@@ -66,7 +66,7 @@ class SaleController extends Controller
 
 
         /*-------------------------- */
-        return $bcv;
+       return bcdiv($bcv, '1', 2);
 
     }
 

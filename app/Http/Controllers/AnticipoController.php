@@ -337,6 +337,36 @@ class AnticipoController extends Controller
         
     }
 
+    public function registerAnticipo($date_begin,$id_client,$id_account,$coin,$amount,$rate,$reference,$id_quotation = null)
+    {
+   
+        $user       =   auth()->user();
+        $var = new Anticipo();
+        $var->setConnection(Auth::user()->database_name);
+        
+        $var->date = $date_begin;
+       
+        $var->id_client = $id_client;
+        
+        $var->id_quotation = $id_quotation;
+          
+
+        $var->id_account = $id_account;
+        $var->id_user =  $user->id;
+        $var->coin = $coin;
+        
+       
+        $var->amount = $amount; 
+        $var->rate = $rate;
+        
+        
+        $var->reference = $reference;
+        $var->status = 1;
+
+        $var->save();
+        
+    }
+
 
     public function store_provider(Request $request)
     {
@@ -718,7 +748,7 @@ class AnticipoController extends Controller
 
 
         /*-------------------------- */
-        return $bcv;
+       return bcdiv($bcv, '1', 2);
 
     }
 

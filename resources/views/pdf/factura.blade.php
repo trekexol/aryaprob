@@ -178,51 +178,57 @@
 
   //$total_petro = ($total - $quotation->anticipo) / $company->rate_petro;
 
-  $iva = $iva / ($bcv ?? 1);
+  //$iva = $iva / ($bcv ?? 1);
 
-  $total = $total / ($bcv ?? 1);
+  $total_coin = $total / ($bcv ?? 1);
 ?>
 
 <table style="width: 100%;">
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Sub Total</th>
-    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($quotation->amount / ($bcv ?? 1), 2, ',', '.') }}</th>
+    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format(bcdiv($quotation->amount / ($bcv ?? 1), '1', 2), 2, ',', '.') }}{{($coin == 'bolivares') ? '' : '$'}}</th>
   </tr> 
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Base Imponible</th>
-    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($quotation->base_imponible / ($bcv ?? 1), 2, ',', '.') }}</th>
+    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format(bcdiv($quotation->base_imponible , '1', 2), 2, ',', '.') }}</th>
   </tr>
   @if ($quotation->retencion_iva != 0)
     <tr>
       <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Retención de Iva</th>
-      <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($quotation->retencion_iva / ($bcv ?? 1), 2, ',', '.') }}</th>
+      <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format(bcdiv($quotation->retencion_iva , '1', 2), 2, ',', '.') }}</th>
     </tr> 
   @endif 
   @if ($quotation->retencion_islr != 0)
     <tr>
       <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Retención de ISLR</th>
-      <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($quotation->retencion_islr / ($bcv ?? 1), 2, ',', '.') }}</th>
+      <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format(bcdiv($quotation->retencion_islr , '1', 2), 2, ',', '.') }}</th>
     </tr> 
   @endif 
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">I.V.A.{{ $quotation->iva_percentage }}%</th>
-    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($iva, 2, ',', '.') }}</th>
+    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format(bcdiv($iva, '1', 2), 2, ',', '.') }}</th>
   </tr> 
   @if ($quotation->anticipo != 0)
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Anticipo</th>
-    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($quotation->anticipo / ($bcv ?? 1), 2, ',', '.') }}</th>
+    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format(bcdiv($quotation->anticipo , '1', 2), 2, ',', '.') }}</th>
   </tr> 
   @endif
  
   <tr>
-    <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">MONTO TOTAL {{($coin != 'bolivares') ? '$' : ''}}</th>
-    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($total , 2, ',', '.') }}</th>
+    <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">MONTO TOTAL </th>
+    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format(bcdiv($total , '1', 2), 2, ',', '.') }}</th>
   </tr> 
- 
+  @if (isset($coin) && ($coin != 'bolivares'))
+  <tr>
+    <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">MONTO TOTAL {{($coin == 'bolivares') ? '' : ' USD'}}</th>
+    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format(bcdiv($total_coin , '1', 2), 2, ',', '.') }}{{($coin == 'bolivares') ? '' : '$'}}</th>
+  </tr> 
+  @endif
+  
   
     <tr>
-      <th style="text-align: left; font-weight: normal; width: 79%; border-top-color: rgb(17, 9, 9); border-right-color: white; font-size: small;"> Tasa: {{ number_format($quotation->bcv, 2, ',', '.') }}</th>
+      <th style="text-align: left; font-weight: normal; width: 79%; border-top-color: rgb(17, 9, 9); border-right-color: white; font-size: small;"> Tasa: {{ number_format(bcdiv($quotation->bcv, '1', 2), 2, ',', '.') }}</th>
       <th style="text-align: right; font-weight: normal; width: 21%; "></th>
     </tr> 
   

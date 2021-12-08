@@ -1532,7 +1532,7 @@ public function calculation_superavit_level2($var,$code,$coin)
 
 
         /*-------------------------- */
-        return $bcv;
+       return bcdiv($bcv, '1', 2);
 
      
     }

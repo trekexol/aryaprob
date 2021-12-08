@@ -26,21 +26,21 @@
     <div class="row justify-content-center" >
         
             <div class="card" style="width: 70rem;" >
-                <div class="card-header" >Facturar</div>
+                <div class="card-header" >Nota de Credito</div>
                 
                 <div class="card-body" >
                         
                     <div class="form-group row">
                         <label for="total_factura" class="col-md-2 col-form-label text-md-right">Nº Factura:</label>
                         <div class="col-md-4">
-                            <input id="num_factura" type="text" class="form-control @error('total_factura') is-invalid @enderror" name="num_factura" value="{{ $quotation->number_invoice}}" readonly>
+                            <input id="num_factura" type="text" class="form-control @error('total_factura') is-invalid @enderror" name="num_factura" value="{{ $creditnote->number_invoice}}" readonly>
                         </div>
 
-                        <label for="date_quotation" class="col-md-2 col-form-label text-md-right">CI/Rif: </label>
+                        <label for="date_creditnote" class="col-md-2 col-form-label text-md-right">CI/Rif: </label>
                         <div class="col-md-3">
-                            <input id="date_quotation" type="text" class="form-control @error('date_quotation') is-invalid @enderror" name="date_quotation" value="{{ $quotation->clients['cedula_rif']  ?? '' }}" readonly required autocomplete="date_quotation">
+                            <input id="date_creditnote" type="text" class="form-control @error('date_creditnote') is-invalid @enderror" name="date_creditnote" value="{{ $creditnote->clients['cedula_rif']  ?? '' }}" readonly required autocomplete="date_creditnote">
     
-                            @error('date_quotation')
+                            @error('date_creditnote')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -51,11 +51,11 @@
               
                     
                     <div class="form-group row">
-                            <label for="date_quotation" class="col-md-2 col-form-label text-md-right">Cliente: </label>
+                            <label for="date_creditnote" class="col-md-2 col-form-label text-md-right">Cliente: </label>
                             <div class="col-md-4">
-                                <input id="name_cliente" type="text" class="form-control @error('date_quotation') is-invalid @enderror" name="name_cliente" value="{{ $quotation->clients['name']  ?? '' }}" readonly>
+                                <input id="name_cliente" type="text" class="form-control @error('date_creditnote') is-invalid @enderror" name="name_cliente" value="{{ $creditnote->clients['name']  ?? '' }}" readonly>
 
-                                @error('date_quotation')
+                                @error('date_creditnote')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -63,7 +63,7 @@
                             </div>
                             <label for="client" class="col-md-2 col-form-label text-md-right">N° de Control/Serie:</label>
                             <div class="col-md-3">
-                                <input id="client" type="text" class="form-control @error('client') is-invalid @enderror" name="client" value="{{ $quotation->serie ?? '' }}" readonly required autocomplete="client">
+                                <input id="client" type="text" class="form-control @error('client') is-invalid @enderror" name="client" value="{{ $creditnote->serie ?? '' }}" readonly required autocomplete="client">
                                 @error('client')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -75,7 +75,7 @@
                         <div class="form-group row">
                             <label for="total_factura" class="col-md-2 col-form-label text-md-right">Total Factura:</label>
                             <div class="col-md-4">
-                                <input id="total_factura" type="text" class="form-control @error('total_factura') is-invalid @enderror" name="total_factura" value="{{ number_format($quotation->amount / ($bcv ?? 1), 2, ',', '.') ?? 0 }}" readonly required autocomplete="total_factura">
+                                <input id="total_factura" type="text" class="form-control @error('total_factura') is-invalid @enderror" name="total_factura" value="{{ number_format($creditnote->amount / ($bcv ?? 1), 2, ',', '.') ?? 0 }}" readonly required autocomplete="total_factura">
     
                                 @error('total_factura')
                                     <span class="invalid-feedback" role="alert">
@@ -85,7 +85,7 @@
                             </div>
                             <label for="base_imponible" class="col-md-2 col-form-label text-md-right">Base Imponible:</label>
                             <div class="col-md-3">
-                                <input id="base_imponible" type="text" class="form-control @error('base_imponible') is-invalid @enderror" name="base_imponible" value="{{ number_format($quotation->base_imponible / ($bcv ?? 1), 2, ',', '.') ?? 0 }}" readonly required autocomplete="base_imponible">
+                                <input id="base_imponible" type="text" class="form-control @error('base_imponible') is-invalid @enderror" name="base_imponible" value="{{ number_format($creditnote->base_imponible / ($bcv ?? 1), 2, ',', '.') ?? 0 }}" readonly required autocomplete="base_imponible">
                                 @error('base_imponible')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -97,7 +97,7 @@
                         <div class="form-group row">
                             <label for="iva_amounts" class="col-md-2 col-form-label text-md-right">Monto de Iva:</label>
                             <div class="col-md-4">
-                                <input id="iva_amounts" type="text" class="form-control @error('iva_amount') is-invalid @enderror" name="iva_amount" value="{{ number_format($quotation->amount_iva / ($bcv ?? 1), 2, ',', '.') ?? 0 }}"  readonly required autocomplete="iva_amount"> 
+                                <input id="iva_amounts" type="text" class="form-control @error('iva_amount') is-invalid @enderror" name="iva_amount" value="{{ number_format($creditnote->amount_iva / ($bcv ?? 1), 2, ',', '.') ?? 0 }}"  readonly required autocomplete="iva_amount"> 
                                 
                                 @error('iva_amount')
                                     <span class="invalid-feedback" role="alert">
@@ -108,7 +108,7 @@
                             <label for="observation" class="col-md-2 col-form-label text-md-right">Retencion IVA:</label>
 
                             <div class="col-md-3">
-                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ number_format(bcdiv(($quotation->retencion_iva), '1', 2)/ ($bcv ?? 1), 2, ',', '.') ?? 0 }}" readonly required autocomplete="observation">
+                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ number_format(bcdiv(($creditnote->retencion_iva), '1', 2)/ ($bcv ?? 1), 2, ',', '.') ?? 0 }}" readonly required autocomplete="observation">
 
                                 @error('observation')
                                     <span class="invalid-feedback" role="alert">
@@ -120,7 +120,7 @@
                         <div class="form-group row">
                             <label for="grand_totals" class="col-md-2 col-form-label text-md-right">Total General:</label>
                             <div class="col-md-4">
-                                <input id="grand_total" type="text" class="form-control @error('grand_total') is-invalid @enderror" name="grand_total" value="{{ number_format( ($quotation->amount + $quotation->amount_iva) / ($bcv ?? 1), 2, ',', '.') }}" readonly required autocomplete="grand_total"> 
+                                <input id="grand_total" type="text" class="form-control @error('grand_total') is-invalid @enderror" name="grand_total" value="{{ number_format( ($creditnote->amount + $creditnote->amount_iva) / ($bcv ?? 1), 2, ',', '.') }}" readonly required autocomplete="grand_total"> 
                            
                                 @error('grand_total')
                                     <span class="invalid-feedback" role="alert">
@@ -131,7 +131,7 @@
                             <label for="note" class="col-md-2 col-form-label text-md-right">Retencion ISLR:</label>
 
                             <div class="col-md-3">
-                                <input id="note" type="text" class="form-control @error('note') is-invalid @enderror" name="note" value="{{ number_format($quotation->retencion_islr / ($bcv ?? 1), 2, ',', '.') ?? 0 }}" readonly required autocomplete="note">
+                                <input id="note" type="text" class="form-control @error('note') is-invalid @enderror" name="note" value="{{ number_format($creditnote->retencion_islr / ($bcv ?? 1), 2, ',', '.') ?? 0 }}" readonly required autocomplete="note">
 
                                 @error('note')
                                     <span class="invalid-feedback" role="alert">
@@ -145,7 +145,7 @@
                         <div class="form-group row">
                             <label for="anticipo" class="col-md-2 col-form-label text-md-right">Menos Anticipo:</label>
                             <div class="col-md-4">
-                                <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" value="{{ number_format($quotation->anticipo / ($bcv ?? 1), 2, ',', '.') }}" readonly required autocomplete="anticipo"> 
+                                <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" value="{{ number_format($creditnote->anticipo / ($bcv ?? 1), 2, ',', '.') }}" readonly required autocomplete="anticipo"> 
                            
                                 @error('anticipo')
                                     <span class="invalid-feedback" role="alert">
@@ -156,14 +156,14 @@
                             <label for="iva" class="col-md-2 col-form-label text-md-right">IVA:</label>
                             <div class="col-md-2">
                             <select class="form-control" name="iva" id="iva">
-                                <option value="{{ $quotation->iva_percentage }}">{{ $quotation->iva_percentage }}%</option>
+                                <option value="{{ $creditnote->iva_percentage }}">{{ $creditnote->iva_percentage }}%</option>
                             </select>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="total_pays" class="col-md-2 col-form-label text-md-right">Total a Pagar:</label>
                             <div class="col-md-4">
-                                <input id="total_pay" type="text" class="form-control @error('total_pay') is-invalid @enderror" name="total_pay" readonly value="{{ number_format(($quotation->amount_with_iva / ($bcv ?? 1)) - ($quotation->anticipo / ($bcv ?? 1)) - ($quotation->retencion_iva / ($bcv ?? 1)) - ($quotation->retencion_islr / ($bcv ?? 1)), 2, ',', '.') ?? '0,00' }}"  required autocomplete="total_pay"> 
+                                <input id="total_pay" type="text" class="form-control @error('total_pay') is-invalid @enderror" name="total_pay" readonly value="{{ number_format(($creditnote->amount_with_iva / ($bcv ?? 1)) - ($creditnote->anticipo / ($bcv ?? 1)) - ($creditnote->retencion_iva / ($bcv ?? 1)) - ($creditnote->retencion_islr / ($bcv ?? 1)), 2, ',', '.') ?? '0,00' }}"  required autocomplete="total_pay"> 
                            
                                 @error('total_pay')
                                     <span class="invalid-feedback" role="alert">
@@ -173,12 +173,12 @@
                             </div>
                             <label id="coinlabel" for="coin" class="col-md-1 col-form-label text-md-right">Taza:</label> 
                             <div class="col-md-2">
-                                <input id="monto_taza" type="text" class="form-control" name="monto_taza" value="{{ number_format( $quotation->bcv ?? 1, 2,',', '.') }}" readonly> <!--By dacson-->
+                                <input id="monto_taza" type="text" class="form-control" name="monto_taza" value="{{ number_format( $creditnote->bcv ?? 1, 2,',', '.') }}" readonly> <!--By dacson-->
                             </div>                              
-                            @if (isset($quotation->credit_days))
+                            @if (isset($creditnote->credit_days))
                                 <label for="total_pays" class="col-md-2 col-form-label text-md-right">Dias de Crédito:</label>
                                 <div class="col-md-1">
-                                    <input id="credit" type="text" class="form-control @error('credit') is-invalid @enderror" name="credit" value="{{ $quotation->credit_days ?? '' }}" readonly autocomplete="credit"> 
+                                    <input id="credit" type="text" class="form-control @error('credit') is-invalid @enderror" name="credit" value="{{ $creditnote->credit_days ?? '' }}" readonly autocomplete="credit"> 
                                 </div>
                             @endif
                             
@@ -215,16 +215,16 @@
                                 <div class="dropdown-menu animated--fade-in"
                                     aria-labelledby="dropdownMenuButton">
                                     <a href="#" onclick="pdf_media();" id="btnfacturar" name="btnfacturar" class="dropdown-item bg-light" title="imprimir">Imprimir Factura Media Carta</a>  
-                                    <a href="#" class="dropdown-item bg-light delete" data-id-quotation={{$quotation->id}} data-toggle="modal" data-target="#reversarModal" title="Eliminar">Reversar Compra</a> 
+                                    <a href="#" class="dropdown-item bg-light delete" data-id-creditnote={{$creditnote->id}} data-toggle="modal" data-target="#reversarModal" title="Eliminar">Reversar Compra</a> 
                                 </div>
                             </div> 
                            
                             <div class="col-md-3">
-                                <a href="{{ route('invoices.movement',[$quotation->id,$coin]) }}" id="btnmovement" name="btnmovement" class="btn btn-light" title="movement">Ver Movimiento de Cuenta</a>  
+                                <a href="{{ route('movements.creditnote',[$creditnote->id,$coin]) }}" id="btnmovement" name="btnmovement" class="btn btn-light" title="movement">Ver Movimiento de Cuenta</a>  
                             </div>
                            
                             <div class="col-md-2">
-                                <a href="{{ route('invoices') }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Ver Facturas</a>  
+                                <a href="{{ route('creditnotes') }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Ver Facturas</a>  
                             </div>
                         </div>
                         
@@ -233,48 +233,23 @@
             </div>
         </div>
 </div>
-<!-- Delete Warning Modal -->
-<div class="modal modal-danger fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="Delete" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Eliminar Multipago</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-           
-                <h5 class="text-center">Esta factura fue pagada con multipago, al reversarla, reversará todas las facturas 
-                    realizadas en el multipago.</h5>
-                <h5 class="text-center">Seguro quiere reversar todas las facturas?</h5>
-                
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <a href="{{ route('quotations.reversar_quotation_multipayment',[$quotation->id,$reverso ?? null]) }}" type="submit" class="btn btn-danger">Eliminar</a>
-            </div>
-            
-        </div>
-    </div>
-</div>
 
 <!-- Delete Warning Modal -->
 <div class="modal modal-danger fade" id="reversarModal" tabindex="-1" role="dialog" aria-labelledby="reversar" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Eliminar Factura</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Eliminar Nota de Credito</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('quotations.reversarQuotation') }}" method="post">
+            <form action="{{ route('creditnotes.reversarcreditnote') }}" method="post">
                 @csrf
                 @method('DELETE')
                 <div class="modal-body">
                     <h5 class="text-center">Seguro quiere reversar la factura?</h5>
-                    <input id="id_quotation_modal" type="hidden" class="form-control @error('id_quotation_modal') is-invalid @enderror" name="id_quotation_modal" readonly required autocomplete="id_quotation_modal">
+                    <input id="id_creditnote_modal" type="hidden" class="form-control @error('id_creditnote_modal') is-invalid @enderror" name="id_creditnote_modal" readonly required autocomplete="id_creditnote_modal">
                     
                 </div>
                 <div class="modal-footer">
@@ -304,22 +279,22 @@
 
             $("#coin").on('change',function(){
                 coin = $(this).val();
-                window.location = "{{route('quotations.createfacturado', [$quotation->id,''])}}"+"/"+coin;
+                window.location = "{{route('creditnotes.createfacturado', [$creditnote->id,''])}}"+"/"+coin;
             });
 
             $(document).on('click','.delete',function(){
-                let id_quotation = $(this).attr('data-id-quotation');
+                let id_creditnote = $(this).attr('data-id-creditnote');
 
-                $('#id_quotation_modal').val(id_quotation);
+                $('#id_creditnote_modal').val(id_creditnote);
             });
             function pdf() {
                 
-                var nuevaVentana= window.open("{{ route('pdf',[$quotation->id,$coin])}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
+                var nuevaVentana= window.open("{{ route('pdf',[$creditnote->id,$coin])}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
         
             }
             function pdf_media() {
                 
-                var nuevaVentana2= window.open("{{ route('pdf.media',[$quotation->id,$coin])}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
+                var nuevaVentana2= window.open("{{ route('pdf.media',[$creditnote->id,$coin])}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
         
             }
            
@@ -328,14 +303,14 @@
             function calculate() {
                 let inputIva = document.getElementById("iva").value; 
 
-                //let totalIva = (inputIva * "<?php echo $quotation->total_factura; ?>") / 100;  
+                //let totalIva = (inputIva * "<?php echo $creditnote->total_factura; ?>") / 100;  
 
-                let totalFactura = "<?php echo $quotation->total_factura / ($bcv ?? 1) ?>";       
+                let totalFactura = "<?php echo $creditnote->total_factura / ($bcv ?? 1) ?>";       
 
                 //AQUI VAMOS A SACAR EL MONTO DEL IVA DE LOS QUE ESTAN EXENTOS, PARA LUEGO RESTARSELO AL IVA TOTAL
-                let totalBaseImponible = "<?php echo $quotation->base_imponible / ($bcv ?? 1) ?>";
+                let totalBaseImponible = "<?php echo $creditnote->base_imponible / ($bcv ?? 1) ?>";
 
-                let totalIvaMenos = (inputIva * "<?php echo $quotation->base_imponible / ($bcv ?? 1); ?>") / 100;  
+                let totalIvaMenos = (inputIva * "<?php echo $creditnote->base_imponible / ($bcv ?? 1); ?>") / 100;  
 
                
 

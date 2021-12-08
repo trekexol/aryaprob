@@ -322,10 +322,7 @@
             
         });
 
-	$(function(){
-        soloAlfaNumerico('code_comercial');
-        soloAlfaNumerico('description');
-    });
+	
     </script>
 @endsection
 

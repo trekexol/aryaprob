@@ -510,7 +510,7 @@ class DetailVoucherController extends Controller
 
 
         /*-------------------------- */
-        return $bcv;
+       return bcdiv($bcv, '1', 2);
 
     }
 

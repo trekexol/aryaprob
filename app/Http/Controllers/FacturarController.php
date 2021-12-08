@@ -1873,9 +1873,6 @@ class FacturarController extends Controller
     }
 
 
-
-
-
     public function add_pay_movement($bcv,$payment_type,$header_voucher,$id_account,$quotation_id,$user_id,$amount_debe,$amount_haber){
 
 
@@ -1978,7 +1975,7 @@ class FacturarController extends Controller
 
 
         /*-------------------------- */
-        return $bcv;
+       return bcdiv($bcv, '1', 2);
 
     }
 }
