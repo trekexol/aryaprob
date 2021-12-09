@@ -87,7 +87,7 @@ class ExportExpenseController extends Controller
                 $content .= '<?xml version="1.0" encoding="UTF-8"?>
                 <RelacionRetencionesISLR RifAgente="'.$company->code_rif.'" Periodo="'.$expense->date->format('Ym').'">
                  <DetalleRetencion>
-                  <RifRetenido>'.$expense->providers['code_provider'].'</RifRetenido>
+                  <RifRetenido>'.str_replace("-","",$expense->providers['code_provider']).'</RifRetenido>
                   <NumeroFactura>'.$expense->invoice.'</NumeroFactura>
                   <NumeroControl>'.$expense->serie.'</NumeroControl>
                   <FechaOperacion>'.$expense->date->format('d/m/Y').'</FechaOperacion>
