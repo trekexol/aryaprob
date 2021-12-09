@@ -970,7 +970,7 @@ Route::group(["prefix"=>'creditnotes'],function(){
     Route::get('register/{id_creditnote}/{coin}','CreditNoteController@create')->name('creditnotes.create');
     Route::post('store','CreditNoteController@store')->name('creditnotes.store');
     Route::delete('{id}/delete','CreditNoteController@destroy')->name('creditnotes.delete');
-
+    Route::get('historial','CreditNoteController@index_historial')->name('creditnotes.historial');
    
     Route::get('registercreditnote/{id_invoice?}/{id_client?}/{id_vendor?}','CreditNoteController@createcreditnote')->name('creditnotes.createcreditnote');
     Route::get('selectclient','CreditNoteController@selectclient')->name('creditnotes.selectclient');
@@ -998,8 +998,6 @@ Route::group(["prefix"=>'creditnotes'],function(){
 
     Route::delete('deleteproduct','CreditNoteController@deleteProduct')->name('creditnotes.deleteProduct');
     Route::delete('deletecreditnote','CreditNoteController@deletecreditnote')->name('creditnotes.deletecreditnote');
-
-    Route::delete('reversarcreditnote','CreditNoteController@reversar_creditnote')->name('creditnotes.reversarcreditnote');
 
     Route::get('selectinvoice','CreditNoteController@selectinvoice')->name('creditnotes.selectinvoice');
 

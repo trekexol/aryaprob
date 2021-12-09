@@ -279,7 +279,10 @@ class CreditNoteDetailController extends Controller
             $creditnote->amount =  $sin_formato_amount;
             $creditnote->amount_iva =  $sin_formato_amount_iva;
             $creditnote->amount_with_iva = $sin_formato_grandtotal;
+            $creditnote->iva_percentage = $iva_percentage;
+        
 
+            $creditnote->status =  'C';
             $creditnote->save();
             
             /*---------------------- */
@@ -356,7 +359,13 @@ class CreditNoteDetailController extends Controller
                                                         ->where('id_credit_note', '=', $creditnote->id)
                                                         ->update(['status' => 'C']);
 
-          
+
+            $anticipoController = new AnticipoController();
+
+            $id_client = $creditnote->id_client ?? $creditnote->quotations['id_client'];
+
+            $anticipoController->registerAnticipo($date_begin,$id_client,$account_descuento_pago->id,$coin,$sin_formato_grandtotal,$creditnote->rate,
+            "Nota de Credito",$creditnote->id_quotation ?? null);
             /*------------------------------------------------- */
 
             return redirect('creditnotes/facturado/'.$creditnote->id.'/'.$coin.'')->withSuccess('Nota de Credito Guardada con Exito!');

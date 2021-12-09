@@ -65,7 +65,12 @@
                                                         <option  selected style="backgroud-color:blue;" value="{{ $subsegment->id }}"><strong>{{ $subsegment->description }}</strong></option>
                                                     @endif
                                                 @endforeach
-                                               
+                                                <option class="hidden" disabled data-color="#A0522D" value="-1">------------------</option>
+                                                @foreach($subsegments as $var2)
+                                                    <option value="{{ $var2->id }}" >
+                                                        {{ $var2->description }}
+                                                    </option>
+                                                @endforeach
                                             </select>
                                         </div> 
                                 </div>

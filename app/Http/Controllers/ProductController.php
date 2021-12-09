@@ -163,7 +163,7 @@ class ProductController extends Controller
         $product = Product::on(Auth::user()->database_name)->find($id);
         $segments     = Segment::on(Auth::user()->database_name)->orderBY('description','asc')->get();
        
-        $subsegments  = Subsegment::on(Auth::user()->database_name)->orderBY('description','asc')->get();
+        $subsegments  = Subsegment::on(Auth::user()->database_name)->where('segment_id',$product->segment_id)->orderBY('description','asc')->get();
 
         $twosubsegments  = TwoSubsegment::on(Auth::user()->database_name)->where('subsegment_id',$product->subsegment_id)->orderBY('description','asc')->get();
      

@@ -33,12 +33,12 @@
                     <div class="form-group row">
                         <label for="total_factura" class="col-md-2 col-form-label text-md-right">Nº Factura:</label>
                         <div class="col-md-4">
-                            <input id="num_factura" type="text" class="form-control @error('total_factura') is-invalid @enderror" name="num_factura" value="{{ $creditnote->number_invoice}}" readonly>
+                            <input id="num_factura" type="text" class="form-control @error('total_factura') is-invalid @enderror" name="num_factura" value="{{ $creditnote->quotations->number_invoice}}" readonly>
                         </div>
 
                         <label for="date_creditnote" class="col-md-2 col-form-label text-md-right">CI/Rif: </label>
                         <div class="col-md-3">
-                            <input id="date_creditnote" type="text" class="form-control @error('date_creditnote') is-invalid @enderror" name="date_creditnote" value="{{ $creditnote->clients['cedula_rif']  ?? '' }}" readonly required autocomplete="date_creditnote">
+                            <input id="date_creditnote" type="text" class="form-control @error('date_creditnote') is-invalid @enderror" name="date_creditnote" value="{{ $creditnote->clients['cedula_rif'] ?? $creditnote->quotations->clients['cedula_rif']  ?? '' }}" readonly required autocomplete="date_creditnote">
     
                             @error('date_creditnote')
                                 <span class="invalid-feedback" role="alert">
@@ -53,7 +53,7 @@
                     <div class="form-group row">
                             <label for="date_creditnote" class="col-md-2 col-form-label text-md-right">Cliente: </label>
                             <div class="col-md-4">
-                                <input id="name_cliente" type="text" class="form-control @error('date_creditnote') is-invalid @enderror" name="name_cliente" value="{{ $creditnote->clients['name']  ?? '' }}" readonly>
+                                <input id="name_cliente" type="text" class="form-control @error('date_creditnote') is-invalid @enderror" name="name_cliente" value="{{$creditnote->quotations->clients['name'] ?? $creditnote->clients['name']  ?? '' }}" readonly>
 
                                 @error('date_creditnote')
                                     <span class="invalid-feedback" role="alert">

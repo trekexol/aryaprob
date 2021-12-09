@@ -35,7 +35,6 @@
                         <th class="text-center">REF</th>
                         <th class="text-center">Monto</th>
                         <th class="text-center">Moneda</th>
-                        <th class="text-center"></th>
                         
                     </tr>
                     </thead>
@@ -66,11 +65,9 @@
                                     <td class="text-center font-weight-bold">{{$quotation->vendors['name'] ?? ''}} {{$quotation->vendors['surname'] ?? ''}}</td>
                                     <td class="text-right font-weight-bold">${{number_format($amount_bcv, 2, ',', '.')}}</td>
                                     <td class="text-right font-weight-bold">{{number_format($quotation->amount_with_iva, 2, ',', '.')}}</td>
-                                    <td class="text-right font-weight-bold">{{$quotation->coin}}</td>
+                                    <td class="text-center font-weight-bold">{{$quotation->coin}}</td>
                                    
-                                    <td class="text-center font-weight-bold text-success">
-                                        Cobrado
-                                    </td>
+                                    
                                 </tr>     
                             @endforeach   
                         @endif

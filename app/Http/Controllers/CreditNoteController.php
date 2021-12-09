@@ -37,7 +37,7 @@ class CreditNoteController extends Controller
    {
         
         if($this->userAccess->validate_user_access($this->modulo)){
-            $creditnotes = CreditNote::on(Auth::user()->database_name)->orderBy('id' ,'DESC')
+            $creditnotes = CreditNote::on(Auth::user()->database_name)->where('status','1')->orderBy('id' ,'DESC')
             ->get();
 
             return view('admin.credit_notes.index',compact('creditnotes'));
@@ -45,7 +45,21 @@ class CreditNoteController extends Controller
             return redirect('/home')->withDanger('No tiene Acceso al modulo de '.$this->modulo);
         }
 
-      
+   }
+
+   public function index_historial()
+   {
+        
+        if($this->userAccess->validate_user_access($this->modulo)){
+            $creditnotes = CreditNote::on(Auth::user()->database_name)->where('status','C')->orderBy('id' ,'DESC')
+            ->get();
+
+            $historial = "historial";
+            return view('admin.credit_notes.index',compact('creditnotes','historial'));
+        }else{
+            return redirect('/home')->withDanger('No tiene Acceso al modulo de '.$this->modulo);
+        }
+
    }
 
    /**
@@ -327,7 +341,7 @@ class CreditNoteController extends Controller
         $quotations     = Quotation::on(Auth::user()->database_name)
                                     ->orderBy('number_invoice' ,'desc')
                                     ->where('date_billing','<>',null)
-                                    ->where('status','C')
+                                    ->where('status','P')
                                     ->get();
 
         $route = 'creditnotes.createcreditnote';
@@ -371,7 +385,7 @@ class CreditNoteController extends Controller
                 $var->id_user = request('id_user');
                 $var->serie = request('serie');
                 $var->date = request('date');
-        
+                
                 $var->observation = request('observation');
                
                 $company = Company::on(Auth::user()->database_name)->find(1);
@@ -812,14 +826,40 @@ class CreditNoteController extends Controller
         
         $creditnote = CreditNote::on(Auth::user()->database_name)->find(request('id_creditnote_modal')); 
 
-        $global = new GlobalController();
-        $global->deleteAllProducts($creditnote->id);
+    
+        $this->deleteAllProducts($creditnote->id);
+
+        DB::connection(Auth::user()->database_name)->table('detail_vouchers')
+        ->join('header_vouchers', 'header_vouchers.id','=','detail_vouchers.id_header_voucher')
+        ->where('header_vouchers.id_credit_note','=',$creditnote->id)
+        ->update(['detail_vouchers.status' => 'X' , 'header_vouchers.status' => 'X']);
 
         $creditnote->delete(); 
 
         
         return redirect('/creditnotes')->withDanger('Eliminacion exitosa!!');
         
+    }
+
+    public function deleteAllProducts($id_credit_note)
+    {
+        $credit_note_products = CreditNoteDetail::on(Auth::user()->database_name)->where('id_credit_note',$id_credit_note)->get(); 
+        
+        if(isset($credit_note_products)){
+            foreach($credit_note_products as $credit_note_product){
+                if(isset($credit_note_product) && $credit_note_product->status == "C"){
+                    credit_noteProduct::on(Auth::user()->database_name)
+                        ->join('inventories','inventories.id','credit_note_products.id_inventory')
+                        ->join('products','products.id','inventories.product_id')
+                        ->where(function ($query){
+                            $query->where('products.type','MERCANCIA')
+                                ->orWhere('products.type','COMBO');
+                        })
+                        ->where('credit_note_products.id',$credit_note_product->id)
+                        ->update(['inventories.amount' => DB::raw('inventories.amount+credit_note_products.amount'), 'credit_note_products.status' => 'X']);
+                }
+            }
+        }
     }
 
     public function reversar_creditnote(Request $request)

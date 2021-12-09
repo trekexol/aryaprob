@@ -69,7 +69,7 @@
               
                   <div class="row justify-content-center ">
                       <div class="card shadow mb-2 col-sm-8"  style="background-color: white">
-                        <div class="card-header py-2" style="background-color: #ff9101">
+                        <div class="card-header py-2" style="background-color: rgb(255, 185, 81);">
                           <div class="form-group row">
                             <div class="m-0 font-weight-bold text-center col-sm-10" style="color: #000000">Ingresos Correspondientes al periodo {{$date->format('Y')}}</div>
                               
@@ -96,7 +96,7 @@
                       <div class="col-sm-3" >
                           <div class="card shadow" style="background-color: white">
                             <!-- Card Header - Dropdown -->
-                            <div class="card-header"  style="background-color: #ff9101">
+                            <div class="card-header"  style="background-color: rgb(255, 185, 81);">
                                 <h6 class="m-0 font-weight-bold text-center" style="color: #000000">Reporte de Ingresos,<br> Egresos y Gastos</h6>
                             </div>
                             <!-- Card Body -->
