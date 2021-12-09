@@ -85,7 +85,7 @@ class ExportExpenseController extends Controller
                 $total_retiene_iva = $this->calculatarTotalProductosSinIva($expense);
                 
                 $content .= '<?xml version="1.0" encoding="UTF-8"?>
-                <RelacionRetencionesISLR RifAgente="'.$company->code_rif.'" Periodo="'.$expense->date->format('Ym').'">
+                <RelacionRetencionesISLR RifAgente="'.str_replace("-","",$company->code_rif).'" Periodo="'.$expense->date->format('Ym').'">
                  <DetalleRetencion>
                   <RifRetenido>'.str_replace("-","",$expense->providers['code_provider']).'</RifRetenido>
                   <NumeroFactura>'.$expense->invoice.'</NumeroFactura>
