@@ -38,10 +38,24 @@
 
     <!-- Page Heading -->
     <div class="row py-lg-2">
-      <div class="col-md-6">
-          <h2>Notas de Crédito</h2>
-      </div>
-      <div class="col-md-6">
+      
+      @if (isset($historial))
+        <div class="col-md-5">
+            <h2>Historial de Notas de Crédito</h2>
+        </div>
+        <div class="col-md-3">
+            <a href="{{ route('creditnotes')}}" class="btn btn-info  float-md-right" role="button" aria-pressed="true">Notas de Credito</a>
+        </div>
+      @else
+        <div class="col-md-3">
+            <h2>Notas de Crédito</h2>
+        </div>
+        <div class="col-md-3">
+            <a href="{{ route('creditnotes.historial')}}" class="btn btn-info  float-md-right" role="button" aria-pressed="true">Historial</a>
+        </div>
+      @endif
+      
+      <div class="col-md-4">
         <a href="{{ route('creditnotes.createcreditnote')}}" class="btn btn-primary  float-md-right" role="button" aria-pressed="true">Registrar una Nota de Crédito</a>
       </div>
     </div>
@@ -74,7 +88,6 @@
                 <th class="text-center">N° de Control/Serie</th>
                 <th class="text-center">Cliente</th>
                 <th class="text-center">Vendedor</th>
-                <th class="text-center">Transp. / Tipo de Entrega</th>
                 <th class="text-center">Fecha</th>
                 <th class="text-center"></th>
                
@@ -89,10 +102,9 @@
                             <td>
                             <a href="{{ route('creditnotes.create',[$creditnote->id,'bolivares']) }}" title="Seleccionar"><i class="fa fa-check" style="color: orange;"></i></a>
                             </td>
-                            <td class="text-center">{{$creditnote->serie ?? ''}}</td>
-                            <td class="text-center">{{ $creditnote->clients['name'] ?? ''}}</td>
-                            <td class="text-center">{{ $creditnote->vendors['name'] ?? ''}}</td>
-                            <td class="text-center">{{ $creditnote->transports['placa'] ?? ''}}</td>
+                            <td class="text-center">{{ $creditnote->serie ?? $creditnote->id ?? ''}}</td>
+                            <td class="text-center">{{ $creditnote->clients['name'] ?? $creditnote->quotations->clients['name'] ?? ''}}</td>
+                            <td class="text-center">{{ $creditnote->vendors['name'] ?? $creditnote->quotations->vendors['name'] ?? ''}}</td>
                             <td class="text-center">{{ $creditnote->date ?? ''}}</td>
                             <td>
                             <a href="#" class="delete" data-id-creditnote={{$creditnote->id}} data-toggle="modal" data-target="#deleteModal" title="Eliminar"><i class="fa fa-trash text-danger"></i></a>  

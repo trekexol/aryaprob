@@ -23,6 +23,7 @@ class CreateCreditNotesTable extends Migration
 
             $table->string('serie',30)->nullable();
             $table->date('date');
+            $table->integer('iva_percentage')->nullable();
             $table->string('observation',150)->nullable();
             $table->string('coin',15)->nullable();
 
