@@ -222,7 +222,7 @@
   @if (isset($coin) && ($coin != 'bolivares'))
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">MONTO TOTAL {{($coin == 'bolivares') ? '' : ' USD'}}</th>
-    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format(bcdiv($total_coin , '1', 2), 2, ',', '.') }}{{($coin == 'bolivares') ? '' : '$'}}</th>
+    <th style="text-align: right; font-weight: normal; width: 21%;">{{($coin == 'bolivares') ? '' : '$'}}{{ number_format(bcdiv($total_coin , '1', 2), 2, ',', '.') }}</th>
   </tr> 
   @endif
   
