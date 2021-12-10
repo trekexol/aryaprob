@@ -71,7 +71,7 @@
                       <div class="card shadow mb-2 col-sm-8"  style="background-color: white">
                         <div class="card-header py-2" style="background-color: rgb(255, 185, 81);">
                           <div class="form-group row">
-                            <div class="m-0 font-weight-bold text-center col-sm-10" style="color: #000000">Ingresos Correspondientes al periodoo {{$date->format('Y')}}</div>
+                            <div class="m-0 font-weight-bold text-center col-sm-10" style="color: #000000">Ingresos Correspondientes al periodo {{$date->format('Y')}}</div>
                               
                                 @if (empty($coin) || (isset($coin) && $coin == 'bolivares'))
                                   <a href="{{ route('home',"dolares") }}" class="btn btn-circle btn-success btn-sm ">
