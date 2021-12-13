@@ -18,8 +18,6 @@ use Illuminate\Support\Facades\Auth;
 class ExcelController extends Controller
 {
 
-<<<<<<< HEAD
-=======
     public function export_client() 
     {
          $clients = Client::on(Auth::user()->database_name)
@@ -38,7 +36,6 @@ class ExcelController extends Controller
         return Excel::download($export, 'plantilla_clientes.xlsx');
     }
 
->>>>>>> carlos
     public function export_product() 
     {
          $products = Product::on(Auth::user()->database_name)
@@ -120,16 +117,7 @@ class ExcelController extends Controller
        return redirect('clients')->with('success', 'Archivo importado con Exito!');
    }
   
-   public function import_product(Request $request) 
-   {
-       $file = $request->file('file');
-       
-       Excel::import(new ProductImport, $file);
-
-       Excel::import(new InventoryImport, $file);
-       
-       return redirect('products')->with('success', 'Archivo importado con Exito!');
-   }
+  
 
    public function import(Request $request) 
    {
