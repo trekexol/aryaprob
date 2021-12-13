@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Account;
 use App\Exports\ExpensesExport;
 use App\Imports\ExpensesImport;
+use App\Imports\ProductImport;
 use App\Inventory;
+use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Maatwebsite\Excel\Facades\Excel;
@@ -13,6 +15,27 @@ use Illuminate\Support\Facades\Auth;
 
 class ExcelController extends Controller
 {
+
+    public function export_product() 
+    {
+         $products = Product::on(Auth::user()->database_name)
+         ->join('inventories','inventories.product_id','=','products.id')
+         ->select('products.id','segment_id','subsegment_id','twosubsegment_id','threesubsegment_id','unit_of_measure_id',
+         'code_comercial','type','description','price','price_buy','cost_average','photo_product','money',
+         'exento','islr','inventories.amount')
+         ->get();
+
+        
+         $export = new ExpensesExport([
+             ['id','id_segmento','id_subsegmento','id_twosubsegment','id_threesubsegment','id_unidadmedida'
+              ,'codigo_comercial','tipo_mercancia_o_servicio','descripcion','precio','precio_compra','costo_promedio','foto','moneda_d_o_bs',
+              'exento_1_o_0','islr_1_o_0','Cantidad en Inventario'],
+              $products
+        ]);
+        
+        return Excel::download($export, 'guia_productos.xlsx');
+    }
+
     public function export($id) 
    {
        
@@ -74,5 +97,14 @@ class ExcelController extends Controller
        Excel::import(new ExpensesImport, $file);
        
        return redirect('expensesandpurchases/register/'.$id_expense.'/'.$coin.'')->with('success', 'Archivo importado con Exito!');
+   }
+
+   public function import_product(Request $request) 
+   {
+       $file = $request->file('file');
+       
+       Excel::import(new ProductImport, $file);
+       
+       return redirect('products')->with('success', 'Archivo importado con Exito!');
    }
 }
