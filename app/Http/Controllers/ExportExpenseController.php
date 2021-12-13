@@ -92,8 +92,8 @@ class ExportExpenseController extends Controller
                   <NumeroControl>'.$expense->serie.'</NumeroControl>
                   <FechaOperacion>'.$expense->date->format('d/m/Y').'</FechaOperacion>
                   <CodigoConcepto>'.str_pad($expense->id_islr_concept, 3, "0", STR_PAD_LEFT).'</CodigoConcepto>
-                  <MontoOperacion>'.$expense->base_imponible.'</MontoOperacion>
-                  <PorcentajeRetencion>'.bcdiv($expense->islr_concepts['value'],'1',2).'</PorcentajeRetencion>
+                  <MontoOperacion>'.bcdiv($expense->base_imponible,'1',2) .'</MontoOperacion>
+                  <PorcentajeRetencion>'.$expense->islr_concepts['value'].'</PorcentajeRetencion>
                  </DetalleRetencion>
                 </RelacionRetencionesISLR>';
 
