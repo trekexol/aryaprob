@@ -26,7 +26,6 @@ class ExcelController extends Controller
          ,'direction','city','country','phone1','phone2','days_credit','amount_max_credit','percentage_retencion_iva',
          'percentage_retencion_islr')
          ->get();
-
         
          $export = new ExpensesExport([
              ['id','id_vendor','id_user','type_code','name','cedula_rif'
