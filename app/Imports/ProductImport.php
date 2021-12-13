@@ -25,6 +25,15 @@ class ProductImport implements ToModel,WithHeadingRow, SkipsOnError
         $user       =   auth()->user();
         $date = Carbon::now();
 
+<<<<<<< HEAD
+=======
+        /*Validator::make($rows->toArray(), [
+            '*.name' => 'required',
+            '*.email' => 'required',
+            '*.password' => 'required',
+        ])->validate();*/
+
+>>>>>>> carlos
         $product = new Product([
             
             'id'                    => $row['id'],

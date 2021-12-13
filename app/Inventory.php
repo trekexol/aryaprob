@@ -7,12 +7,8 @@ use Illuminate\Support\Facades\Auth;
 
 class Inventory extends Model
 {
+    protected $fillable = ['id','product_id','id_user','code','amount','status','created_at','updated_at'];
 
-    /*protected $connection = 'arya';
-
-    public function changeConnection($conn){
-        $this->connection = $conn;
-    }*/
 
     public function products(){
         return $this->belongsTo('App\Permission\Models\Product','product_id');

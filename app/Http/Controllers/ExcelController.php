@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Account;
+use App\Client;
 use App\Exports\ExpensesExport;
+use App\Imports\ClientImport;
 use App\Imports\ExpensesImport;
 use App\Imports\ProductImport;
 use App\Inventory;
@@ -86,6 +88,26 @@ class ExcelController extends Controller
        ]);
        
        return Excel::download($export, 'guia_inventario.xlsx');
+   }
+
+   public function import_client(Request $request) 
+   {
+       $file = $request->file('file');
+       
+       Excel::import(new ClientImport, $file);
+       
+       return redirect('clients')->with('success', 'Archivo importado con Exito!');
+   }
+  
+   public function import_product(Request $request) 
+   {
+       $file = $request->file('file');
+       
+       Excel::import(new ProductImport, $file);
+
+       Excel::import(new InventoryImport, $file);
+       
+       return redirect('products')->with('success', 'Archivo importado con Exito!');
    }
 
    public function import(Request $request) 

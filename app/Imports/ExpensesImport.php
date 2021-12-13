@@ -6,6 +6,7 @@ use App\ExpensesDetail;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Illuminate\Support\Facades\Auth;
 
 class ExpensesImport implements ToModel,WithHeadingRow
 {
@@ -18,8 +19,9 @@ class ExpensesImport implements ToModel,WithHeadingRow
     {
         $user       =   auth()->user();
         $date = Carbon::now();
+       
 
-        return new ExpensesDetail([
+        $expense = new ExpensesDetail([
             
             'id_expense'        => $row['id_compra'],
             'id_inventory'      => $row['id_inventario'], 
@@ -36,5 +38,9 @@ class ExpensesImport implements ToModel,WithHeadingRow
             'created_at'        => $date,
             'updated_at'        => $date,
         ]);
+
+        $expense->setConnection(Auth::user()->database_name);
+
+        return $expense;
     }
 }
