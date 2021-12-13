@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Account;
+use App\Client;
 use App\Exports\ExpensesExport;
+use App\Imports\ClientImport;
 use App\Imports\ExpensesImport;
+use App\Imports\InventoryImport;
 use App\Imports\ProductImport;
 use App\Inventory;
 use App\Product;
@@ -15,6 +18,25 @@ use Illuminate\Support\Facades\Auth;
 
 class ExcelController extends Controller
 {
+
+    public function export_client() 
+    {
+         $clients = Client::on(Auth::user()->database_name)
+         ->select('id','id_vendor','id_user','type_code','name','cedula_rif'
+         ,'direction','city','country','phone1','phone2','days_credit','amount_max_credit','percentage_retencion_iva',
+         'percentage_retencion_islr')
+         ->get();
+
+        
+         $export = new ExpensesExport([
+             ['id','id_vendor','id_user','type_code','name','cedula_rif'
+              ,'direction','city','country','phone1','phone2','days_credit','amount_max_credit','percentage_retencion_iva',
+              'percentage_retencion_islr'],
+              $clients
+        ]);
+        
+        return Excel::download($export, 'plantilla_clientes.xlsx');
+    }
 
     public function export_product() 
     {
@@ -29,11 +51,11 @@ class ExcelController extends Controller
          $export = new ExpensesExport([
              ['id','id_segmento','id_subsegmento','id_twosubsegment','id_threesubsegment','id_unidadmedida'
               ,'codigo_comercial','tipo_mercancia_o_servicio','descripcion','precio','precio_compra','costo_promedio','foto','moneda_d_o_bs',
-              'exento_1_o_0','islr_1_o_0','Cantidad en Inventario'],
+              'exento_1_o_0','islr_1_o_0','cantidad_en_inventario'],
               $products
         ]);
         
-        return Excel::download($export, 'guia_productos.xlsx');
+        return Excel::download($export, 'plantilla_productos.xlsx');
     }
 
     public function export($id) 
@@ -88,6 +110,26 @@ class ExcelController extends Controller
        return Excel::download($export, 'guia_inventario.xlsx');
    }
 
+   public function import_client(Request $request) 
+   {
+       $file = $request->file('file');
+       
+       Excel::import(new ClientImport, $file);
+       
+       return redirect('clients')->with('success', 'Archivo importado con Exito!');
+   }
+  
+   public function import_product(Request $request) 
+   {
+       $file = $request->file('file');
+       
+       Excel::import(new ProductImport, $file);
+
+       Excel::import(new InventoryImport, $file);
+       
+       return redirect('products')->with('success', 'Archivo importado con Exito!');
+   }
+
    public function import(Request $request) 
    {
        $file = $request->file('file');
@@ -99,12 +141,5 @@ class ExcelController extends Controller
        return redirect('expensesandpurchases/register/'.$id_expense.'/'.$coin.'')->with('success', 'Archivo importado con Exito!');
    }
 
-   public function import_product(Request $request) 
-   {
-       $file = $request->file('file');
-       
-       Excel::import(new ProductImport, $file);
-       
-       return redirect('products')->with('success', 'Archivo importado con Exito!');
-   }
+  
 }

@@ -39,9 +39,25 @@
 
     <!-- Page Heading -->
     <div class="row py-lg-2">
-      <div class="col-md-6">
+      <div class="col-sm-3">
           <h2>Clientes</h2>
       </div>
+      <div class="col-sm-3 dropdown mb-4">
+        <button class="btn btn-dark" type="button"
+            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="false"
+            aria-expanded="false">
+            <i class="fas fa-bars"></i>
+            Opciones
+        </button>
+        <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
+            
+            <a href="{{ route('export.client_template') }}" class="dropdown-item bg-success text-white h5">Descargar Plantilla</a> 
+            <form id="fileForm" method="POST" action="{{ route('import_client') }}" enctype="multipart/form-data" >
+              @csrf
+                <input id="file" type="file" value="import" accept=".xlsx" name="file" class="file">
+            </form>
+        </div> 
+    </div> 
       <div class="col-md-6">
         <a href="{{ route('clients.create')}}" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">Registrar Cliente</a>
       </div>
@@ -117,7 +133,27 @@
         'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]]
     });
 
-    
+    $("#file").on('change',function(){
+            
+        var file = document.getElementById("file").value;
+
+        /*Extrae la extencion del archivo*/
+        var basename = file.split(/[\\/]/).pop(),  // extract file name from full path ...
+                                            // (supports `\\` and `/` separators)
+        pos = basename.lastIndexOf(".");       // get last position of `.`
+
+        if (basename === "" || pos < 1) {
+            alert("El archivo no tiene extension");
+        }          
+        /*-------------------------------*/     
+
+        if(basename.slice(pos + 1) == 'xlsx'){
+            document.getElementById("fileForm").submit();
+        }else{
+            alert("Solo puede cargar archivos .xlsx");
+        }            
+            
+    });
 
     </script> 
 @endsection
