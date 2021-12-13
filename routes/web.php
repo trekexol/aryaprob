@@ -888,6 +888,8 @@ Route::group(["prefix"=>'export'],function(){
 
     Route::post('expenseimport','ExcelController@import')->name('import');
 
+    Route::get('products','ExcelController@export_product')->name('export.product_template');
+    Route::post('productsimport','ExcelController@import_product')->name('import_product');
   });
 
   Route::group(["prefix"=>'orders'],function(){

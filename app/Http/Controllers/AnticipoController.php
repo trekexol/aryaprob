@@ -676,8 +676,8 @@ class AnticipoController extends Controller
 
         if(isset($anticipo)){
            
-            $anticipo->status = 'X';
-            $anticipo->save();
+           
+            $anticipo->delete();
            
             $this->disableMovementsAnticipo($anticipo);
 
@@ -697,8 +697,8 @@ class AnticipoController extends Controller
 
         if(isset($anticipo)){
            
-            $anticipo->status = 'X';
-            $anticipo->save();
+           
+            $anticipo->delete();
            
             $this->disableMovementsAnticipo($anticipo);
 
