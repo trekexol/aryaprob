@@ -23,10 +23,23 @@
 
     <!-- Page Heading -->
     <div class="row py-lg-2">
-      <div class="col-md-6">
-          
-      </div>
-      <div class="col-md-6">
+      <div class="col-sm-3 offset-sm-4  dropdown mb-4">
+          <button class="btn btn-dark" type="button"
+              id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="false"
+              aria-expanded="false">
+              <i class="fas fa-bars"></i>
+              Opciones
+          </button>
+          <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
+              
+              <a href="{{ route('export.product_template') }}" class="dropdown-item bg-success text-white h5">Descargar Plantilla</a> 
+              <form id="fileForm" method="POST" action="{{ route('import_product') }}" enctype="multipart/form-data" >
+                @csrf
+                  <input id="file" type="file" value="import" accept=".xlsx" name="file" class="file">
+              </form>
+          </div> 
+      </div> 
+      <div class="col-sm-3">
         <a href="{{ route('products.create')}}" class="btn btn-primary float-md-right" role="button" aria-pressed="true">Registrar un Producto</a>
       </div>
     </div>
@@ -140,6 +153,28 @@
             let id_product = $(this).attr('data-id-product');
     
             $('#id_product_modal').val(id_product);
+        });
+
+        $("#file").on('change',function(){
+            
+            var file = document.getElementById("file").value;
+
+            /*Extrae la extencion del archivo*/
+            var basename = file.split(/[\\/]/).pop(),  // extract file name from full path ...
+                                               // (supports `\\` and `/` separators)
+            pos = basename.lastIndexOf(".");       // get last position of `.`
+
+            if (basename === "" || pos < 1) {
+                alert("El archivo no tiene extension");
+            }          
+            /*-------------------------------*/     
+
+            if(basename.slice(pos + 1) == 'xlsx'){
+                document.getElementById("fileForm").submit();
+            }else{
+                alert("Solo puede cargar archivos .xlsx");
+            }            
+               
         });
         </script> 
 @endsection
