@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Account;
 use App\Client;
 use App\Exports\ExpensesExport;
+use App\Imports\AccountImport;
 use App\Imports\ClientImport;
 use App\Imports\ExpensesImport;
 use App\Imports\InventoryImport;
 use App\Imports\ProductImport;
+use App\Imports\ProviderImport;
 use App\Inventory;
 use App\Product;
+use App\Provider;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Maatwebsite\Excel\Facades\Excel;
@@ -18,6 +21,44 @@ use Illuminate\Support\Facades\Auth;
 
 class ExcelController extends Controller
 {
+
+    public function export_account() 
+    {
+         $accounts = Account::on(Auth::user()->database_name)
+         ->select('id','code_one','code_two','code_three',
+         'code_four','code_five','period','description','type','level',
+         'balance_previus','rate','coin')
+         ->get();
+        
+         $export = new ExpensesExport([
+             ['id','code_one','code_two','code_three',
+             'code_four','code_five','period','description','type','level',
+             'balance_previus','rate','coin'],
+              $accounts
+        ]);
+        
+        return Excel::download($export, 'plantilla_cuentas.xlsx');
+    }
+
+    public function export_provider() 
+    {
+         $providers = Provider::on(Auth::user()->database_name)
+         ->select('id','code_provider','razon_social','direction',
+         'city','country','phone1','phone2','has_credit','days_credit',
+         'amount_max_credit','porc_retencion_iva','porc_retencion_islr',
+         'balance')
+         ->get();
+        
+         $export = new ExpensesExport([
+             ['id','code_provider','razon_social','direction',
+             'city','country','phone1','phone2','has_credit','days_credit',
+             'amount_max_credit','porc_retencion_iva','porc_retencion_islr',
+             'balance'],
+              $providers
+        ]);
+        
+        return Excel::download($export, 'plantilla_proveedores.xlsx');
+    }
 
     public function export_client() 
     {
@@ -107,6 +148,26 @@ class ExcelController extends Controller
        ]);
        
        return Excel::download($export, 'guia_inventario.xlsx');
+   }
+
+   public function import_account(Request $request) 
+   {
+       $file = $request->file('file');
+       
+       Excel::import(new AccountImport, $file);
+       
+       return redirect('accounts/menu')->with('success', 'Archivo importado con Exito!');
+   }
+
+  
+
+   public function import_provider(Request $request) 
+   {
+       $file = $request->file('file');
+       
+       Excel::import(new ProviderImport, $file);
+       
+       return redirect('providers')->with('success', 'Archivo importado con Exito!');
    }
 
    public function import_client(Request $request) 

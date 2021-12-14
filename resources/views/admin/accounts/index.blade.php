@@ -34,8 +34,13 @@
                 
             </button>
             <div class="dropdown-menu animated--fade-in"
-                aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="{{ route('accounts.index_previous_exercise') }}">Ver Ejercicios Anteriores</a>
+                aria-labelledby="dropdownMenuButton"> 
+                <a href="{{ route('export.account_template') }}" class="dropdown-item bg-success text-white h5">Descargar Plantilla</a> 
+                <form id="fileForm" method="POST" action="{{ route('import_account') }}" enctype="multipart/form-data" >
+                  @csrf
+                    <input id="file" type="file" value="import" accept=".xlsx" name="file" class="file">
+                </form>
+                <a class="dropdown-item bg-light" href="{{ route('accounts.index_previous_exercise') }}">Ver Ejercicios Anteriores</a>
             </div>
         </div> 
        
@@ -506,7 +511,27 @@
         window.location = "{{route('accounts', ['',''])}}"+"/"+coin+"/"+level;
     });
 
-        
+    $("#file").on('change',function(){
+            
+            var file = document.getElementById("file").value;
+    
+            /*Extrae la extencion del archivo*/
+            var basename = file.split(/[\\/]/).pop(),  // extract file name from full path ...
+                                                // (supports `\\` and `/` separators)
+            pos = basename.lastIndexOf(".");       // get last position of `.`
+    
+            if (basename === "" || pos < 1) {
+                alert("El archivo no tiene extension");
+            }          
+            /*-------------------------------*/     
+    
+            if(basename.slice(pos + 1) == 'xlsx'){
+                document.getElementById("fileForm").submit();
+            }else{
+                alert("Solo puede cargar archivos .xlsx");
+            }            
+                
+        });
     
     </script> 
 

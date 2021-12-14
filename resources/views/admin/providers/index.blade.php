@@ -19,8 +19,8 @@
         </button>
         <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
             
-            <a href="{{ route('export.client_template') }}" class="dropdown-item bg-success text-white h5">Descargar Plantilla</a> 
-            <form id="fileForm" method="POST" action="{{ route('import_client') }}" enctype="multipart/form-data" >
+            <a href="{{ route('export.provider_template') }}" class="dropdown-item bg-success text-white h5">Descargar Plantilla</a> 
+            <form id="fileForm" method="POST" action="{{ route('import_provider') }}" enctype="multipart/form-data" >
               @csrf
                 <input id="file" type="file" value="import" accept=".xlsx" name="file" class="file">
             </form>

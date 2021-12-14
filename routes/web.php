@@ -893,6 +893,12 @@ Route::group(["prefix"=>'export'],function(){
 
     Route::get('clients','ExcelController@export_client')->name('export.client_template');
     Route::post('clientsimport','ExcelController@import_client')->name('import_client');
+
+    Route::get('providers','ExcelController@export_provider')->name('export.provider_template');
+    Route::post('providersimport','ExcelController@import_provider')->name('import_provider');
+
+    Route::get('accounts','ExcelController@export_account')->name('export.account_template');
+    Route::post('accountsimport','ExcelController@import_account')->name('import_account');
   });
 
   Route::group(["prefix"=>'orders'],function(){
