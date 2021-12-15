@@ -172,6 +172,11 @@
     </tr> 
   @endforeach 
 </table>
+<?php
+  $expense->sub_total = $expense->amount;
+
+ $expense->amount_with_iva = ($expense->amount_with_iva / ($bcv ?? 1)); //+ ($expense->retencion_iva / ($bcv ?? 1)) + ($expense->retencion_islr / ($bcv ?? 1));
+?>
 
 <table style="width: 100%;">
   <tr>
@@ -183,18 +188,6 @@
     <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($expense->base_imponible / ($bcv ?? 1), 2, ',', '.') }}</th>
   </tr> 
   
-  @if ($expense->retencion_iva != 0)
-    <tr>
-      <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Retención de Iva</th>
-      <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($expense->retencion_iva / ($bcv ?? 1), 2, ',', '.') }}</th>
-    </tr> 
-  @endif 
-  @if ($expense->retencion_islr != 0)
-    <tr>
-      <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Retención de ISLR</th>
-      <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($expense->retencion_islr / ($bcv ?? 1), 2, ',', '.') }}</th>
-    </tr> 
-  @endif 
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">I.V.A.{{ $expense->iva_percentage }}%</th>
     <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($expense->amount_iva / ($bcv ?? 1), 2, ',', '.') }}</th>
@@ -208,7 +201,7 @@
  
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-top-color: rgb(17, 9, 9); font-size: small;">MONTO TOTAL</th>
-    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($expense->amount_with_iva / ($bcv ?? 1), 2, ',', '.') }}</th>
+    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($expense->amount_with_iva, 2, ',', '.') }}</th>
   </tr> 
   
 </table>

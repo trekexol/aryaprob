@@ -890,12 +890,17 @@ Route::group(["prefix"=>'export'],function(){
 
     Route::get('products','ExcelController@export_product')->name('export.product_template');
     Route::post('productsimport','ExcelController@import_product')->name('import_product');
-<<<<<<< HEAD
-=======
+
 
     Route::get('clients','ExcelController@export_client')->name('export.client_template');
     Route::post('clientsimport','ExcelController@import_client')->name('import_client');
->>>>>>> carlos
+
+    Route::get('providers','ExcelController@export_provider')->name('export.provider_template');
+    Route::post('providersimport','ExcelController@import_provider')->name('import_provider');
+
+    Route::get('accounts','ExcelController@export_account')->name('export.account_template');
+    Route::post('accountsimport','ExcelController@import_account')->name('import_account');
+
   });
 
   Route::group(["prefix"=>'orders'],function(){
@@ -1013,4 +1018,8 @@ Route::group(["prefix"=>'creditnotes'],function(){
 
 Route::group(["prefix"=>'movements'],function(){
     Route::get('creditnote/{id_creditnote}/{coin?}','CreditNoteDetailController@movements')->name('movements.creditnote');
+});
+
+Route::group(["prefix"=>'accounting_adjustments'],function(){
+    Route::get('index/{coin?}','CreditNoteDetailController@index')->name('accounting_adjustments.creditnote');
 });

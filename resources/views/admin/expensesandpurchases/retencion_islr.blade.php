@@ -54,11 +54,11 @@
     <th style="font-size: x-small; width: 10%; text-align: center;">Fecha</th>
     <th style="font-size: x-small; width: 10%; text-align: center;">No Pago</th>
     <th style="font-size: x-small; width: 10%; text-align: center;">No Documento</th>
-    <th style="font-size: x-small; width: 20%; text-align: center;">Monto</th>
-    <th style="font-size: x-small; width: 20%; text-align: center;">Cantidad Objeto de Retención</th>
+    <th style="font-size: x-small; width: 10%; text-align: center;">Monto</th>
+    <th style="font-size: x-small; width: 10%; text-align: center;">Cantidad Objeto de Retención</th>
     <th style="font-size: x-small; width: 5%; text-align: center;">Tarifa %</th>
-    <th style="font-size: x-small; width: 10%; text-align: center;">Concepto de ISLR</th>
-    <th style="font-size: x-small; width: 20%; text-align: center;">Impuesto Retenido menos sustraendo</th>
+    <th style="font-size: x-small; width: 25%; text-align: center;">Concepto de ISLR</th>
+    <th style="font-size: x-small; width: 10%; text-align: center;">Impuesto Retenido menos sustraendo</th>
   </tr>
   <tr>
     <td style="font-size: x-small; text-align: center;">{{ $datenow ?? '' }}</td>
