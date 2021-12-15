@@ -1020,5 +1020,5 @@ Route::group(["prefix"=>'movements'],function(){
 });
 
 Route::group(["prefix"=>'accounting_adjustments'],function(){
-    Route::get('index/{coin?}','CreditNoteDetailController@index')->name('accounting_adjustments.creditnote');
+    Route::get('index/{coin?}','AccountingAdjustmentController@index')->name('accounting_adjustments.index');
 });
