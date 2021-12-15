@@ -102,10 +102,18 @@
                     <?php 
                         $amount_bcv = 0;
                         $amount_bcv = $quotation->amount_with_iva / $quotation->bcv;
+
+                        $date_defeated = date("Y-m-d",strtotime($quotation->date_billing."+ $quotation->credit_days days")); 
+
+                        $currentDate = \Carbon\Carbon::createFromFormat('Y-m-d', $datenow);
+                        $shippingDate = \Carbon\Carbon::createFromFormat('Y-m-d', $date_defeated); 
+
+                        $diferencia_en_dias = $currentDate->diffInDays($shippingDate);
+                        
                     ?>
 
                         <tr>
-                            <td class="text-center font-weight-bold">{{$quotation->date_billing}}</td>
+                            <td class="text-center font-weight-bold">{{$quotation->date_billing}} </td>
                             @if ($quotation->status == "X")
                                 <td class="text-center font-weight-bold">{{ $quotation->number_invoice }}
                                 </td>
@@ -115,7 +123,7 @@
                                 </td>
                             @endif
                             <td class="text-center font-weight-bold">{{$quotation->number_delivery_note ?? ''}}</td>
-                            <td class="text-center font-weight-bold">{{$quotation->clients['name'] ?? ''}}</td>
+                            <td class="text-center font-weight-bold">{{$quotation->clients['name'] ?? ''}} </td>
                             <td class="text-center font-weight-bold">{{$quotation->vendors['name'] ?? ''}} {{$quotation->vendors['surname'] ?? ''}}</td>
                             <td class="text-right font-weight-bold">${{number_format($amount_bcv, 2, ',', '.')}}</td>
                             <td class="text-right font-weight-bold">{{number_format($quotation->amount_with_iva, 2, ',', '.')}}</td>
@@ -132,9 +140,15 @@
                                 <td>
                                 </td>
                             @else
-                                <td class="text-center font-weight-bold">
-                                    <a href="{{ route('quotations.createfacturar_after',[$quotation->id,$quotation->coin ?? 'bolivares']) }}" title="Cobrar Factura" class="font-weight-bold text-dark">Click para Cobrar</a>
-                                </td>
+                                @if ($diferencia_en_dias >= 0)
+                                    <td class="text-center font-weight-bold">
+                                        <a href="{{ route('quotations.createfacturar_after',[$quotation->id,$quotation->coin ?? 'bolivares']) }}" title="Cobrar Factura" class="font-weight-bold" style="color: rgb(255, 183, 0)">Click para Cobrar<br>Vencida ({{$diferencia_en_dias}} dias)</a>
+                                    </td>
+                                @else
+                                    <td class="text-center font-weight-bold">
+                                        <a href="{{ route('quotations.createfacturar_after',[$quotation->id,$quotation->coin ?? 'bolivares']) }}" title="Cobrar Factura" class="font-weight-bold text-dark">Click para Cobrar</a>
+                                    </td>
+                                @endif
                                 <td>
                                     <input type="checkbox" name="check{{ $quotation->id }}" value="{{ $quotation->id }}" onclick="buttom();" id="flexCheckChecked">    
                                 </td>

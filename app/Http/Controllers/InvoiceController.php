@@ -36,13 +36,16 @@ class InvoiceController extends Controller
     public function index()
     {
         if($this->userAccess->validate_user_access($this->modulo)){
+
+            $date = Carbon::now();
+            $datenow = $date->format('Y-m-d');
            
             $quotations = Quotation::on(Auth::user()->database_name)->orderBy('number_invoice' ,'desc')
                                             ->where('date_billing','<>',null)
                                             ->get();
             
     
-            return view('admin.invoices.index',compact('quotations'));
+            return view('admin.invoices.index',compact('quotations','datenow'));
         }else{
             return redirect('/home')->withDanger('No tiene Acceso al modulo de '.$this->modulo);
         }
