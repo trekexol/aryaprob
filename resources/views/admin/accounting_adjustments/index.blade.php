@@ -5,11 +5,8 @@
 
 <!-- container-fluid -->
 <div class="container-fluid">
-
-    
-    </div>
     <div class="row py-lg-2">
-        <form method="POST" action="{{ route('daily_listing.store') }}">
+        <form method="POST" action="{{ route('accounting_adjustments.store') }}">
             @csrf
             <div class="card-body">
                 <div class="form-group row">
@@ -43,7 +40,7 @@
         </form>
     </div>
     <!-- Page Heading -->
-  </div>
+</div>
   {{-- VALIDACIONES-RESPUESTA--}}
 @include('admin.layouts.success')   {{-- SAVE --}}
 @include('admin.layouts.danger')    {{-- EDITAR --}}
@@ -55,7 +52,7 @@
             <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                 <tr>
-                    <th class="text-center">Fecha</th>
+                    <th class="text-center width: 8%;">Fecha</th>
                    
                     <th class="text-center">Cuenta</th>
                     <th class="text-center">Tipo de Movimiento</th>
@@ -65,9 +62,7 @@
                     <th class="text-center">Descripción</th>
                     <th class="text-center">Debe</th>
                     <th class="text-center">Haber</th>
-                   
-                   
-                  
+                    <th class="text-center"></th>
                 </tr>
                 </thead>
                 
@@ -126,7 +121,9 @@
                             <td class="text-right font-weight-bold">{{number_format($var->debe, 2, ',', '.')}}</td>
                             <td class="text-right font-weight-bold">{{number_format($var->haber, 2, ',', '.')}}</td>
                         @endif
-                        
+                            <td>    
+                                <a href="{{ route('detailvouchers.create',[$coin,$var->id_header_voucher]) }}" title="Editar"><i class="fa fa-edit"></i></a>
+                            </td>
                         </tr>
                         @endforeach
                     @endif

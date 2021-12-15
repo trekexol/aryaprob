@@ -1021,4 +1021,5 @@ Route::group(["prefix"=>'movements'],function(){
 
 Route::group(["prefix"=>'accounting_adjustments'],function(){
     Route::get('index/{coin?}','AccountingAdjustmentController@index')->name('accounting_adjustments.index');
+    Route::post('store','AccountingAdjustmentController@store')->name('accounting_adjustments.store');
 });
