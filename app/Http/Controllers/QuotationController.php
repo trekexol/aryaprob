@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Account;
 use App\Anticipo;
+use App\AnticipoQuotation;
 use App\Client;
 use App\Company;
 use App\DetailVoucher;
@@ -891,7 +893,7 @@ class QuotationController extends Controller
 
     public function reversar_quotation(Request $request)
     { 
-        
+       
         $id_quotation = $request->id_quotation_modal;
 
         $quotation = Quotation::on(Auth::user()->database_name)->findOrFail($id_quotation);
@@ -899,6 +901,9 @@ class QuotationController extends Controller
         $exist_multipayment = Multipayment::on(Auth::user()->database_name)
                             ->where('id_quotation',$quotation->id)
                             ->first();
+
+        $date = Carbon::now();
+        $datenow = $date->format('Y-m-d');  
                             
         if(empty($exist_multipayment)){
             if($quotation != 'X'){
@@ -915,6 +920,18 @@ class QuotationController extends Controller
     
                 $quotation->status = 'X';
                 $quotation->save();
+
+
+
+                //Crear un nuevo anticipo con el monto registrado en la cotizacion
+                if((isset($quotation->anticipo))&& ($quotation->anticipo != 0)){
+
+                    $account_anticipo = Account::on(Auth::user()->database_name)->where('description', 'like', 'Anticipos Clientes')->first();
+                    $anticipoController = new AnticipoController();
+                    $anticipoController->registerAnticipo($datenow,$quotation->id_client,$account_anticipo->id,"bolivares",
+                    $quotation->anticipo,$quotation->bcv,"reverso factura N°".$quotation->number_invoice);
+                    
+                }
 
                 $historial_quotation = new HistorialQuotationController();
 

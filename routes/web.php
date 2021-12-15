@@ -1017,3 +1017,7 @@ Route::group(["prefix"=>'creditnotes'],function(){
 Route::group(["prefix"=>'movements'],function(){
     Route::get('creditnote/{id_creditnote}/{coin?}','CreditNoteDetailController@movements')->name('movements.creditnote');
 });
+
+Route::group(["prefix"=>'accounting_adjustments'],function(){
+    Route::get('index/{coin?}','CreditNoteDetailController@index')->name('accounting_adjustments.creditnote');
+});
