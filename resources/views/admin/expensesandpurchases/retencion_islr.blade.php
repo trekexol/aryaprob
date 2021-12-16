@@ -64,15 +64,15 @@
     <td style="font-size: x-small; text-align: center;">{{ $datenow ?? '' }}</td>
     <td style="font-size: x-small; text-align: center;">{{ $expense->id ?? '' }}</td>
     <td style="font-size: x-small; text-align: center;">{{ $expense->serie ?? ''}}</td>
-    <td style="font-size: x-small; text-align: right;">{{ number_format(($expense->amount ?? 0) + ($expense->amount_iva ?? 0), 0, '', '.')}}</td>
-    <td style="font-size: x-small; text-align: right;">{{ number_format($total_islr_details ?? 0, 0, '', '.') }}</td>
-    <td style="font-size: x-small; text-align: center;">{{ number_format($expense->iva_percentage ?? 0, 0, '', '.')}}</td>
+    <td style="font-size: x-small; text-align: right;">{{ number_format(bcdiv(($expense->amount ?? 0) + ($expense->amount_iva ?? 0), '1', 2), 2, ',', '.')}}</td>
+    <td style="font-size: x-small; text-align: right;">{{ number_format(bcdiv($total_islr_details ?? 0, '1', 2), 2, ',', '.') }}</td>
+    <td style="font-size: x-small; text-align: center;">{{ number_format(bcdiv($expense->iva_percentage ?? 0, '1', 2), 2, ',', '.')}}</td>
     @if (isset($expense->islr_concepts['description']))
       <td style="font-size: x-small; text-align: right;">{{ $expense->islr_concepts['description'] ?? ''}} - {{ $expense->islr_concepts['value'] ?? ''}} %</td>   
     @else
       <td style="font-size: x-small; text-align: right;"></td>   
     @endif
-   <td style="font-size: x-small; text-align: right;">{{ number_format($expense->retencion_islr ?? 0, 0, '', '.')}}</td>
+   <td style="font-size: x-small; text-align: right;">{{ number_format(bcdiv($expense->retencion_islr ?? 0, '1', 2), 2, ',', '.')}}</td>
   </tr>
 
 </table>
