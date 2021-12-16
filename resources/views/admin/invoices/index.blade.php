@@ -105,7 +105,7 @@
 
                         if(isset($quotation->credit_days)){
                             $date_defeated = date("Y-m-d",strtotime($quotation->date_billing."+ $quotation->credit_days days")); 
-
+                            $diferencia_en_dias = 0;
                             $currentDate = \Carbon\Carbon::createFromFormat('Y-m-d', $datenow);
                             $shippingDate = \Carbon\Carbon::createFromFormat('Y-m-d', $date_defeated); 
 
@@ -128,7 +128,7 @@
                                 </td>
                             @endif
                             <td class="text-center font-weight-bold">{{$quotation->number_delivery_note ?? ''}}</td>
-                            <td class="text-center font-weight-bold">{{$quotation->clients['name'] ?? ''}}  {{$validator_date}}</td>
+                            <td class="text-center font-weight-bold">{{$quotation->clients['name'] ?? ''}}  </td>
                             <td class="text-center font-weight-bold">{{$quotation->vendors['name'] ?? ''}} {{$quotation->vendors['surname'] ?? ''}}</td>
                             <td class="text-right font-weight-bold">${{number_format($amount_bcv, 2, ',', '.')}}</td>
                             <td class="text-right font-weight-bold">{{number_format($quotation->amount_with_iva, 2, ',', '.')}}</td>
