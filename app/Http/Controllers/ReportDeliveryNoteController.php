@@ -46,7 +46,9 @@ class ReportDeliveryNoteController extends Controller
                 if(isset($id_client_or_vendor)){
                     $client    = Client::on(Auth::user()->database_name)->find($id_client_or_vendor);
                 }
-            }else if (isset($typeperson) && $typeperson == 'Vendedor'){
+            }
+            
+            if (isset($typeperson) && $typeperson == 'Vendedor'){
                 if(isset($id_client_or_vendor)){
                     $vendor    = Vendor::on(Auth::user()->database_name)->find($id_client_or_vendor);
                 }
@@ -74,7 +76,7 @@ class ReportDeliveryNoteController extends Controller
         $coin = request('coin');
         $client = null;
         $vendor = null;
-        $typeperson = 'ninguno';
+        $typeperson = 'todo';
 
         if($type != 'todo'){
             if(isset($id_client)){
@@ -884,6 +886,8 @@ class ReportDeliveryNoteController extends Controller
     function accounts_receivable_note_pdf($coin,$date_end,$typeinvoice,$typeperson,$id_client_or_vendor = null,$fecha_frist = null)
     {
         
+
+        
         //dd('Moneda: '.$coin.' Hasta: '.$date_end.' ID-Cliente-Vend: '.$id_client_or_vendor.' Tipo: '.$typeinvoice.' Persona: '.$typeperson.' Fecha frist ');
     
 
@@ -924,43 +928,49 @@ class ReportDeliveryNoteController extends Controller
                     ->where('quotations.date_delivery_note','<=',$date_consult)
                     ->where('quotations.date_billing',null)
                     ->where('quotations.id_client',$id_client_or_vendor)
-                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount) As amount_anticipo'))
-                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','clients.name','quotations.amount','quotations.amount_with_iva')
+                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','vendors.surname as surname_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount) As amount_anticipo'))
+                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','vendors.surname','clients.name','quotations.amount','quotations.amount_with_iva')
                     ->orderBy('quotations.date_delivery_note','desc')
                     ->get();
-                }else if(isset($typeinvoice) && ($typeinvoice == 'facturas')){ // nota a factura pendiente por cobrar cliente bs
+                }
+                    
+               if(isset($typeinvoice) && ($typeinvoice == 'facturas')){ // nota a factura pendiente por cobrar cliente bs
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                      ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                     ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                     ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
                     ->whereIn('quotations.status',['P'])
                     ->where('quotations.date_billing','<>',null)
-                    ->where('quotations.date_billing','>=',$fecha_frist)
-                    ->where('quotations.date_billing','<=',$date_consult)
+                    ->where('quotations.date_delivery_note','>=',$fecha_frist)
+                    ->where('quotations.date_delivery_note','<=',$date_consult)
                     ->where('quotations.number_invoice','<>',null)
                     ->where('quotations.number_delivery_note','<>',null)
                     ->where('quotations.id_client',$id_client_or_vendor)
-                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount) As amount_anticipo'))
-                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','clients.name','quotations.amount','quotations.amount_with_iva')
+                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','vendors.surname as surname_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount) As amount_anticipo'))
+                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','vendors.surname','clients.name','quotations.amount','quotations.amount_with_iva')
                     ->orderBy('quotations.date_billing','desc')
                     ->get();
-                }else if(isset($typeinvoice) && ($typeinvoice == 'facturasc')){ // facturas cobradas cliente bs
+                } 
+                
+                if(isset($typeinvoice) && ($typeinvoice == 'facturasc')){ // facturas cobradas cliente bs
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                      ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                     ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                     ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
                     ->whereIn('quotations.status',['C'])
                     ->where('quotations.date_billing','<>',null)
-                    ->where('quotations.date_billing','>=',$fecha_frist)
-                    ->where('quotations.date_billing','<=',$date_consult)
+                    ->where('quotations.date_delivery_note','>=',$fecha_frist)
+                    ->where('quotations.date_delivery_note','<=',$date_consult)
                     ->where('quotations.number_invoice','<>',null)
                     ->where('quotations.number_delivery_note','<>',null)
                     ->where('quotations.id_client',$id_client_or_vendor)
-                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount) As amount_anticipo'))
-                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','clients.name','quotations.amount','quotations.amount_with_iva')
+                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','vendors.surname as surname_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount) As amount_anticipo'))
+                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','vendors.surname','clients.name','quotations.amount','quotations.amount_with_iva')
                     ->orderBy('quotations.date_billing','desc')
                     ->get();
-                }else if(isset($typeinvoice) && ($typeinvoice == 'notase')){ // nota eliminada cliente bs
+                }
+                
+                if(isset($typeinvoice) && ($typeinvoice == 'notase')){ // nota eliminada cliente bs
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                     ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
@@ -970,12 +980,13 @@ class ReportDeliveryNoteController extends Controller
                     ->where('quotations.date_delivery_note','<=',$date_consult)
                     ->where('quotations.date_billing',null)
                     ->where('quotations.id_client',$id_client_or_vendor)
-                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount) As amount_anticipo'))
-                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','clients.name','quotations.amount','quotations.amount_with_iva')
+                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','vendors.surname as surname_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount) As amount_anticipo'))
+                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','vendors.surname','clients.name','quotations.amount','quotations.amount_with_iva')
                     ->orderBy('quotations.date_delivery_note','desc')
                     ->get();
-                }else
-                { // todas cliente bs
+                }
+
+                 if(isset($typeinvoice) && ($typeinvoice == 'todo')){ // todas cliente bs
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                                          ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                                         ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
@@ -984,259 +995,279 @@ class ReportDeliveryNoteController extends Controller
                                         ->where('quotations.date_delivery_note','>=',$fecha_frist)
                                         ->where('quotations.date_delivery_note','<=',$date_consult )          
                                         ->where('quotations.id_client',$id_client_or_vendor)                                    
-                                        ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount) As amount_anticipo'))
-                                        ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','clients.name','quotations.amount','quotations.amount_with_iva')
+                                        ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','vendors.surname as surname_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount) As amount_anticipo'))
+                                        ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','vendors.surname','clients.name','quotations.amount','quotations.amount_with_iva')
                                         ->orderBy('quotations.date_quotation','desc')
                                         ->get();
                 }
-            }else{
+
+            }else{ // notas cliente en dolares
+
                 //PARA CUANDO EL REPORTE ESTE EN DOLARES
                 if(isset($typeinvoice) && ($typeinvoice == 'notas')){ // nota cliente $
+                    $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
+                    ->leftjoin('clients', 'clients.id','=','quotations.id_client')
+                    ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
+                    ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
+                    ->whereIn('quotations.status',[1,'P'])
+                    ->where('quotations.date_delivery_note','>=',$fecha_frist)
+                    ->where('quotations.date_delivery_note','<=',$date_consult)
+                    ->where('quotations.date_billing',null)
+                    ->where('quotations.id_client',$id_client_or_vendor)
+                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','vendors.surname as surname_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount / anticipos.rate) As amount_anticipo'))
+                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','vendors.surname','clients.name','quotations.amount','quotations.amount_with_iva')
+                    ->orderBy('quotations.date_delivery_note','desc')
+                    ->get();
+                }
+                
+                if(isset($typeinvoice) && ($typeinvoice == 'facturas')){ // factura cliente $
+                    $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
+                    ->leftjoin('clients', 'clients.id','=','quotations.id_client')
+                    ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
+                    ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
+                    ->whereIn('quotations.status',['P'])
+                    ->where('quotations.date_billing','<>',null)
+                    ->where('quotations.date_delivery_note','>=',$fecha_frist)
+                    ->where('quotations.date_delivery_note','<=',$date_consult)
+                    ->where('quotations.number_invoice','<>',null)
+                    ->where('quotations.number_delivery_note','<>',null)
+                    ->where('quotations.id_client',$id_client_or_vendor)
+                    
+                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','vendors.surname as surname_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount / anticipos.rate) As amount_anticipo'))
+                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','vendors.surname','clients.name','quotations.amount','quotations.amount_with_iva')
+                    ->orderBy('quotations.date_billing','desc')
+                    ->get();
+                }
+                if(isset($typeinvoice) && ($typeinvoice == 'facturasc')){ // facturas cobradas cliente bs
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                      ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                     ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                     ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
-                    ->whereIn('quotations.status',[1,'P'])
-                    ->where('quotations.amount','<>',null)
-                    ->where('quotations.date_quotation','<=',$date_consult)
-                    ->where('quotations.date_delivery_note','<>',null)
-                    ->where('quotations.date_billing',null)
-                    ->where('quotations.id_client',$id_client_or_vendor)
-                    
-                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount / anticipos.rate) As amount_anticipo'))
-                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','clients.name','quotations.amount','quotations.amount_with_iva')
-                    ->orderBy('quotations.date_delivery_note','desc')
-                    ->get();
-                }else if(isset($typeinvoice) && ($typeinvoice == 'facturas')){ // factura cliente $
-                    $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
-                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
-                                        ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
-                    ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
-                    ->whereIn('quotations.status',[1,'P'])
-                    ->where('quotations.amount','<>',null)
-                    ->where('quotations.date_quotation','<=',$date_consult)
+                    ->whereIn('quotations.status',['C'])
                     ->where('quotations.date_billing','<>',null)
+                    ->where('quotations.date_delivery_note','>=',$fecha_frist)
+                    ->where('quotations.date_delivery_note','<=',$date_consult)
+                    ->where('quotations.number_invoice','<>',null)
+                    ->where('quotations.number_delivery_note','<>',null)
                     ->where('quotations.id_client',$id_client_or_vendor)
-                    
-                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount / anticipos.rate) As amount_anticipo'))
-                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','clients.name','quotations.amount','quotations.amount_with_iva')
+                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','vendors.surname as surname_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount / anticipos.rate) As amount_anticipo'))
+                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','vendors.surname','clients.name','quotations.amount','quotations.amount_with_iva')
                     ->orderBy('quotations.date_billing','desc')
                     ->get();
-                }else
-                { // Todas cliente $
+                }
+                
+                if(isset($typeinvoice) && ($typeinvoice == 'notase')){ // nota eliminada cliente bs
+                    $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
+                    ->leftjoin('clients', 'clients.id','=','quotations.id_client')
+                    ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
+                    ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
+                    ->whereIn('quotations.status',['X'])
+                    ->where('quotations.date_delivery_note','>=',$fecha_frist)
+                    ->where('quotations.date_delivery_note','<=',$date_consult)
+                    ->where('quotations.date_billing',null)
+                    ->where('quotations.id_client',$id_client_or_vendor)
+                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','vendors.surname as surname_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount / anticipos.rate) As amount_anticipo'))
+                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','vendors.surname','clients.name','quotations.amount','quotations.amount_with_iva')
+                    ->orderBy('quotations.date_billing','desc')
+                    ->get();
+                }                
+                if(isset($typeinvoice) && ($typeinvoice == 'todo')){ // Todas cliente $
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                                          ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                                         ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                                         ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
                                         ->whereIn('quotations.status',[1,'P'])
                                         ->where('quotations.amount','<>',null)
-                                        ->where('quotations.date_quotation','<=',$date_consult)
+                                        ->where('quotations.date_delivery_note','>=',$fecha_frist)
+                                        ->where('quotations.date_delivery_note','<=',$date_consult)
                                         ->where('quotations.id_client',$id_client_or_vendor)
                                         
-                                        ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount / anticipos.rate) As amount_anticipo'))
-                                        ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','clients.name','quotations.amount','quotations.amount_with_iva')
+                                        ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','vendors.surname as surname_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount / anticipos.rate) As amount_anticipo'))
+                                        ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','vendors.surname','clients.name','quotations.amount','quotations.amount_with_iva')
                                         ->orderBy('quotations.date_quotation','desc')
                                         ->get();
                 }
             }
-        }else if(isset($typeperson) && $typeperson == 'Vendedor'){ // Vendedor
-            if(isset($coin) && $coin == 'bolivares'){ //vendedor bs
-                if(isset($typeinvoice) && ($typeinvoice == 'notas')){ // notas vendedor bs
+        }
+        
+        if(isset($typeperson) && $typeperson == 'Vendedor'){ // Vendedor
+            if(isset($coin) && $coin == 'bolivares'){ // nota vendedor bs
+                if(isset($typeinvoice) && ($typeinvoice == 'notas')){  // nota vendedor bs
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                      ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                     ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                     ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
                     ->whereIn('quotations.status',[1,'P'])
-                    ->where('quotations.amount','<>',null)
-                    ->where('quotations.date_quotation','<=',$date_consult)
-                    ->where('quotations.date_delivery_note','<>',null)
+                    ->where('quotations.date_delivery_note','>=',$fecha_frist)
+                    ->where('quotations.date_delivery_note','<=',$date_consult)
                     ->where('quotations.date_billing',null)
                     ->where('quotations.id_vendor',$id_client_or_vendor)
-                    
-                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount) As amount_anticipo'))
-                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','clients.name','quotations.amount','quotations.amount_with_iva')
+                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','vendors.surname as surname_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount) As amount_anticipo'))
+                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','vendors.surname','clients.name','quotations.amount','quotations.amount_with_iva')
                     ->orderBy('quotations.date_delivery_note','desc')
                     ->get();
-                }else if(isset($typeinvoice) && ($typeinvoice == 'facturas')){ // facturas vendedor bs
+                }
+                    
+               if(isset($typeinvoice) && ($typeinvoice == 'facturas')){ // nota a factura pendiente por cobrar vendedor bs
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                      ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                     ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                     ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
-                    ->whereIn('quotations.status',[1,'P'])
-                    ->where('quotations.amount','<>',null)
-                    ->where('quotations.date_quotation','<=',$date_consult)
+                    ->whereIn('quotations.status',['P'])
                     ->where('quotations.date_billing','<>',null)
+                    ->where('quotations.date_delivery_note','>=',$fecha_frist)
+                    ->where('quotations.date_delivery_note','<=',$date_consult)
+                    ->where('quotations.number_invoice','<>',null)
+                    ->where('quotations.number_delivery_note','<>',null)
                     ->where('quotations.id_vendor',$id_client_or_vendor)
-                    
-                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount) As amount_anticipo'))
-                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','clients.name','quotations.amount','quotations.amount_with_iva')
+                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','vendors.surname as surname_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount) As amount_anticipo'))
+                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','vendors.surname','clients.name','quotations.amount','quotations.amount_with_iva')
                     ->orderBy('quotations.date_billing','desc')
                     ->get();
-                }else
-                {// todas vendedor bs
-                    $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
-                    ->leftjoin('clients', 'clients.id','=','quotations.id_client')
-                    ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
-                    ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
-                    ->whereIn('quotations.status',[1,'P'])
-                    ->where('quotations.amount','<>',null)
-                    ->where('quotations.date_quotation','<=',$date_consult)
-                    ->where('quotations.id_vendor',$id_client_or_vendor)
-                    
-                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount) As amount_anticipo'))
-                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','clients.name','quotations.amount','quotations.amount_with_iva')
-                    ->orderBy('quotations.date_quotation','desc')
-                    ->get();
-                }
-            }else{ // vendedor $
+                } 
                 
-                //PARA CUANDO EL REPORTE ESTE EN DOLARES
-                if(isset($typeinvoice) && ($typeinvoice == 'notas')){ // notas vendedor $
+                if(isset($typeinvoice) && ($typeinvoice == 'facturasc')){ // facturas cobradas cliente bs
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                      ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                     ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                     ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
-                    ->whereIn('quotations.status',[1,'P'])
-                    ->where('quotations.amount','<>',null)
-                    ->where('quotations.date_quotation','<=',$date_consult)
-                    ->where('quotations.date_delivery_note','<>',null)
-                    ->where('quotations.date_billing',null)
-                    ->where('quotations.id_vendor',$id_client_or_vendor)
-                    
-                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount / anticipos.rate) As amount_anticipo'))
-                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','clients.name','quotations.amount','quotations.amount_with_iva')
-                    ->orderBy('quotations.date_delivery_note','desc')
-                    ->get();
-                }else if(isset($typeinvoice) && ($typeinvoice == 'facturas')){ // facturas vendedor $
-                    $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
-                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
-                    ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
-                    ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
-                    ->whereIn('quotations.status',[1,'P'])
-                    ->where('quotations.amount','<>',null)
-                    ->where('quotations.date_quotation','<=',$date_consult)
+                    ->whereIn('quotations.status',['C'])
                     ->where('quotations.date_billing','<>',null)
+                    ->where('quotations.date_delivery_note','>=',$fecha_frist)
+                    ->where('quotations.date_delivery_note','<=',$date_consult)
+                    ->where('quotations.number_invoice','<>',null)
+                    ->where('quotations.number_delivery_note','<>',null)
                     ->where('quotations.id_vendor',$id_client_or_vendor)
-                    
-                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount / anticipos.rate) As amount_anticipo'))
-                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','clients.name','quotations.amount','quotations.amount_with_iva')
+                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','vendors.surname as surname_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount) As amount_anticipo'))
+                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','vendors.surname','clients.name','quotations.amount','quotations.amount_with_iva')
                     ->orderBy('quotations.date_billing','desc')
                     ->get();
-                }else
-                { // todas vendedor $
+                }
+                
+                if(isset($typeinvoice) && ($typeinvoice == 'notase')){ // nota eliminada vendedor bs
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                     ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                     ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
-                    ->whereIn('quotations.status',[1,'P'])
-                    ->where('quotations.amount','<>',null)
-                    ->where('quotations.date_quotation','<=',$date_consult)
-                    ->where('quotations.id_vendor',$id_client_or_vendor)
-                    
-                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount / anticipos.rate) As amount_anticipo'))
-                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','clients.name','quotations.amount','quotations.amount_with_iva')
-                    ->orderBy('quotations.date_quotation','desc')
-                    ->get();
-                }
-            }
-        }else{  // todas Bs
-            
-            if(isset($coin) && $coin == 'bolivares'){
-                if(isset($typeinvoice) && ($typeinvoice == 'notas')){
-                    $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
-                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
-                    ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
-                    ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
-                    ->whereIn('quotations.status',[1,'P'])
-                    ->where('quotations.amount','<>',null)
-                    ->where('quotations.date_quotation','<=',$date_consult)
-                    ->where('quotations.date_delivery_note','<>',null)
+                    ->whereIn('quotations.status',['X'])
+                    ->where('quotations.date_delivery_note','>=',$fecha_frist)
+                    ->where('quotations.date_delivery_note','<=',$date_consult)
                     ->where('quotations.date_billing',null)
-                    
-                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount) As amount_anticipo'))
-                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','clients.name','quotations.amount','quotations.amount_with_iva')
+                    ->where('quotations.id_vendor',$id_client_or_vendor)
+                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','vendors.surname as surname_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount) As amount_anticipo'))
+                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','vendors.surname','clients.name','quotations.amount','quotations.amount_with_iva')
                     ->orderBy('quotations.date_delivery_note','desc')
                     ->get();
-                }else if(isset($typeinvoice) && ($typeinvoice == 'facturas')){
-                    $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
-                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
-                    ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
-                    ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
-                    ->whereIn('quotations.status',[1,'P'])
-                    ->where('quotations.amount','<>',null)
-                    ->where('quotations.date_quotation','<=',$date_consult)
-                    ->where('quotations.date_billing','<>',null)
-                    
-                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount) As amount_anticipo'))
-                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','clients.name','quotations.amount','quotations.amount_with_iva')
-                    ->orderBy('quotations.date_billing','desc')
-                    ->get();
-                }else
-                {
-                   
-                    $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
-                                        ->leftjoin('clients', 'clients.id','=','quotations.id_client')
-                                        ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
-                                        ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
-                                        ->whereIn('quotations.status',[1,'P'])
-                                        ->where('quotations.amount','<>',null)
-                                        ->where('quotations.date_quotation','<=',$date_consult)
-                                        
-                                        ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount) As amount_anticipo'))
-                                        ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','clients.name','quotations.amount','quotations.amount_with_iva')
-                                        ->orderBy('quotations.date_quotation','desc')
-                                        ->get();
+                }
 
-                    
+                 if(isset($typeinvoice) && ($typeinvoice == 'todo')){ // todas vendedor bs
+                    $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
+                                         ->leftjoin('clients', 'clients.id','=','quotations.id_client')
+                                        ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
+                                        ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
+                                        ->where('quotations.amount','<>',null)
+                                        ->where('quotations.date_delivery_note','>=',$fecha_frist)
+                                        ->where('quotations.date_delivery_note','<=',$date_consult )          
+                                        ->where('quotations.id_vendor',$id_client_or_vendor)                                    
+                                        ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','vendors.surname as surname_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount) As amount_anticipo'))
+                                        ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','vendors.surname','clients.name','quotations.amount','quotations.amount_with_iva')
+                                        ->orderBy('quotations.date_quotation','desc')
+                                        ->get();
                 }
-            }else{ // todas $
-                
+
+            }else{ // notas id_vendor en dolares
+
                 //PARA CUANDO EL REPORTE ESTE EN DOLARES
-                if(isset($typeinvoice) && ($typeinvoice == 'notas')){
+                if(isset($typeinvoice) && ($typeinvoice == 'notas')){ // nota id_vendor $
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                     ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                     ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
                     ->whereIn('quotations.status',[1,'P'])
-                    ->where('quotations.amount','<>',null)
-                    ->where('quotations.date_quotation','<=',$date_consult)
-                    ->where('quotations.date_delivery_note','<>',null)
+                    ->where('quotations.date_delivery_note','>=',$fecha_frist)
+                    ->where('quotations.date_delivery_note','<=',$date_consult)
                     ->where('quotations.date_billing',null)
-                    
-                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount/anticipos.rate) As amount_anticipo'))
-                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','clients.name','quotations.amount','quotations.amount_with_iva')
+                    ->where('quotations.id_vendor',$id_client_or_vendor)
+                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','vendors.surname as surname_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount / anticipos.rate) As amount_anticipo'))
+                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','vendors.surname','clients.name','quotations.amount','quotations.amount_with_iva')
                     ->orderBy('quotations.date_delivery_note','desc')
                     ->get();
-                }else if(isset($typeinvoice) && ($typeinvoice == 'facturas')){
+                }
+                
+                if(isset($typeinvoice) && ($typeinvoice == 'facturas')){ // factura id_vendor $
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                     ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                     ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
-                    ->whereIn('quotations.status',[1,'P'])
-                    ->where('quotations.amount','<>',null)
-                    ->where('quotations.date_quotation','<=',$date_consult)
+                    ->whereIn('quotations.status',['P'])
                     ->where('quotations.date_billing','<>',null)
+                    ->where('quotations.date_delivery_note','>=',$fecha_frist)
+                    ->where('quotations.date_delivery_note','<=',$date_consult)
+                    ->where('quotations.number_invoice','<>',null)
+                    ->where('quotations.number_delivery_note','<>',null)
+                    ->where('quotations.id_vendor',$id_client_or_vendor)
                     
-                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount/anticipos.rate) As amount_anticipo'))
-                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','clients.name','quotations.amount','quotations.amount_with_iva')
+                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','vendors.surname as surname_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount / anticipos.rate) As amount_anticipo'))
+                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','vendors.surname','clients.name','quotations.amount','quotations.amount_with_iva')
                     ->orderBy('quotations.date_billing','desc')
                     ->get();
-                }else
-                {
+                }
+                if(isset($typeinvoice) && ($typeinvoice == 'facturasc')){ // facturas cobradas id_vendor bs
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
-                                        ->leftjoin('clients', 'clients.id','=','quotations.id_client')
+                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
+                    ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
+                    ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
+                    ->whereIn('quotations.status',['C'])
+                    ->where('quotations.date_billing','<>',null)
+                    ->where('quotations.date_delivery_note','>=',$fecha_frist)
+                    ->where('quotations.date_delivery_note','<=',$date_consult)
+                    ->where('quotations.number_invoice','<>',null)
+                    ->where('quotations.number_delivery_note','<>',null)
+                    ->where('quotations.id_vendor',$id_client_or_vendor)
+                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','vendors.surname as surname_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount / anticipos.rate) As amount_anticipo'))
+                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','vendors.surname','clients.name','quotations.amount','quotations.amount_with_iva')
+                    ->orderBy('quotations.date_billing','desc')
+                    ->get();
+                }
+                
+                if(isset($typeinvoice) && ($typeinvoice == 'notase')){ // nota eliminada id_vendorbs
+                    $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
+                    ->leftjoin('clients', 'clients.id','=','quotations.id_client')
+                    ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
+                    ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
+                    ->whereIn('quotations.status',['X'])
+                    ->where('quotations.date_delivery_note','>=',$fecha_frist)
+                    ->where('quotations.date_delivery_note','<=',$date_consult)
+                    ->where('quotations.date_billing',null)
+                    ->where('quotations.id_vendor',$id_client_or_vendor)
+                    ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','vendors.surname as surname_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount / anticipos.rate) As amount_anticipo'))
+                    ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','vendors.surname','clients.name','quotations.amount','quotations.amount_with_iva')
+                    ->orderBy('quotations.date_billing','desc')
+                    ->get();
+                }                
+                if(isset($typeinvoice) && ($typeinvoice == 'todo')){ // Todas id_vendor $
+                    $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
+                                         ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                                         ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
                                         ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
                                         ->whereIn('quotations.status',[1,'P'])
                                         ->where('quotations.amount','<>',null)
-                                        ->where('quotations.date_quotation','<=',$date_consult)
+                                        ->where('quotations.date_delivery_note','>=',$fecha_frist)
+                                        ->where('quotations.date_delivery_note','<=',$date_consult)
+                                        ->where('quotations.id_vendor',$id_client_or_vendor)
                                         
-                                        ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount/anticipos.rate) As amount_anticipo'))
-                                        ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','clients.name','quotations.amount','quotations.amount_with_iva')
+                                        ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','vendors.surname as surname_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount / anticipos.rate) As amount_anticipo'))
+                                        ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','vendors.surname','clients.name','quotations.amount','quotations.amount_with_iva')
                                         ->orderBy('quotations.date_quotation','desc')
                                         ->get();
                 }
-            }
+            }  
+            
+        }
+        
+        if(isset($typeperson) && $typeperson == 'todo'){ // todas Bs
+           
+            dd($typeperson);
         }
         
         $pdf = $pdf->loadView('admin.reports.accounts_receivable_note',compact('coin','quotations','datenow','date_end','fecha_frist'));

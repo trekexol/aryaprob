@@ -11,27 +11,10 @@
                 <input type="hidden" name="id_client" value="{{$client->id ?? null}}" readonly>
                 <input type="hidden" name="id_vendor" value="{{$vendor->id ?? null}}" readonly>
 
+
                 <div class="card-header text-center h4">
                         Nota de Entrega Vista Previa 
                 </div>
-                <br>
-                cliente:{{$client->id ?? null}} 
-                <br>
-                vendedor: {{$vendor->id ?? null}}
-                <br>
-                Id_cliente_vendedor: {{$id_client_or_vendor ?? null}}
-                <br>
-                Moneda" {{$coin ?? 'bolivares'}}
-                <br>
-                Data Now: {{$date_end ?? $datenow}}
-                <br>
-                Fecha frist: {{$fecha_frist ?? null}}
-                <br>
-                Tipo invoice: {{$typeinvoice ?? 'todo'}}
-                <br>
-                Tipo Persona: {{$typeperson ?? 'ninguno'}}
-
-
 
 
                 <div class="card-body">
@@ -52,7 +35,9 @@
                                         <option value="todo">Todos</option>
                                         <option value="cliente">Por Cliente</option>
                                         <option selected value="vendor">Por Vendedor</option>
-                                    @else
+                                    @endif 
+
+                                    @if ($typeperson == 'todo')
                                         <option selected value="todo">Todos</option>
                                         <option value="cliente">Por Cliente</option>
                                         <option value="vendor">Por Vendedor</option>
@@ -142,7 +127,7 @@
                     </form>
                         <div class="embed-responsive embed-responsive-16by9">
 
-                            <iframe class="embed-responsive-item" src="{{ route('reports.accounts_receivable_note_pdf',[$coin ?? 'bolivares',$date_end ?? $datenow,$typeinvoice ?? 'todo',$typeperson ?? 'ninguno', $client->id ?? $vendor->id ?? null,$fecha_frist ?? null])}}" allowfullscreen></iframe>
+                            <iframe class="embed-responsive-item" src="{{ route('reports.accounts_receivable_note_pdf',[$coin ?? 'bolivares',$date_end ?? $datenow,$typeinvoice ?? 'todo',$typeperson ?? 'todo', $client->id ?? $vendor->id ?? null,$fecha_frist ?? null])}}" allowfullscreen></iframe>
                           </div>                                      
                         
                         </div>
@@ -185,7 +170,9 @@
         $("#client_label2").html('');
         $("#client_label2").val('');
         $("#vendor_label2").html('');
-        $("#client_label1").hide();
+        $("#client_label1").show();
+        $("#client_label1").html('Todo:');
+        //$("#client_label1").hide();
         $("#client_label2").hide();
         $("#client_label3").hide();
     }
@@ -198,7 +185,8 @@
                 $("#client_label2").html('');
                 $("#client_label2").val('');
                 $("#vendor_label2").html('');
-                $("#client_label1").hide();
+                $("#client_label1").show();
+                $("#client_label1").html('Todo:');
                 $("#client_label2").hide();
                 $("#client_label3").hide();
             } 
