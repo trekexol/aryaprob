@@ -27,7 +27,7 @@ class ReportDeliveryNoteController extends Controller
    
     public $modulo = "Reportes";
    
-    public function index_accounts_receivable_note($typeperson,$id_client_or_vendor = null,$date_end = null,$typeinvoice = 'notas')
+    public function index_accounts_receivable_note($typeperson = 'todo',$id_client_or_vendor = null,$date_end = null,$typeinvoice = 'notas')
     {        
        
         $global = new GlobalController();
@@ -40,7 +40,7 @@ class ReportDeliveryNoteController extends Controller
             $datenow = $date->format('Y-m-d');   
             $client = null; 
             $vendor = null; 
-
+            
 
             if(isset($typeperson) && $typeperson == 'Cliente'){
                 if(isset($id_client_or_vendor)){
@@ -76,7 +76,7 @@ class ReportDeliveryNoteController extends Controller
         $coin = request('coin');
         $client = null;
         $vendor = null;
-        $typeperson = 'todo';
+        
 
         if($type != 'todo'){
             if(isset($id_client)){
@@ -89,6 +89,9 @@ class ReportDeliveryNoteController extends Controller
                 $typeperson = 'Vendedor';
                 $id_client_or_vendor = $vendor;
             }
+        } else {
+            $typeperson = 'todo';
+            
         }
 
         return view('admin.reports.index_accounts_receivable_note',compact('coin','typeinvoice','date_end','client','vendor','typeperson','fecha_frist'));
@@ -883,7 +886,7 @@ class ReportDeliveryNoteController extends Controller
                  
     }
 
-    function accounts_receivable_note_pdf($coin,$date_end,$typeinvoice,$typeperson,$id_client_or_vendor = null,$fecha_frist = null)
+    function accounts_receivable_note_pdf($coin,$date_end,$typeinvoice,$typeperson = 'todo',$id_client_or_vendor = null,$fecha_frist = null)
     {
         
 

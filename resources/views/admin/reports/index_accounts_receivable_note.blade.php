@@ -15,7 +15,7 @@
                 <div class="card-header text-center h4">
                         Nota de Entrega Vista Previa 
                 </div>
-
+  
 
                 <div class="card-body">
                     <div class="card-body">
@@ -31,13 +31,15 @@
                                         <option value="todo">Todos</option>
                                         <option selected value="cliente">Por Cliente</option>
                                         <option value="vendor">Por Vendedor</option>
-                                    @elseif (isset($vendor))
+                                    @endif
+                                    
+                                    @if (isset($vendor))
                                         <option value="todo">Todos</option>
                                         <option value="cliente">Por Cliente</option>
                                         <option selected value="vendor">Por Vendedor</option>
-                                    @endif 
-
-                                    @if ($typeperson == 'todo')
+                                    @endif
+                                    
+                                    @if ($typeperson == 'index' || $typeperson == 'todo' || $typeperson == '' || $typeperson == null)
                                         <option selected value="todo">Todos</option>
                                         <option value="cliente">Por Cliente</option>
                                         <option value="vendor">Por Vendedor</option>
