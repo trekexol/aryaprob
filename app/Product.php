@@ -24,7 +24,7 @@ class Product extends Model
         return $this->belongsTo('App\TwoSubsegment','twosubsegment_id');
     }
     public function threesubsegments(){
-        return $this->belongsTo('App\ThreeSubSegment','threesubsegment_id');
+        return $this->belongsTo('App\ThreeSubsegment','threesubsegment_id');
     }
 
     public function unitofmeasures(){
