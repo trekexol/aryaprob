@@ -30,6 +30,9 @@ class ReportDeliveryNoteController extends Controller
     public function index_accounts_receivable_note($typeperson = 'todo',$id_client_or_vendor = null,$date_end = null,$typeinvoice = 'notas')
     {        
        
+        //dd($typeperson);
+
+
         $global = new GlobalController();
         $fecha_frist = $global->data_first_month_day();      
 
