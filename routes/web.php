@@ -837,11 +837,11 @@ Route::group(["prefix"=>'reports'],function(){
     Route::get('sales','Report2Controller@index_sales')->name('reports.sales');
     Route::post('storesales','Report2Controller@store_sales')->name('reports.store_sales');
     Route::get('salespdf/{coin}/{date_begin}/{date_end}/{name?}','Report2Controller@sales_pdf')->name('reports.sales_pdf');
-
+    //nueva linea reporte nota de entrega
     Route::get('accounts_receivable_note/{typeperson}/{id_client?}','ReportDeliveryNoteController@index_accounts_receivable_note')->name('reports.accounts_receivable_note'); // dacson (report note delivery)
     Route::post('storeaccounts_receivable_note','ReportDeliveryNoteController@store_accounts_receivable_note')->name('reports.store_accounts_receivable_note'); // dacson (report note delivery)
     Route::get('accounts_receivable_note_pdf/{coin}/{date_end}/{typeinvoice}/{typeperson}/{id_client_or_vendor?}/{fecha_frist?}','ReportDeliveryNoteController@accounts_receivable_note_pdf')->name('reports.accounts_receivable_note_pdf');
-
+    //nueva
 
 });
 
