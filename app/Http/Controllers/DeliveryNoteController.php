@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Client;
+use App\Http\Controllers\Historial\HistorialQuotationController;
 use App\Http\Controllers\UserAccess\UserAccessController;
 use App\Quotation;
 use App\QuotationProduct;
@@ -159,6 +160,10 @@ class DeliveryNoteController extends Controller
     
         $quotation->status = 'X';
         $quotation->save();
+
+        $historial_quotation = new HistorialQuotationController();
+
+        $historial_quotation->registerAction($quotation,"quotation","Se eliminó la Nota de Entrega");
        
         return redirect('quotations/indexnotasdeentrega')->withSuccess('Reverso de Nota de Entrega Exitoso!');
 
