@@ -54,8 +54,8 @@ class ShoppingController extends Controller
             $shoppings = Product::on(Auth::user()->database_name)
             ->join('inventories', 'inventories.product_id', '=', 'products.id')
             ->join('expenses_details', 'expenses_details.id_inventory', '=', 'inventories.id')
-            ->join('segments', 'segments.id', '=', 'products.segment_id')
-            ->join('subsegments', 'subsegments.id', '=', 'products.subsegment_id')
+            ->leftjoin('segments', 'segments.id', '=', 'products.segment_id')
+            ->leftjoin('subsegments', 'subsegments.id', '=', 'products.subsegment_id')
             ->where('expenses_details.status','C')
             ->where('expenses_details.description','LIKE',$name.'%')
             ->whereRaw(

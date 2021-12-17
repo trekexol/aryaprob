@@ -217,7 +217,13 @@ class ProductController extends Controller
     $var = Product::on(Auth::user()->database_name)->findOrFail($id);
 
     $var->segment_id = request('segment');
-    $var->subsegment_id= request('Subsegment');
+
+    if(request('Subsegment') == 'null'){
+       $var->subsegment_id = null;
+    }else{
+       $var->subsegment_id = request('Subsegment');
+    }
+
     if(request('twoSubsegment') == 'null'){
         $var->twosubsegment_id= null;
     }else{
