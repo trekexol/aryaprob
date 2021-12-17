@@ -280,6 +280,7 @@
 
                     <a  class="collapse-header text-danger" href="#">Otros</a>
                     <a class="collapse-item" href="{{ route('reports.sales')}}" > <i class="fas fa-dollar-sign fa-sm fa-fw mr-2 text-black-400"></i><strong>Ventas</strong></a>
+                    <a class="collapse-item" href="{{ route('reports.shopping')}}" > <i class="fas fa-file-invoice-dollar fa-sm fa-fw mr-2 text-black-400"></i><strong>Compras</strong></a>
 
                 </div>
             </div>
