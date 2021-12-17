@@ -837,7 +837,12 @@ Route::group(["prefix"=>'reports'],function(){
     Route::get('sales','Report2Controller@index_sales')->name('reports.sales');
     Route::post('storesales','Report2Controller@store_sales')->name('reports.store_sales');
     Route::get('salespdf/{coin}/{date_begin}/{date_end}/{name?}','Report2Controller@sales_pdf')->name('reports.sales_pdf');
-/*
+
+    Route::get('shopping','Reports\ShoppingController@index_shopping')->name('reports.shopping');
+    Route::post('storeshopping','Reports\ShoppingController@store_shopping')->name('reports.store_shopping');
+    Route::get('shoppingpdf/{coin}/{date_begin}/{date_end}/{name?}','Reports\ShoppingController@shopping_pdf')->name('reports.shopping_pdf');
+    
+    /*
     Route::get('accounts_receivable_note/{typeperson}/{id_client?}','Report2Controller@index_accounts_receivable_note')->name('reports.accounts_receivable_note'); // dacson (report note delivery)
     Route::post('storeaccounts_receivable_note','Report2Controller@store_accounts_receivable_note')->name('reports.store_accounts_receivable_note'); // dacson (report note delivery)
     Route::get('accounts_receivable_note_pdf/{coin}/{date_end?}/{date_begin?}/{typeinvoice}/{typeperson}','Report2Controller@accounts_receivable_note_pdf')->name('reports.accounts_receivable_note_pdf');
