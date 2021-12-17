@@ -1110,7 +1110,7 @@ class Report2Controller extends Controller
             ->join('inventories', 'inventories.product_id', '=', 'products.id')
             ->join('quotation_products', 'quotation_products.id_inventory', '=', 'inventories.id')
             ->join('segments', 'segments.id', '=', 'products.segment_id')
-            ->join('subsegments', 'subsegments.id', '=', 'products.subsegment_id')
+            ->leftjoin('subsegments', 'subsegments.id', '=', 'products.subsegment_id')
             ->where('quotation_products.status','C')
             ->where('products.description','LIKE',$name.'%')
             ->whereRaw(
@@ -1125,7 +1125,7 @@ class Report2Controller extends Controller
             ->join('inventories', 'inventories.product_id', '=', 'products.id')
             ->join('quotation_products', 'quotation_products.id_inventory', '=', 'inventories.id')
             ->join('segments', 'segments.id', '=', 'products.segment_id')
-            ->join('subsegments', 'subsegments.id', '=', 'products.subsegment_id')
+            ->leftjoin('subsegments', 'subsegments.id', '=', 'products.subsegment_id')
             ->where('quotation_products.status','C')
             ->whereRaw(
                 "(DATE_FORMAT(quotation_products.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(quotation_products.created_at, '%Y-%m-%d') <= ?)", 

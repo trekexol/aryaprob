@@ -69,8 +69,8 @@ class ShoppingController extends Controller
             $shoppings = Product::on(Auth::user()->database_name)
             ->join('inventories', 'inventories.product_id', '=', 'products.id')
             ->join('expenses_details', 'expenses_details.id_inventory', '=', 'inventories.id')
-            ->join('segments', 'segments.id', '=', 'products.segment_id')
-            ->join('subsegments', 'subsegments.id', '=', 'products.subsegment_id')
+            ->leftjoin('segments', 'segments.id', '=', 'products.segment_id')
+            ->leftjoin('subsegments', 'subsegments.id', '=', 'products.subsegment_id')
             ->where('expenses_details.status','C')
             ->whereRaw(
                 "(DATE_FORMAT(expenses_details.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(expenses_details.created_at, '%Y-%m-%d') <= ?)", 
@@ -78,6 +78,7 @@ class ShoppingController extends Controller
             ->select('products.description', DB::connection(Auth::user()->database_name)->raw('SUM(expenses_details.amount) as amount_shopping'), DB::connection(Auth::user()->database_name)->raw('SUM(expenses_details.price*expenses_details.amount) as price_shopping'), DB::connection(Auth::user()->database_name)->raw('SUM(expenses_details.price*expenses_details.amount/expenses_details.rate) as price_shopping_dolar'),'products.type','products.price as price','inventories.code','products.money as money','segments.description as segment_description','subsegments.description as subsegment_description')
             ->groupBy('products.description','products.type','products.price','inventories.code','products.money','segments.description','subsegments.description')
             ->orderBy('products.description','asc')->get();
+           
         }
         
         $date_begin = Carbon::parse($date_begin);
