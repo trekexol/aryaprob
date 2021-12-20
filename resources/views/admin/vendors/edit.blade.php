@@ -107,7 +107,7 @@
                             <label for="comision" class="col-md-2 col-form-label text-md-right">Comisión</label>
 
                             <div class="col-md-4">
-                                <input id="comision" type="number" class="form-control @error('comision') is-invalid @enderror" name="comision" value="{{ $var->comision }}" required autocomplete="comision">
+                                <input id="comision" type="text" class="form-control @error('comision') is-invalid @enderror" name="comision" value="{{ $var->comision }}" required autocomplete="comision">
 
                                 @error('comision')
                                     <span class="invalid-feedback" role="alert">
@@ -246,7 +246,7 @@
                             <label for="instagram" class="col-md-2 col-form-label text-md-right">Instagram</label>
 
                             <div class="col-md-4">
-                                <input id="instagram" type="text" class="form-control @error('instagram') is-invalid @enderror" name="instagram" value="{{ $var->instagram }}" required autocomplete="instagram">
+                                <input id="instagram" type="text" class="form-control @error('instagram') is-invalid @enderror" name="instagram" value="{{ $var->instagram }}"  autocomplete="instagram">
 
                                 @error('instagram')
                                     <span class="invalid-feedback" role="alert">
@@ -257,7 +257,7 @@
                             <label for="facebook" class="col-md-2 col-form-label text-md-right">Facebook</label>
 
                             <div class="col-md-4">
-                                <input id="facebook" type="text" class="form-control @error('facebook') is-invalid @enderror" name="facebook" value="{{ $var->facebook }}" required autocomplete="facebook">
+                                <input id="facebook" type="text" class="form-control @error('facebook') is-invalid @enderror" name="facebook" value="{{ $var->facebook }}"  autocomplete="facebook">
 
                                 @error('facebook')
                                     <span class="invalid-feedback" role="alert">
@@ -270,7 +270,7 @@
                             <label for="twitter" class="col-md-2 col-form-label text-md-right">Twitter</label>
 
                             <div class="col-md-4">
-                                <input id="twitter" type="text" class="form-control @error('twitter') is-invalid @enderror" name="twitter" value="{{ $var->twitter }}" required autocomplete="twitter">
+                                <input id="twitter" type="text" class="form-control @error('twitter') is-invalid @enderror" name="twitter" value="{{ $var->twitter }}"  autocomplete="twitter">
 
                                 @error('twitter')
                                     <span class="invalid-feedback" role="alert">
@@ -281,7 +281,7 @@
                             <label for="especification" class="col-md-2 col-form-label text-md-right">Especificación</label>
 
                             <div class="col-md-4">
-                                <input id="especification" type="text" class="form-control @error('especification') is-invalid @enderror" name="especification" value="{{ $var->especification }}" required autocomplete="especification">
+                                <input id="especification" type="text" class="form-control @error('especification') is-invalid @enderror" name="especification" value="{{ $var->especification }}"  autocomplete="especification">
 
                                 @error('especification')
                                     <span class="invalid-feedback" role="alert">
@@ -295,7 +295,7 @@
                             <label for="observation" class="col-md-2 col-form-label text-md-right">Observación</label>
 
                             <div class="col-md-4">
-                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ $var->observation }}" required autocomplete="observation">
+                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ $var->observation }}"  autocomplete="observation">
 
                                 @error('observation')
                                     <span class="invalid-feedback" role="alert">
@@ -343,13 +343,15 @@
                     @endsection
                     @section('validacion_usuario')
                     <script>
-                        
+                         $(document).ready(function () {
+                            $("#comision").mask('000.000.000.000.000,00', { reverse: true });
+                            
+                        });
                     $(function(){
                         soloAlfaNumerico('code');
                         soloNumeros('cedula_rif');
                         soloLetras('name');
                         soloLetras('surname');
-                        soloNumeros('comision');
                         soloNumeros('phone');
                         soloNumeros('phone2');
                     });
@@ -433,10 +435,6 @@
                             })
                         }
                         // Funcion Solo Numero
-                        $(function(){
-                        soloNumeros('xtelf_local');
-                        soloNumeros('xtelf_cel');
-                        });
-                    
+                       
                     </script>
                 @endsection
