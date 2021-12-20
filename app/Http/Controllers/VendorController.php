@@ -214,7 +214,7 @@ class VendorController extends Controller
     $var->email = request('email');
     $var->phone = request('phone');
     $var->phone2 = request('phone2');
-    $var->comision = request('comision');
+    $var->comision = str_replace(',', '.', str_replace('.', '', request('comision')));
     $var->instagram = request('instagram');
 
     $var->facebook = request('facebook');
