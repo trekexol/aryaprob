@@ -99,7 +99,9 @@ class BalanceGeneralController extends Controller
         $accounts = $accounts_all->filter(function($account)
         {
             if($account->code_one <= 3){
+                
                 $total = $account->balance_previus + $account->debe - $account->haber;
+               
                 if ($total != 0) {
                     return $account;
                 }

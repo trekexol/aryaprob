@@ -284,13 +284,13 @@ $suma_haber = 0;
                                     @endforeach
                                     <tr>
                                         
-                                        @if($suma_debe == $suma_haber)
+                                        @if(bcdiv($suma_debe, '1', 2) == bcdiv($suma_haber, '1', 2))
                                             <td style="color: rgb(84, 196, 84)">El comprobante está cuadrado</td>
                                             <td>Total</td>
                                             <td>{{ number_format($suma_debe, 2, ',', '.') }}</td>
                                             <td>{{ number_format($suma_haber, 2, ',', '.') }}</td>
                                         @else
-                                            <td style="color: red">El comprobante está descuadrado</td>
+                                            <td style="color: red">El comprobante está descuadrado </td>
                                             <td>Total</td>
                                             @if ($suma_debe > $suma_haber)
                                                 <td>{{number_format($suma_debe, 2, ',', '.')}}  <br><div style="color: red"> - {{ number_format($suma_debe - $suma_haber, 2, ',', '.')}}</div></td>
@@ -391,14 +391,11 @@ $suma_haber = 0;
 
 @section('javascript')
 
-    @if($suma_debe != $suma_haber)
+    @if(bcdiv($suma_debe, '1', 2) != bcdiv($suma_haber, '1', 2))
     <script>
 
         btncontabilizar.style.pointerEvents = 'none';
         btncontabilizar.style.color = '#bbb';
-
-       
-    
 
     </script> 
 

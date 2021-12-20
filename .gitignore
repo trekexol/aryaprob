@@ -1,3 +1,4 @@
 .env
 .env.local2
 .envProduction
+.env.local
