@@ -45,6 +45,7 @@ class CreateExpensesAndPurchasesTable extends Migration
             $table->decimal('rate',64,2)->nullable()->comment = 'Tasa';
 
            
+            $table->bigInteger('number_islr')->nullable();
             $table->string('status',1);
             $table->foreign('id_provider')->references('id')->on('providers');
             $table->foreign('id_user')->references('id')->on('users');
