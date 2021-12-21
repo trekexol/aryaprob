@@ -15,7 +15,24 @@
                 <div class="card-header text-center h4">
                         Nota de Entrega Vista Previa 
                 </div>
-  
+
+                <br>
+                cliente:{{$client->id ?? null}} 
+                <br>
+                vendedor: {{$vendor->id ?? null}}
+                <br>
+                Id_cliente_vendedor: {{$id_client_or_vendor ?? null}}
+                <br>
+                Moneda: {{$coin ?? 'bolivares'}}
+                <br>
+                Fecha frist: {{date_format(date_create($fecha_frist),"d-m-Y") ?? null}}
+                <br>
+                Data Now: {{date_format(date_create($date_end),"d-m-Y") ?? $datenow}}
+                <br>
+                Tipo invoice: {{$typeinvoice ?? 'todo'}}
+                <br>
+                Tipo Persona: {{$typepersone ?? 'nada'}}
+
 
                 <div class="card-body">
                     <div class="card-body">
@@ -39,7 +56,7 @@
                                         <option selected value="vendor">Por Vendedor</option>
                                     @endif
                                     
-                                    @if ($typeperson == 'index' || $typeperson == 'todo' || $typeperson == '' || $typeperson == null)
+                                    @if ($typepersone == 'todo' || $typepersone == null)
                                         <option selected value="todo">Todos</option>
                                         <option value="cliente">Por Cliente</option>
                                         <option value="vendor">Por Vendedor</option>
@@ -129,8 +146,9 @@
                     </form>
                         <div class="embed-responsive embed-responsive-16by9">
 
-                            <iframe class="embed-responsive-item" src="{{ route('reports.accounts_receivable_note_pdf',[$coin ?? 'bolivares',$date_end ?? $datenow,$typeinvoice ?? 'todo',$typeperson ?? 'todo', $client->id ?? $vendor->id ?? null,$fecha_frist ?? null])}}" allowfullscreen></iframe>
-                          </div>                                      
+                            <iframe class="embed-responsive-item" src="{{ route('reports.accounts_receivable_note_pdf',[$coin ?? 'bolivares',$date_end ?? $datenow,$typeinvoice ?? 'todo',$typepersone ?? 'todo', $client->id ?? $vendor->id ?? null,$fecha_frist ?? null])}}" allowfullscreen></iframe>
+                            
+                            </div>                                      
                         
                         </div>
                 </div>
@@ -141,6 +159,8 @@
 
 
 @endsection
+
+
 @section('javascript')
 
 <script>

@@ -34,6 +34,7 @@ class CreateCompaniesTable extends Migration
             $table->string('foto_company',255)->nullable();
             $table->string('pie_pagina',20)->nullable();
             $table->string('status',1);
+            $table->bigInteger('retention_islr',2)->default(0);
             $table->timestamps();
 
 

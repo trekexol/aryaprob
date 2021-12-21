@@ -27,11 +27,15 @@ class ReportDeliveryNoteController extends Controller
    
     public $modulo = "Reportes";
    
-    public function index_accounts_receivable_note($typeperson = 'todo',$id_client_or_vendor = null,$date_end = null,$typeinvoice = 'notas')
+    public function index_accounts_receivable_note($typepersone = null,$id_client_or_vendor = null,$date_end = null,$typeinvoice = 'notas')
     {        
-       
-        //dd($typeperson);
-
+        
+            
+        if($typepersone == null){
+            $typepersone = 'todo';
+        }
+        
+        $typepersone = 'todo';
 
         $global = new GlobalController();
         $fecha_frist = $global->data_first_month_day();      
@@ -45,22 +49,24 @@ class ReportDeliveryNoteController extends Controller
             $vendor = null; 
             
 
-            if(isset($typeperson) && $typeperson == 'Cliente'){
+            if($typepersone == 'cliente'){
                 if(isset($id_client_or_vendor)){
                     $client    = Client::on(Auth::user()->database_name)->find($id_client_or_vendor);
                 }
             }
             
-            if (isset($typeperson) && $typeperson == 'Vendedor'){
+            if ($typepersone == 'vendor'){
                 if(isset($id_client_or_vendor)){
                     $vendor    = Vendor::on(Auth::user()->database_name)->find($id_client_or_vendor);
                 }
             }
+
+
+            return view('admin.reports.index_accounts_receivable_note',compact('client','datenow','typepersone','vendor','date_end','fecha_frist','typeinvoice'));
             
-            return view('admin.reports.index_accounts_receivable_note',compact('client','datenow','typeperson','vendor','date_end','fecha_frist','typeinvoice'));
         }else{
             return redirect('/home')->withDanger('No tiene Acceso al modulo de '.$this->modulo);
-        }
+        } 
     }
 
     
@@ -72,7 +78,7 @@ class ReportDeliveryNoteController extends Controller
 
         $date_end = request('date_end');
         $fecha_frist = request('date_begin');
-        $type = request('type');
+        $typepersone = request('type');
         $id_client = request('id_client');
         $id_vendor = request('id_vendor');
         $typeinvoice = request('typeinvoice');
@@ -81,23 +87,26 @@ class ReportDeliveryNoteController extends Controller
         $vendor = null;
         
 
-        if($type != 'todo'){
+        if($typepersone == 'cliente'){
             if(isset($id_client)){
                 $client    = Client::on(Auth::user()->database_name)->find($id_client);
-                $typeperson = 'Cliente';
                 $id_client_or_vendor = $id_client;
             }
+        }
+
+        if($typepersone == 'vendor'){    
             if(isset($id_vendor)){
                 $vendor    = Vendor::on(Auth::user()->database_name)->find($id_vendor);
-                $typeperson = 'Vendedor';
                 $id_client_or_vendor = $vendor;
             }
-        } else {
-            $typeperson = 'todo';
+        }
+
+        if($typepersone == 'todo' || $type == '' || $type == null){
+            $typepersone = 'todo';
             
         }
 
-        return view('admin.reports.index_accounts_receivable_note',compact('coin','typeinvoice','date_end','client','vendor','typeperson','fecha_frist'));
+        return view('admin.reports.index_accounts_receivable_note',compact('coin','typeinvoice','date_end','client','vendor','typepersone','fecha_frist'));
     }
 
     public function store_debtstopay(Request $request)
@@ -889,13 +898,9 @@ class ReportDeliveryNoteController extends Controller
                  
     }
 
-    function accounts_receivable_note_pdf($coin,$date_end,$typeinvoice,$typeperson = 'todo',$id_client_or_vendor = null,$fecha_frist = null)
+    function accounts_receivable_note_pdf($coin,$date_end,$typeinvoice,$typepersone = 'todo',$id_client_or_vendor = null,$fecha_frist = null)
     {
-        
-
-        
-        //dd('Moneda: '.$coin.' Hasta: '.$date_end.' ID-Cliente-Vend: '.$id_client_or_vendor.' Tipo: '.$typeinvoice.' Persona: '.$typeperson.' Fecha frist ');
-    
+       // dd('Moneda: '.$coin.' Hasta: '.$date_end.' ID-Cliente-Vend: '.$id_client_or_vendor.' Tipo: '.$typeinvoice.' Persona: '.$typepersone.' Fecha frist ');
 
         $pdf = App::make('dompdf.wrapper');
         $quotations = null;
@@ -920,11 +925,11 @@ class ReportDeliveryNoteController extends Controller
         }
         
         $period = $date->format('Y'); 
-        
+         
 
-        if(isset($typeperson) && ($typeperson == 'Cliente')){ // cliente
+        if($typepersone == 'cliente'){ // cliente
             if(isset($coin) && $coin == 'bolivares'){ // nota cliente bs
-                if(isset($typeinvoice) && ($typeinvoice == 'notas')){  // nota cliente bs
+                if($typeinvoice == 'notas'){  // nota cliente bs
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                      ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                     ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
@@ -940,7 +945,7 @@ class ReportDeliveryNoteController extends Controller
                     ->get();
                 }
                     
-               if(isset($typeinvoice) && ($typeinvoice == 'facturas')){ // nota a factura pendiente por cobrar cliente bs
+               if($typeinvoice == 'facturas'){ // nota a factura pendiente por cobrar cliente bs
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                      ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                     ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
@@ -958,7 +963,7 @@ class ReportDeliveryNoteController extends Controller
                     ->get();
                 } 
                 
-                if(isset($typeinvoice) && ($typeinvoice == 'facturasc')){ // facturas cobradas cliente bs
+                if($typeinvoice == 'facturasc'){ // facturas cobradas cliente bs
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                      ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                     ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
@@ -976,7 +981,7 @@ class ReportDeliveryNoteController extends Controller
                     ->get();
                 }
                 
-                if(isset($typeinvoice) && ($typeinvoice == 'notase')){ // nota eliminada cliente bs
+                if($typeinvoice == 'notase'){ // nota eliminada cliente bs
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                     ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
@@ -992,7 +997,7 @@ class ReportDeliveryNoteController extends Controller
                     ->get();
                 }
 
-                 if(isset($typeinvoice) && ($typeinvoice == 'todo')){ // todas cliente bs
+                 if($typeinvoice == 'todo'){ // todas cliente bs
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                                          ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                                         ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
@@ -1010,7 +1015,7 @@ class ReportDeliveryNoteController extends Controller
             }else{ // notas cliente en dolares
 
                 //PARA CUANDO EL REPORTE ESTE EN DOLARES
-                if(isset($typeinvoice) && ($typeinvoice == 'notas')){ // nota cliente $
+                if($typeinvoice == 'notas'){ // nota cliente $
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                     ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
@@ -1026,7 +1031,7 @@ class ReportDeliveryNoteController extends Controller
                     ->get();
                 }
                 
-                if(isset($typeinvoice) && ($typeinvoice == 'facturas')){ // factura cliente $
+                if($typeinvoice == 'facturas'){ // factura cliente $
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                     ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
@@ -1044,7 +1049,7 @@ class ReportDeliveryNoteController extends Controller
                     ->orderBy('quotations.date_billing','desc')
                     ->get();
                 }
-                if(isset($typeinvoice) && ($typeinvoice == 'facturasc')){ // facturas cobradas cliente bs
+                if($typeinvoice == 'facturasc'){ // facturas cobradas cliente bs
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                      ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                     ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
@@ -1062,7 +1067,7 @@ class ReportDeliveryNoteController extends Controller
                     ->get();
                 }
                 
-                if(isset($typeinvoice) && ($typeinvoice == 'notase')){ // nota eliminada cliente bs
+                if($typeinvoice == 'notase'){ // nota eliminada cliente bs
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                     ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
@@ -1077,7 +1082,7 @@ class ReportDeliveryNoteController extends Controller
                     ->orderBy('quotations.date_billing','desc')
                     ->get();
                 }                
-                if(isset($typeinvoice) && ($typeinvoice == 'todo')){ // Todas cliente $
+                if($typeinvoice == 'todo'){ // Todas cliente $
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                                          ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                                         ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
@@ -1096,9 +1101,9 @@ class ReportDeliveryNoteController extends Controller
             }
         }
         
-        if(isset($typeperson) && $typeperson == 'Vendedor'){ // Vendedor
+        if($typepersone == 'vendor'){ // Vendedor
             if(isset($coin) && $coin == 'bolivares'){ // nota vendedor bs
-                if(isset($typeinvoice) && ($typeinvoice == 'notas')){  // nota vendedor bs
+                if($typeinvoice == 'notas'){  // nota vendedor bs
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                      ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                     ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
@@ -1114,7 +1119,7 @@ class ReportDeliveryNoteController extends Controller
                     ->get();
                 }
                     
-               if(isset($typeinvoice) && ($typeinvoice == 'facturas')){ // nota a factura pendiente por cobrar vendedor bs
+               if($typeinvoice == 'facturas'){ // nota a factura pendiente por cobrar vendedor bs
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                      ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                     ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
@@ -1132,7 +1137,7 @@ class ReportDeliveryNoteController extends Controller
                     ->get();
                 } 
                 
-                if(isset($typeinvoice) && ($typeinvoice == 'facturasc')){ // facturas cobradas cliente bs
+                if($typeinvoice == 'facturasc'){ // facturas cobradas cliente bs
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                      ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                     ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
@@ -1150,7 +1155,7 @@ class ReportDeliveryNoteController extends Controller
                     ->get();
                 }
                 
-                if(isset($typeinvoice) && ($typeinvoice == 'notase')){ // nota eliminada vendedor bs
+                if($typeinvoice == 'notase'){ // nota eliminada vendedor bs
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                     ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
@@ -1166,7 +1171,7 @@ class ReportDeliveryNoteController extends Controller
                     ->get();
                 }
 
-                 if(isset($typeinvoice) && ($typeinvoice == 'todo')){ // todas vendedor bs
+                 if($typeinvoice == 'todo'){ // todas vendedor bs
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                                          ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                                         ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
@@ -1184,7 +1189,7 @@ class ReportDeliveryNoteController extends Controller
             }else{ // notas id_vendor en dolares
 
                 //PARA CUANDO EL REPORTE ESTE EN DOLARES
-                if(isset($typeinvoice) && ($typeinvoice == 'notas')){ // nota id_vendor $
+                if($typeinvoice == 'notas'){ // nota id_vendor $
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                     ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
@@ -1200,7 +1205,7 @@ class ReportDeliveryNoteController extends Controller
                     ->get();
                 }
                 
-                if(isset($typeinvoice) && ($typeinvoice == 'facturas')){ // factura id_vendor $
+                if($typeinvoice == 'facturas'){ // factura id_vendor $
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                     ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
@@ -1218,7 +1223,7 @@ class ReportDeliveryNoteController extends Controller
                     ->orderBy('quotations.date_billing','desc')
                     ->get();
                 }
-                if(isset($typeinvoice) && ($typeinvoice == 'facturasc')){ // facturas cobradas id_vendor bs
+                if($typeinvoice == 'facturasc'){ // facturas cobradas id_vendor bs
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                      ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                     ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
@@ -1236,7 +1241,7 @@ class ReportDeliveryNoteController extends Controller
                     ->get();
                 }
                 
-                if(isset($typeinvoice) && ($typeinvoice == 'notase')){ // nota eliminada id_vendorbs
+                if($typeinvoice == 'notase'){ // nota eliminada id_vendorbs
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                     ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                     ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
@@ -1251,7 +1256,7 @@ class ReportDeliveryNoteController extends Controller
                     ->orderBy('quotations.date_billing','desc')
                     ->get();
                 }                
-                if(isset($typeinvoice) && ($typeinvoice == 'todo')){ // Todas id_vendor $
+                if($typeinvoice == 'todo'){ // Todas id_vendor $
                     $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
                                          ->leftjoin('clients', 'clients.id','=','quotations.id_client')
                                         ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
@@ -1271,12 +1276,23 @@ class ReportDeliveryNoteController extends Controller
             
         }
         
-        if(isset($typeperson) && $typeperson == 'todo'){ // todas Bs
+        if($typepersone == 'todo' || $typepersone == null){ // todas Bs
            
-            dd($typeperson);
+            $quotations = DB::connection(Auth::user()->database_name)->table('quotations')
+            ->leftjoin('clients', 'clients.id','=','quotations.id_client')
+           ->leftjoin('vendors', 'vendors.id','=','quotations.id_vendor')
+           ->leftjoin('anticipos', 'anticipos.id_quotation','=','quotations.id')
+           ->where('quotations.amount','<>',null)
+           ->where('quotations.date_delivery_note','>=',$fecha_frist)
+           ->where('quotations.date_delivery_note','<=',$date_consult )          
+           ->where('quotations.id_client',$id_client_or_vendor)                                    
+           ->select('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name as name_vendor','vendors.surname as surname_vendor','clients.name as name_client','quotations.amount','quotations.amount_with_iva', DB::raw('SUM(anticipos.amount) As amount_anticipo'))
+           ->groupBy('quotations.date_billing','quotations.date_delivery_note','quotations.status','quotations.retencion_islr','quotations.retencion_iva','quotations.bcv','quotations.number_invoice','quotations.number_delivery_note','quotations.date_quotation','quotations.id','quotations.serie','vendors.name','vendors.surname','clients.name','quotations.amount','quotations.amount_with_iva')
+           ->orderBy('quotations.date_quotation','desc')
+           ->get();
         }
         
-        $pdf = $pdf->loadView('admin.reports.accounts_receivable_note',compact('coin','quotations','datenow','date_end','fecha_frist'));
+        $pdf = $pdf->loadView('admin.reports.accounts_receivable_note',compact('coin','quotations','datenow','date_end','fecha_frist','typepersone'));
         return $pdf->stream();
                  
     }

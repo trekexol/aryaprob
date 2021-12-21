@@ -69,11 +69,13 @@ class PDF2Controller extends Controller
                     $bcv = null;
                     
                 }else{
-                    $bcv = $quotation->bcv;
+                    $bcv = $quotation->login;
                 }
 
                 $company = Company::on(Auth::user()->database_name)->find(1);
                 
+               // $lineas_cabecera = $company->format_header_line;
+
                  $pdf = $pdf->loadView('pdf.factura',compact('company','quotation','inventories_quotations','payment_quotations','bcv','coin'));
                  return $pdf->stream();
          
