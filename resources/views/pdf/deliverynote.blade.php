@@ -1,5 +1,3 @@
-
-  
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -26,7 +24,7 @@
 <body>
 
 
-  <br><br><br><br><br><br><br><br><br>
+  <br><br><br>
   <h4 style="color: black">NOTA DE ENTREGA NRO: {{ str_pad($quotation->number_delivery_note ?? $quotation->id, 6, "0", STR_PAD_LEFT)}}</h4>
 
  
@@ -147,18 +145,22 @@
 
 <table style="width: 100%;">
   <tr>
+    <th style="text-align: left; font-weight: normal; width: 38%; border-bottom-color: white; border-right-color: white; font-size: small;"></th>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Sub Total</th>
     <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($quotation->total_factura , 2, ',', '.') }}</th>
   </tr> 
   <tr>
+    <th style="text-align: left; font-weight: normal; width: 38%; border-bottom-color: white; border-right-color: white; font-size: small;"></th>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Base Imponible</th>
     <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($quotation->base_imponible , 2, ',', '.') }}</th>
   </tr> 
   <tr>
+    <th style="text-align: left; font-weight: normal; width: 38%; border-bottom-color: white; border-right-color: white; font-size: small;"></th>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Ventas Exentas</th>
     <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format(($retiene_iva ?? 0) , 2, ',', '.') }}</th>
   </tr> 
   <tr>
+    <th style="text-align: left; font-weight: normal; width: 38%; border-bottom-color: white; border-right-color: white; font-size: small;"></th>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">I.V.A.{{ $quotation->iva_percentage }}%</th>
     <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($iva, 2, ',', '.') }}</th>
   </tr> 
@@ -166,33 +168,33 @@
   
     @if (isset($coin) && ($coin == 'bolivares'))
       <tr>
-        <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">TOTAL Bs</th>
+        <th style="text-align: left; font-weight: normal; width: 38%; border-bottom-color: white; border-right-color: white; font-size: small;"></th>
+        <th style="text-align: right; font-weight: normal; width: 21%; border-bottom-color: white;">TOTAL Bs</th>
         <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($total, 2, ',', '.') }}</th>
       </tr> 
       <tr>
-        <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white; font-size: small;">TOTAL $</th>
+        <th style="text-align: left; font-weight: normal; width: 38%; border-bottom-color: white; border-right-color: white; font-size: small;"></th>
+        <th style="text-align: right; font-weight: normal; width: 21%; border-bottom-color: white; font-size: small;">TOTAL $</th>
         <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($total / $quotation->bcv, 2, ',', '.') }}</th>
       </tr> 
     @else
       <tr>
-        <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">TOTAL $</th>
+        <th style="text-align: left; font-weight: normal; width: 38%; border-bottom-color: white; border-right-color: white; font-size: small;"></th>
+        <th style="text-align: right; font-weight: normal; width: 21%; border-bottom-color: white;">TOTAL $</th>
         <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($total, 2, ',', '.') }}</th>
       </tr> 
       <tr>
-        <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">TOTAL Bs</th>
-        <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($total * $quotation->bcv, 2, ',', '.') }}</th>
+        <th style="text-align: left; font-weight: normal; width: 38%; border-bottom-color: white; border-right-color: white; font-size: small;"> Tasa de cambio a la fecha: {{ number_format(bcdiv($quotation->bcv, '1', 2), 2, ',', '.') }} Bs.</th>
+        <th style="text-align: right; font-weight: normal; width: 21%; border-bottom-color: white;  border-left-color: black;">TOTAL Bs</th>
+        <th style="text-align: right; font-weight: normal; width: 21%; border-bottom-color: white;">{{ number_format($total * $quotation->bcv, 2, ',', '.') }}</th>
       </tr> 
     @endif
-    
-  </tr> 
+
   <tr>
-    <th style="text-align: left; font-weight: normal; width: 79%; border-top-color: rgb(17, 9, 9); border-right-color: white; font-size: small;"><pre> Tasa: {{ number_format($quotation->bcv, 2, ',', '.') }}</pre></th>
-    <th style="text-align: right; font-weight: normal; width: 21%; "></th>
+    <th style="text-align: left; width: 50%; border-bottom-color: black; border-right-color: white;" ></th>
+    <th style="text-align: left; font-weight: normal; width: 15%; border-top-color: rgb(17, 9, 9); border-right-color: black; font-size: small;"></th>
+    <th style="text-align: right; font-weight: normal; width: 15%; "></th>
   </tr> 
-  
-  
-  
-  
 </table>
 
 </body>
