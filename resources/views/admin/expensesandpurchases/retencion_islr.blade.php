@@ -62,7 +62,7 @@
   </tr>
   <tr>
     <td style="font-size: x-small; text-align: center;">{{ $datenow ?? '' }}</td>
-    <td style="font-size: x-small; text-align: center;">{{ $expense->id ?? '' }}</td>
+    <td style="font-size: x-small; text-align: center;">{{ $expense->number_islr ?? $expense->id ?? '' }}</td>
     <td style="font-size: x-small; text-align: center;">{{ $expense->serie ?? ''}}</td>
     <td style="font-size: x-small; text-align: right;">{{ number_format(bcdiv(($expense->amount ?? 0) + ($expense->amount_iva ?? 0), '1', 2), 2, ',', '.')}}</td>
     <td style="font-size: x-small; text-align: right;">{{ number_format(bcdiv($total_islr_details ?? 0, '1', 2), 2, ',', '.') }}</td>
