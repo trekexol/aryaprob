@@ -27,7 +27,7 @@
 <body>
   <br>
   <h4 style="color: black; text-align: center">NOTAS DE ENTREGA</h4>
-  <h5 style="color: black; text-align: center">Fecha de Desde: {{date_format(date_create($date_frist),"d-m-Y") ?? ''}}   /   Fecha de Hasta: {{ date_format(date_create($date_end),"d-m-Y")  ?? '' }}</h5>
+  <h5 style="color: black; text-align: center">Fecha de Desde: {{$date_frist}}    /    Fecha de Hasta: {{$date_end}}</h5>
  <?php 
     
     $total_por_facturar = 0;
