@@ -6,6 +6,7 @@ use App\Account;
 use App\Company;
 use App\DetailVoucher;
 use App\HeaderVoucher;
+use App\Http\Controllers\Calculations\CalculationController;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -68,24 +69,40 @@ class DetailVoucherController extends Controller
         $detailvouchers = null;
         $account = null;
         $detailvouchers_last = null;
+        $tasa_calculada = null;
+        $saldo_total_bs = null;
+        $saldo_total_dolares = null;
         
         if(isset($id_header)){
             $header = HeaderVoucher::on(Auth::user()->database_name)->find($id_header);
-            if(isset($header) && $header->status != 'X'){
+           // if(isset($header) && $header->status != 'X'){
                 $detailvouchers = DetailVoucher::on(Auth::user()->database_name)->where('id_header_voucher',$id_header)->get();
                 //se usa el ultimo movimiento agregado de la cabecera para tomar cual fue la tasa que se uso
                 $detailvouchers_last = DetailVoucher::on(Auth::user()->database_name)->where('id_header_voucher',$id_header)->orderBy('id','desc')->first();
                 if(isset($id_account)){
                     $account = Account::on(Auth::user()->database_name)->find($id_account);
-                }
-            }else{
-                return redirect('/detailvouchers/register/bolivares')->withDanger('Este movimiento fue Deshabilitado!');
+
+                    $calculationController = new CalculationController();
+
+                    $account_bolivares = $calculationController->calculate_account_all($account,"bolivares");
+
+                    $account_dolares = $calculationController->calculate_account_all($account,"dolares");
+
+                    $saldo_total_bs = $account_bolivares->balance_previus + $account_bolivares->debe - $account_bolivares->haber;
+
+                    $saldo_total_dolares = $account_dolares->balance_previus + $account_dolares->debe - $account_dolares->haber;
+
+                    $tasa_calculada = ($saldo_total_bs / $saldo_total_dolares);
+                   
+               }
+           /* }else{
+               return redirect('/detailvouchers/register/bolivares')->withDanger('Este movimiento fue Deshabilitado!');
             }
-            
+            */
         }
         
 
-        return view('admin.detailvouchers.create',compact('detailvouchers_last','account','datenow','header_number','coin','bcv','header','detailvouchers'));
+        return view('admin.detailvouchers.create',compact('saldo_total_bs','saldo_total_dolares','tasa_calculada','detailvouchers_last','account','datenow','header_number','coin','bcv','header','detailvouchers'));
    }
 
    public function createvalidation($coin,$id_header = null,$id_account = null)

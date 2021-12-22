@@ -49,7 +49,6 @@
                 <th>Debe</th>
                 <th>Haber</th>
                 <th>Referencia</th>
-                
                 <th>Status</th>
                 <th>Opciones</th>
               
