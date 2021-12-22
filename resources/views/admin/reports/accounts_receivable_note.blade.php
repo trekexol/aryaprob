@@ -1,5 +1,3 @@
-
-  
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -27,7 +25,7 @@
 <body>
   <br>
   <h4 style="color: black; text-align: center">NOTAS DE ENTREGA</h4>
-  <h5 style="color: black; text-align: center">Fecha de Desde: {{$date_frist}}    /    Fecha de Hasta: {{$date_end}}</h5>
+  <h5 style="color: black; text-align: center">Fecha de Desde: {{date_format(date_create($date_frist),"d-m-Y") ?? ''}}   /   Fecha de Hasta: {{ date_format(date_create($date_end),"d-m-Y")  ?? '' }}</h5>
  <?php 
     
     $total_por_facturar = 0;
