@@ -13,7 +13,7 @@
 
 
                 <div class="card-header text-center h4">
-                        Notas de Entrega 
+                        Notas de Entrega
                 </div>
 
                 <div class="card-body">
@@ -127,7 +127,7 @@
                         <div class="embed-responsive embed-responsive-16by9">
 
                             <iframe class="embed-responsive-item" src="{{route('reports.accounts_receivable_note_pdf',[$coin ?? 'bolivares',$date_end ?? '',$typeinvoice ?? 'todo',$typepersone ?? 'todo', $id_client_or_vendor ?? 'nada-index',$date_frist ?? '0000-00-00'])}}" allowfullscreen></iframe>
-                        
+                            -
                             </div>                                      
                         
                         </div>
