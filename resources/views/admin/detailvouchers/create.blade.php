@@ -36,6 +36,7 @@ $suma_haber = 0;
 
                         <input type="hidden" name="coin" value="{{$coin ?? 'bolivares'}}" readonly>
                         <input type="hidden" name="id_header" value="{{$header->id ?? null}}" readonly>
+                        <input type="hidden" name="tasa_calculada" value="{{bcdiv($tasa_calculada ?? $detailvouchers_last->tasa ?? $bcv, '1', 2)}}" readonly>
                        
                         <div class="form-group row">
                             <label for="reference" class="col-sm-2 col-form-label text-md-right">Número</label>
@@ -145,7 +146,7 @@ $suma_haber = 0;
                         </div>
                         <label for="rate" class="col-md-1 col-form-label text-md-right">Tasa:</label>
                         <div class="col-md-2">
-                            <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ $detailvouchers_last->tasa ?? $bcv }}" required autocomplete="rate">
+                            <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ bcdiv($tasa_calculada ?? $detailvouchers_last->tasa ?? $bcv, '1', 2) }}"  required readonly autocomplete="rate">
                             @error('rate')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -406,6 +407,16 @@ $suma_haber = 0;
         
     </script> 
         
+    @endif
+
+    @if (isset($saldo_total_bs) && ($saldo_total_bs > 0))
+        <script>
+            document.getElementById("debe").value = "{{ number_format($saldo_total_bs, 2, ',', '.') }}";
+        </script> 
+    @else
+        <script>
+            document.getElementById("haber").value = "{{ number_format($saldo_total_bs * -1, 2, ',', '.') }}";
+        </script> 
     @endif
 
 @endsection                      

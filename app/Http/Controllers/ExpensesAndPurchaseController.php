@@ -1783,6 +1783,14 @@ class ExpensesAndPurchaseController extends Controller
                     if(isset($account_iva_retenido)){
                         $this->add_movement($bcv,$header_voucher->id,$account_iva_retenido->id,$expense->id,$user_id,0,$retencion_iva);
                     }
+                    $last_number = ExpensesAndPurchase::on(Auth::user()->database_name)->where('number_iva','<>',NULL)->orderBy('number_iva','desc')->first();
+
+                    //Asigno un numero incrementando en 1
+                    if(isset($last_number)){
+                        $expense->number_iva = $last_number->number_iva + 1;
+                    }else{
+                        $expense->number_iva = 1;
+                    }
                 }
 
 
@@ -1793,15 +1801,15 @@ class ExpensesAndPurchaseController extends Controller
                     if(isset($account_islr_pagago)){
                         $this->add_movement($bcv,$header_voucher->id,$account_islr_pagago->id,$expense->id,$user_id,0,$retencion_islr);
                     }
-
-                    $last_number = ExpensesAndPurchase::on(Auth::user()->database_name)->where('number_iva','<>',NULL)->orderBy('number_iva','desc')->first();
+                    $last_number = ExpensesAndPurchase::on(Auth::user()->database_name)->where('number_islr','<>',NULL)->orderBy('number_islr','desc')->first();
 
                     //Asigno un numero incrementando en 1
                     if(isset($last_number)){
-                        $expense->number_iva = $last_number->number_iva + 1;
+                        $expense->number_islr = $last_number->number_islr + 1;
                     }else{
-                        $expense->number_iva = 1;
+                        $expense->number_islr = 1;
                     }
+                    
                 }
                 /*------------------------------- */
                 $anticipo = request('anticipo_form');
