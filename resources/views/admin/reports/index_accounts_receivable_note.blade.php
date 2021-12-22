@@ -13,26 +13,8 @@
 
 
                 <div class="card-header text-center h4">
-                        Nota de Entrega Vista Previa 
+                        Notas de Entrega 
                 </div>
-
-                <br>
-                cliente:{{$client->id ?? null}} 
-                <br>
-                vendedor: {{$vendor->id ?? null}}
-                <br>
-                Id_cliente_vendedor: {{$id_client_or_vendor ?? null}}
-                <br>
-                Moneda: {{$coin ?? 'bolivares'}}
-                <br>
-                Fecha frist: {{date_format(date_create($fecha_frist),"d-m-Y") ?? null}}
-                <br>
-                Data Now: {{date_format(date_create($date_end),"d-m-Y") ?? $datenow}}
-                <br>
-                Tipo invoice: {{$typeinvoice ?? 'todo'}}
-                <br>
-                Tipo Persona: {{$typepersone ?? 'nada'}}
-
 
                 <div class="card-body">
                     <div class="card-body">
@@ -40,17 +22,17 @@
                             <label for="date_begin" class="col-sm-1 col-form-label text-md-right">Desde:</label>
 
                             <div class="col-sm-3">
-                                <input id="date_begin" type="date" class="form-control @error('date_begin') is-invalid @enderror" name="date_begin" value="{{  date('Y-m-d', strtotime($fecha_frist)) }}" required autocomplete="date_begin">
+                                <input id="date_begin" type="date" class="form-control @error('date_begin') is-invalid @enderror" name="date_begin" value="{{  date('Y-m-d', strtotime($date_frist ?? '')) }}" required autocomplete="date_begin">
                             </div>
                             <div class="col-sm-2">
                                 <select class="form-control" name="type" id="type">
-                                    @if (isset($client))
+                                    @if ($typepersone == 'cliente')
                                         <option value="todo">Todos</option>
                                         <option selected value="cliente">Por Cliente</option>
                                         <option value="vendor">Por Vendedor</option>
                                     @endif
                                     
-                                    @if (isset($vendor))
+                                    @if ($typepersone == 'vendor')
                                         <option value="todo">Todos</option>
                                         <option value="cliente">Por Cliente</option>
                                         <option selected value="vendor">Por Vendedor</option>
@@ -63,11 +45,11 @@
                                     @endif
                                 </select>
                             </div>
-                            @if (isset($client))
+                            @if ($typepersone == 'cliente' && isset($client->id))
                             <label id="client_label1" for="clients" class="col-sm-2">Cliente:</label>
                             <label id="client_label2" name="id_client" value="{{ $client->id }}" for="clients" class="col-sm-3">{{ $client->name }} {{ $client->surname }}</label>
                             @endif
-                            @if (isset($vendor))
+                            @if ($typepersone == 'vendor' && isset($vendor->id))
                             <label id="client_label1" for="clients" class="col-sm-2">Vendedor:</label>
                                 <label id="vendor_label2" name="id_vendor" value="{{ $vendor->id }}" for="vendors" class="col-sm-3">{{ $vendor->name }} {{ $vendor->surname }}</label>
                             @endif
@@ -82,7 +64,7 @@
                             <label for="date_end" class="col-sm-1 col-form-label text-md-right">Hasta:</label>
 
                             <div class="col-sm-3">
-                                <input id="date_end" type="date" class="form-control @error('date_end') is-invalid @enderror" name="date_end" value="{{ date('Y-m-d', strtotime($date_end ?? $datenow))}}" required autocomplete="date_end">
+                                <input id="date_end" type="date" class="form-control @error('date_end') is-invalid @enderror" name="date_end" value="{{ date('Y-m-d', strtotime($date_end ?? ''))}}" required autocomplete="date_end">
 
                                 @error('date_end')
                                     <span class="invalid-feedback" role="alert">
@@ -118,9 +100,7 @@
                                             <option selected value="facturasc">Notas Facturadas y Cobradas</option>
                                         @elseif($typeinvoice == 'facturas')
                                             <option selected value="facturas">Notas Facturadas Pendientes</option>
-                                            <option selected value="todo">Todo</option>
-                                        
-                                            @endif
+                                        @endif
                                         <option disabled value="todo">-----------------</option>
                                         <option value="todo">Todo</option>
                                         <option value="notas">Notas de Entrega</option>
@@ -146,8 +126,8 @@
                     </form>
                         <div class="embed-responsive embed-responsive-16by9">
 
-                            <iframe class="embed-responsive-item" src="{{ route('reports.accounts_receivable_note_pdf',[$coin ?? 'bolivares',$date_end ?? $datenow,$typeinvoice ?? 'todo',$typepersone ?? 'todo', $client->id ?? $vendor->id ?? null,$fecha_frist ?? null])}}" allowfullscreen></iframe>
-                            
+                            <iframe class="embed-responsive-item" src="{{route('reports.accounts_receivable_note_pdf',[$coin ?? 'bolivares',$date_end ?? '',$typeinvoice ?? 'todo',$typepersone ?? 'todo', $id_client_or_vendor ?? 'nada-index',$date_frist ?? '0000-00-00'])}}" allowfullscreen></iframe>
+                        
                             </div>                                      
                         
                         </div>
