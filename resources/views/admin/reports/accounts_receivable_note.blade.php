@@ -26,8 +26,8 @@
 
 <body>
   <br>
-  <h4 style="color: black; text-align: center">REPORTE NOTA DE ENTREGA</h4>
-  <h5 style="color: black; text-align: center">Fecha de Desde: {{date_format(date_create($fecha_frist),"d-m-Y") ?? ''}}   /   Fecha de Hasta: {{ date_format(date_create($date_end),"d-m-Y")  ?? '' }}</h5>
+  <h4 style="color: black; text-align: center">NOTAS DE ENTREGA</h4>
+  <h5 style="color: black; text-align: center">Fecha de Desde: {{date_format(date_create($date_frist),"d-m-Y") ?? ''}}   /   Fecha de Hasta: {{ date_format(date_create($date_end),"d-m-Y")  ?? '' }}</h5>
  <?php 
     
     $total_por_facturar = 0;
@@ -127,14 +127,14 @@
 
 
   <tr>
+    <th style="text-align: center; font-weight: normal; border-color: white;">{{count($quotations)}} Regist.</th>
     <th style="text-align: center; font-weight: normal; border-color: white;"></th>
     <th style="text-align: center; font-weight: normal; border-color: white;"></th>
     <th style="text-align: center; font-weight: normal; border-color: white;"></th>
     <th style="text-align: center; font-weight: normal; border-color: white;"></th>
     <th style="text-align: center; font-weight: normal; border-color: white;"></th>
     <th style="text-align: center; font-weight: normal; border-color: white;"></th>
-    <th style="text-align: center; font-weight: normal; border-color: white;"></th>
-    <th style="text-align: right; font-weight: normal; border-color: white; border-right-color: black;"></th>
+    <th style="text-align: right; font-weight: normal; border-color: white; border-right-color: black;">TOTAL</th>
 
 
      

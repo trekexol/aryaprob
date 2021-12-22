@@ -49,7 +49,7 @@
                     @foreach ($clients as $client)
                             <tr>
                                 <td >
-                                    <a href="{{ route('reports.accounts_receivable_note',['Cliente',$client->id]) }}"  title="Seleccionar"><i class="fa fa-check" style="color: orange"></i></a>
+                                    <a href="{{ route('reports.accounts_receivable_note',[$typepersone,$client->id]) }}"  title="Seleccionar"><i class="fa fa-check" style="color: orange"></i></a>
                                </td>
                                 <td >{{$client->name}}</td>
                                 <td >{{$client->cedula_rif}}</td>
