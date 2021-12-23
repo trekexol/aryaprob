@@ -66,7 +66,7 @@
         $total_por_facturar += $quotation->amount_with_iva;
       }
       $total_anticipos = 0;
-      $total_anticipos = $quotation->amount_anticipo;
+      $total_anticipos += $quotation->amount_anticipo;
 
       $tipo = '';
       if ($quotation->number_delivery_note > 0) {
