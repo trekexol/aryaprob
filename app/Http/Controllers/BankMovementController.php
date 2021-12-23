@@ -219,7 +219,7 @@ class BankMovementController extends Controller
 
             $check_amount = $this->check_amount('bolivares',$contrapartida);
 
-            if($check_amount->saldo_actual >= $amount){
+           // if($check_amount->saldo_actual >= $amount){
 
                 $header = new HeaderVoucher();
                 $header->setConnection(Auth::user()->database_name);
@@ -278,9 +278,9 @@ class BankMovementController extends Controller
                 
                 return redirect('/bankmovements')->withSuccess('Registro Exitoso!');
 
-            }else{
+           /* }else{
                 return redirect('/bankmovements/registerdeposit/'.request('id_account').'')->withDanger('El saldo de la Cuenta '.$check_amount->description.' es menor al monto del deposito!');
-            }
+            }*/
             
         }else{
             return redirect('/bankmovements/registerdeposit/'.request('id_account').'')->withDanger('No se puede hacer un movimiento a la misma cuenta!');
@@ -323,7 +323,7 @@ class BankMovementController extends Controller
 
             $check_amount = $this->check_amount('bolivares',$account);
 
-            if($check_amount->saldo_actual >= $amount){
+           // if($check_amount->saldo_actual >= $amount){
                
                 $header = new HeaderVoucher();
                 $header->setConnection(Auth::user()->database_name);
@@ -379,9 +379,9 @@ class BankMovementController extends Controller
 
                 return redirect('/bankmovements')->withSuccess('Registro Exitoso!');
 
-            }else{
+           /* }else{
                 return redirect('/bankmovements/registerretirement/'.request('id_account').'')->withDanger('El saldo de la Cuenta '.$check_amount->description.' es menor al monto del deposito!');
-            }
+            }*/
 
         }else{
             return redirect('/bankmovements/registerretirement/'.request('id_account').'')->withDanger('No se puede hacer un movimiento a la misma cuenta!');
@@ -422,7 +422,7 @@ class BankMovementController extends Controller
 
             $check_amount = $this->check_amount('bolivares',$account);
 
-            if($check_amount->saldo_actual >= $amount){
+           // if($check_amount->saldo_actual >= $amount){
                
                 $header = new HeaderVoucher();
                 $header->setConnection(Auth::user()->database_name);
@@ -479,9 +479,9 @@ class BankMovementController extends Controller
 
                 return redirect('/bankmovements')->withSuccess('Registro Exitoso!');
 
-            }else{
+           /* }else{
                 return redirect('/bankmovements/registertransfer/'.request('id_account').'')->withDanger('El saldo de la Cuenta '.$check_amount->description.' es menor al monto del deposito!');
-            }
+            }*/
 
         }else{
             return redirect('/bankmovements/registertransfer/'.request('id_account').'')->withDanger('No se puede hacer un movimiento a la misma cuenta!');
