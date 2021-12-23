@@ -102,10 +102,11 @@
                     <?php 
                         $amount_bcv = 0;
                         $amount_bcv = $quotation->amount_with_iva / $quotation->bcv;
-
+                        $diferencia_en_dias = 0;
+                        
                         if(isset($quotation->credit_days)){
                             $date_defeated = date("Y-m-d",strtotime($quotation->date_billing."+ $quotation->credit_days days")); 
-                            $diferencia_en_dias = 0;
+                            
                             $currentDate = \Carbon\Carbon::createFromFormat('Y-m-d', $datenow);
                             $shippingDate = \Carbon\Carbon::createFromFormat('Y-m-d', $date_defeated); 
 
