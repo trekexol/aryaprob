@@ -34,7 +34,7 @@
     
     $total_por_facturar = 0;
     $total_por_cobrar = 0;
-  
+    $total_anticipos = 0;
   ?>
 <table style="width: 100%;">
   <tr>
@@ -65,6 +65,8 @@
         $total_por_cobrar += $por_cobrar;
         $total_por_facturar += $quotation->amount_with_iva;
       }
+      
+      $total_anticipos += $quotation->amount_anticipo;
 
       $tipo = '';
       if ($quotation->number_delivery_note > 0) {
@@ -105,8 +107,8 @@
     <th style="text-align: center; font-weight: normal; border-color: white;"></th>
     <th style="text-align: center; font-weight: normal; border-color: white;"></th>
     <th style="text-align: center; font-weight: normal; border-color: white; border-right-color: black;"></th>
-    <th style="text-align: right; font-weight: normal;">{{ number_format(($total_por_facturar ?? 0), 2, ',', '.') }}</th>
-    <th style="text-align: right; font-weight: normal; border-color: white; border-right-color: black;"></th>
+    <th style="text-align: right; font-weight: normal;">{{ number_format(($total_por_facturar ?? 0), 2, ',', '.') }}</th> 
+    <th style="text-align: right; font-weight: normal;">{{ number_format(($total_anticipos ?? 0), 2, ',', '.') }}</th>
     <th style="text-align: right; font-weight: normal;">{{ number_format($total_por_cobrar, 2, ',', '.') }}</th>
   </tr> 
 </table>
