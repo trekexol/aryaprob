@@ -525,10 +525,13 @@ Route::group(["prefix"=>'invoices'],function(){
     Route::get('factura/{id_quotation}/{coin?}','PDF2Controller@imprimirfactura')->name('pdf');
     Route::get('deliverynote/{id_quotation}/{coin}/{iva}/{date}','PDF2Controller@deliverynote')->name('pdf.deliverynote');
     Route::get('deliverynotemediacarta/{id_quotation}/{coin}/{iva}/{date}','PDF2Controller@deliverynotemediacarta')->name('pdf.deliverynotemediacarta');
+    
 
     Route::get('inventory','PDF2Controller@imprimirinventory')->name('pdf.inventory');
 
     Route::get('facturamedia/{id_quotation}/{coin?}','PDF2Controller@imprimirfactura_media')->name('pdf.media');
+
+    Route::get('factura_maq/{id_quotation}/{coin?}','PDF2Controller@imprimirfactura_maq')->name('pdf.maq');
 
     Route::get('expense/{id_expense}/{coin}','PDF2Controller@imprimirExpense')->name('pdf.expense');
 
