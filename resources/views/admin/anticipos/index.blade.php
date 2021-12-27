@@ -83,6 +83,7 @@
         <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
             <tr>
+                <th class="text-center">N°</th>
                 <th class="text-center">Cliente</th>
                 <th class="text-center">Caja/Banco</th>
                 <th class="text-center">Fecha del Anticipo</th>
@@ -130,14 +131,19 @@
 
                     ?>
                     <tr>
-                       
-                    <td class="text-center">{{$anticipo->clients['name'] ?? ''}}<br>{{$num_fac}}</td>
-                    <td class="text-center">{{$anticipo->accounts['description'] ?? ''}}</td>
-                    <td class="text-center">{{$anticipo->date ?? ''}}</td>
-                    <td class="text-center">{{$anticipo->reference ?? ''}}</td>
-                    <td class="text-right">${{number_format($amount_bcv ?? 0, 2, ',', '.')}}</td>
-                    <td class="text-right">{{number_format($anticipo->amount ?? 0, 2, ',', '.')}}</td>
-                    <td class="text-center">{{$anticipo->coin ?? ''}}</td>
+                        @if (isset($anticipo->id_anticipo_restante))
+                            <td class="text-center">{{ $anticipo->id }}<br>{{ (isset($anticipo->id_anticipo_restante)) ? 'Restante de: '.$anticipo->id_anticipo_restante : '' }}</td>
+                        @else
+                            <td class="text-center">{{$anticipo->id ?? ''}}</td>
+                        @endif
+                    
+                        <td class="text-center">{{$anticipo->clients['name'] ?? ''}}<br>{{$num_fac}}</td>
+                        <td class="text-center">{{$anticipo->accounts['description'] ?? ''}}</td>
+                        <td class="text-center">{{$anticipo->date ?? ''}}</td>
+                        <td class="text-center">{{$anticipo->reference ?? ''}}</td>
+                        <td class="text-right">${{number_format($amount_bcv ?? 0, 2, ',', '.')}}</td>
+                        <td class="text-right">{{number_format($anticipo->amount ?? 0, 2, ',', '.')}}</td>
+                        <td class="text-center">{{$anticipo->coin ?? ''}}</td>
                    
                     @if (Auth::user()->role_id  == '1')
                         
