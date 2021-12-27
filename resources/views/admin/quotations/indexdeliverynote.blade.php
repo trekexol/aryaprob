@@ -72,14 +72,14 @@
             <thead>
             <tr> 
                 
-                <th class="text-center">Fecha</th>
+                <th class="text-center" style="width:11%;">Fecha</th>
                 <th class="text-center">N°</th>
                 <th class="text-center">Cliente</th>
                 <th class="text-center">Vendedor</th>
                 <th class="text-center">REF</th>
                 <th class="text-center">Monto</th>
-                <th class="text-center">F.Cotización</th>
-                <th class="text-center">Moneda</th>
+                <th class="text-center" style="width:11%;">F.Cotización</th>
+                <th class="text-center"></th>
                 <th class="text-center"></th>
                 
                 
@@ -97,14 +97,19 @@
                     ?>
                     
                       <tr>
-                            <td class="text-center">{{ $quotation->date_delivery_note ?? ''}}</td>
+                            <td class="text-center">{{ date_format(date_create($quotation->date_delivery_note),"d-m-Y") ?? ''}}</td>
                             <td class="text-center">{{ $quotation->number_delivery_note ?? $quotation->id ?? ''}}</td>
                             <td class="text-center">{{ $quotation->clients['name'] ?? ''}}</td>
                             <td class="text-center">{{ $quotation->vendors['name'] ?? ''}} {{ $quotation->vendors['surname'] ?? ''}}</td>
                             <td class="text-center">${{number_format($amount_bcv, 2, ',', '.') ?? 0}}</td>
                             <td class="text-center">{{number_format($quotation->amount_with_iva, 2, ',', '.') ?? 0}}</td>
-                            <td class="text-center">{{ $quotation->date_quotation ?? ''}}</td>
-                            <td class="text-center">{{ $quotation->coin ?? ''}}</td>
+                            <td class="text-center">{{ date_format(date_create($quotation->date_quotation),"d-m-Y") ?? ''}}</td>
+                            @if ($quotation->coin == 'bolivares')
+                            <td class="text-center font-weight-bold">Bs</td>
+                            @endif
+                            @if ($quotation->coin == 'dolares')
+                            <td class="text-center font-weight-bold">USD</td>
+                            @endif
                             <td class="text-center">
                                 <a href="{{ route('quotations.create',[$quotation->id,$quotation->coin])}}" title="Seleccionar"><i class="fa fa-check"></i></a>
                                 <a href="{{ route('quotations.createdeliverynote',[$quotation->id,$quotation->coin])}}" title="Mostrar"><i class="fa fa-file-alt"></i></a>

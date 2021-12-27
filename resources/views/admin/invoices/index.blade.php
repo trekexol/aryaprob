@@ -84,12 +84,13 @@
             <tr> 
                 <th class="text-center">Fecha</th>
                 <th class="text-center">Nº</th>
-                <th class="text-center">Nota de Entrega</th>
+                <th class="text-center">Nota</th>
+                <th class="text-center">Ctrl/Serie</th>
                 <th class="text-center">Cliente</th>
                 <th class="text-center">Vendedor</th>
                 <th class="text-center">REF</th>
                 <th class="text-center">Monto</th>
-                <th class="text-center">Moneda</th>
+                <th class="text-center"></th>
                 <th class="text-center"></th>
                 <th class="text-center"></th>
             </tr>
@@ -120,7 +121,7 @@
                     ?>
 
                         <tr>
-                            <td class="text-center font-weight-bold">{{$quotation->date_billing}} </td>
+                            <td class="text-center font-weight-bold" style="width:11%;">{{date_format(date_create($quotation->date_billing),"d-m-Y") ?? ''}} </td>
                             @if ($quotation->status == "X")
                                 <td class="text-center font-weight-bold">{{ $quotation->number_invoice }}
                                 </td>
@@ -130,11 +131,18 @@
                                 </td>
                             @endif
                             <td class="text-center font-weight-bold">{{$quotation->number_delivery_note ?? ''}}</td>
+                            <td class="text-center font-weight-bold" style="width:11%;">{{$quotation->serie ?? ''}}</td>
                             <td class="text-center font-weight-bold">{{$quotation->clients['name'] ?? ''}}  </td>
                             <td class="text-center font-weight-bold">{{$quotation->vendors['name'] ?? ''}} {{$quotation->vendors['surname'] ?? ''}}</td>
                             <td class="text-right font-weight-bold">${{number_format($amount_bcv, 2, ',', '.')}}</td>
                             <td class="text-right font-weight-bold">{{number_format($quotation->amount_with_iva, 2, ',', '.')}}</td>
-                            <td class="text-right font-weight-bold">{{$quotation->coin}}</td>
+                            @if ($quotation->coin == 'bolivares')
+                            <td class="text-center font-weight-bold">Bs</td>
+                            @endif
+                            @if ($quotation->coin == 'dolares')
+                            <td class="text-center font-weight-bold">USD</td>
+                            @endif
+
                             @if ($quotation->status == "C")
                                 <td class="text-center font-weight-bold">
                                     <a href="{{ route('quotations.createfacturado',[$quotation->id,$quotation->coin ?? 'bolivares']) }}" title="Ver Factura" class="text-center text-success font-weight-bold">Cobrado</a>
