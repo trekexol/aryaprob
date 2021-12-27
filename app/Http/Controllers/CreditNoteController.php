@@ -114,12 +114,8 @@ class CreditNoteController extends Controller
                                 ->join('credit_note_details', 'inventories.id', '=', 'credit_note_details.id_inventory')
                                 ->where('credit_note_details.id_credit_note',$id_creditnote)
                                 ->whereIn('credit_note_details.status',['1','C'])
-<<<<<<< HEAD
-                                ->select('products.*','credit_note_details.price as price','credit_note_details.id_inventory as id_inventory','credit_note_details.rate as rate','credit_note_details.id as credit_note_details_id','inventories.code as code','credit_note_details.discount as discount',
-=======
-                                ->select('products.*','credit_note_details.price as price','credit_note_details.rate as rate','credit_note_details.id as credit_note_details_id','inventories.code as code','credit_note_details.discount as discount',
->>>>>>> carlos
-                                'credit_note_details.amount as amount_creditnote','credit_note_details.exento as exento')
+                                //->select('products.*','credit_note_details.price as price','credit_note_details.id_inventory as id_inventory','credit_note_details.rate as rate','credit_note_details.id as credit_note_details_id','inventories.code as code','credit_note_details.discount as discount',
+                                ->select('products.*','credit_note_details.price as price','credit_note_details.rate as rate','credit_note_details.id as credit_note_details_id','inventories.code as code','credit_note_details.discount as discount','credit_note_details.amount as amount_creditnote','credit_note_details.exento as exento')
                                 ->get(); 
             
                 
@@ -467,10 +463,6 @@ class CreditNoteController extends Controller
         $amount = request('amount');
         $cost = str_replace(',', '.', str_replace('.', '',request('cost')));
 
-<<<<<<< HEAD
-=======
-
->>>>>>> carlos
         if($coin == 'dolares'){
             $cost_sin_formato = ($cost) * $var->rate;
         }else{
@@ -492,15 +484,10 @@ class CreditNoteController extends Controller
     
         $var->save();
 
-<<<<<<< HEAD
         if(isset($creditnote->date_delivery_note) || isset($creditnote->date_billing)){
             $this->recalculatecreditnote($creditnote->id);
         }
-
-
-=======
-      
->>>>>>> carlos
+ 
         return redirect('creditnotes/register/'.$var->id_credit_note.'/'.$coin.'')->withSuccess('Producto agregado Exitosamente!');
     }
    
@@ -629,7 +616,6 @@ class CreditNoteController extends Controller
 
     public function updatecreditnoteproduct(Request $request, $id)
     { 
-
            
             $data = request()->validate([
                 
@@ -638,7 +624,6 @@ class CreditNoteController extends Controller
             
             ]);
 
-            
         
             $var = CreditNoteDetail::on(Auth::user()->database_name)->findOrFail($id);
 
@@ -675,23 +660,15 @@ class CreditNoteController extends Controller
                 $var->exento = false;
             }else{
                 $var->exento = true;
-<<<<<<< HEAD
-            }
+
 
             if($value_return != 'exito'){
                 return redirect('creditnotes/creditnoteproduct/'.$var->id.'/'.$coin.'/edit')->withDanger('La cantidad de este producto excede a la cantidad puesta en inventario! ');
-=======
->>>>>>> carlos
-            }
 
+            }
           
             $var->save();
-
-<<<<<<< HEAD
-
-=======
->>>>>>> carlos
-          
+   
             return redirect('/creditnotes/register/'.$var->id_credit_note.'/'.$coin.'')->withSuccess('Actualizacion Exitosa!');
         
     }
