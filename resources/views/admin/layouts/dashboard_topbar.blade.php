@@ -8,7 +8,7 @@
         <nav class="navbar navbar-light" style="list-style: none;">
             <li>
             <a class="navbar-brand text-secondary" href="#">
-                <img src="{{ asset(Auth::user()->company->foto_company ?? '') }}" width="120" height="60" class="d-inline-block align-top" alt="">                
+                <img src="{{ asset(Auth::user()->company->foto_company ?? '') }}" width="auto" height="60" class="d-inline-block align-top" alt="">                
                 
             </a>
            </li>
