@@ -166,7 +166,7 @@ class GlobalController extends Controller
 
                 //si el anticipo esta en dolares, multiplico los dolares por la tasa de la cotizacion, para sacar el monto real en bolivares
                 if($anticipo->coin != "bolivares"){
-                    $anticipo->amount = ($anticipo->amount / $anticipo->rate) * $expense->bcv;
+                    $anticipo->amount = ($anticipo->amount / $anticipo->rate) * $expense->rate;
                 }
 
                 if($total_pay >= $anticipo->amount){
@@ -199,17 +199,15 @@ class GlobalController extends Controller
                     $var->id_account = $anticipo->id_account;
                     $var->coin = $anticipo->coin;
                     $var->amount = $amount_anticipo_new;
-                    $var->rate = $expense->rate;
+                    $var->rate = $anticipo->rate;
                     $var->reference = $anticipo->reference;
                     $var->status = 1;
                     $var->save();
                     break;
                 }
             }
-
-            
     }
-
+   
     public function associate_anticipos_quotation($quotation){
 
         $anticipos = DB::connection(Auth::user()->database_name)->table('anticipos')->where('id_client', '=', $quotation->id_client)

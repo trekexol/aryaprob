@@ -1723,7 +1723,7 @@ class FacturarController extends Controller
 
             $historial_quotation = new HistorialQuotationController();
 
-            $historial_quotation->registerAction($var,"quotation","Registro de Factura Realizada");
+            $historial_quotation->registerAction($quotation,"quotation","Registro de Factura Realizada");
 
             return redirect('quotations/facturado/'.$quotation->id.'/'.$coin.'')->withSuccess('Factura Guardada con Exito!');
 
@@ -1785,9 +1785,10 @@ class FacturarController extends Controller
                     $var->id_account = $anticipo->id_account;
                     $var->coin = $anticipo->coin;
                     $var->amount = $amount_anticipo_new;
-                    $var->rate = $quotation->bcv;
+                    $var->rate = $anticipo->rate;
                     $var->reference = $anticipo->reference;
                     $var->status = 1;
+                    $var->id_anticipo_restante = $anticipo->id;
                     $var->save();
                     break;
                 }

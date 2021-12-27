@@ -77,12 +77,11 @@ class HeaderVoucherController extends Controller
             }
             $var->id = $header_id;
             $var->reference = $header_id;
-            $var->description = request('description');
+            $var->description = "ajuste ".request('description');
             $var->date = request('date');
            
            
-            //U porque son creados por el usuario
-            $var->status =  "U";
+            $var->status =  "1";
         
             $var->save();
 

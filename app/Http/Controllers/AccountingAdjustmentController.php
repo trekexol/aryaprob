@@ -37,7 +37,7 @@ class AccountingAdjustmentController extends Controller
                             ->join('accounts', 'accounts.id', '=', 'detail_vouchers.id_account')
                             ->where('header_vouchers.date', $datenow)
                             ->select('detail_vouchers.*','header_vouchers.*'
-                            ,'accounts.description as account_description')->get();
+                            ,'accounts.description as account_description')->orderBy('header_vouchers.date','asc')->get();
             
             $accounts = Account::on(Auth::user()->database_name)->select('id','description')->where('code_one','<>',0)
                             ->where('code_two','<>',0)
@@ -60,6 +60,7 @@ class AccountingAdjustmentController extends Controller
 
     public function store(Request $request)
     {
+       
         $data = request()->validate([
             'date_begin'        =>'required',
             'date_end'          =>'required',
@@ -67,15 +68,34 @@ class AccountingAdjustmentController extends Controller
         
         $date_begin = request('date_begin');
         $date_end = request('date_end');
+        $coin = request('coin');
+        $ver_ajuste = null;
+        $ver_ajuste = request('switch');
 
-        $detailvouchers =  DB::connection(Auth::user()->database_name)->table('detail_vouchers')
-                                ->join('header_vouchers', 'header_vouchers.id', '=', 'detail_vouchers.id_header_voucher')
-                                ->join('accounts', 'accounts.id', '=', 'detail_vouchers.id_account')
-                                ->whereBetween('header_vouchers.date', [$date_begin, $date_end])
-                                ->select('detail_vouchers.*','header_vouchers.*'
-                                ,'accounts.description as account_description')
-                                ->orderBy('detail_vouchers.id','desc')->get();
+        if(empty($coin)){
+            $coin = "bolivares";
+        }
+        
+        if(isset($ver_ajuste) && ($ver_ajuste == "on")){
+            $detailvouchers =  DB::connection(Auth::user()->database_name)->table('detail_vouchers')
+            ->join('header_vouchers', 'header_vouchers.id', '=', 'detail_vouchers.id_header_voucher')
+            ->join('accounts', 'accounts.id', '=', 'detail_vouchers.id_account')
+            ->whereBetween('header_vouchers.date', [$date_begin, $date_end])
+            ->where('header_vouchers.description','LIKE','ajuste%')
+            ->select('detail_vouchers.*','header_vouchers.*'
+            ,'accounts.description as account_description')
+            ->orderBy('detail_vouchers.id','desc')->get();
+        }else{
+            $detailvouchers =  DB::connection(Auth::user()->database_name)->table('detail_vouchers')
+            ->join('header_vouchers', 'header_vouchers.id', '=', 'detail_vouchers.id_header_voucher')
+            ->join('accounts', 'accounts.id', '=', 'detail_vouchers.id_account')
+            ->whereBetween('header_vouchers.date', [$date_begin, $date_end])
+            ->select('detail_vouchers.*','header_vouchers.*'
+            ,'accounts.description as account_description')
+            ->orderBy('detail_vouchers.id','desc')->get();
 
+        }
+       
         $accounts = Account::on(Auth::user()->database_name)->select('id','description')->where('code_one','<>',0)
                                 ->where('code_two','<>',0)
                                 ->where('code_three','<>',0)
@@ -83,7 +103,7 @@ class AccountingAdjustmentController extends Controller
                                 ->where('code_five', '<>',0)
                                 ->get();
                                 
-        return view('admin.accounting_adjustments.index',compact('detailvouchers','date_begin','date_end','accounts'));
+        return view('admin.accounting_adjustments.index',compact('detailvouchers','date_begin','date_end','accounts','coin','ver_ajuste'));
    
     }
 }

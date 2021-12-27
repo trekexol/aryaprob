@@ -8,11 +8,12 @@
     <div class="row py-lg-2">
         <form method="POST" action="{{ route('accounting_adjustments.store') }}">
             @csrf
+            <input type="hidden" name="coin" value="{{$coin}}" readonly>
             <div class="card-body">
                 <div class="form-group row">
                     <label for="date_end" class="col-sm-1 col-form-label text-md-right">Desde</label>
 
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                         <input id="date_begin" type="date" class="form-control @error('date_begin') is-invalid @enderror" name="date_begin" value="{{  $date_begin ?? $datenow ?? '' }}" required autocomplete="date_begin">
 
                         @error('date_begin')
@@ -23,7 +24,7 @@
                     </div>
                     <label for="date_end" class="col-sm-1 col-form-label text-md-right">hasta </label>
 
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                         <input id="date_begin" type="date" class="form-control @error('date_end') is-invalid @enderror" name="date_end" value="{{ $date_end ?? $datenow ?? '' }}" required autocomplete="date_end">
 
                         @error('date_end')
@@ -32,8 +33,18 @@
                             </span>
                         @enderror
                     </div>
-                    <div class="form-group col-md-2">
+                    <div class="form-group col-sm-2">
                         <button type="submit" class="btn btn-info" title="Buscar">Buscar</button>  
+                    </div>
+                    <div class="form-group col-sm-2">
+                        <div class="custom-control custom-switch">
+                            @if (isset($ver_ajuste) && ($ver_ajuste == "on"))
+                                <input type="checkbox" class="custom-control-input" name="switch" checked id="customSwitches">
+                            @else
+                                <input type="checkbox" class="custom-control-input" name="switch" id="customSwitches">
+                            @endif
+                            <label class="custom-control-label" for="customSwitches">Ver Ajustes</label>
+                        </div>
                     </div>
                 </div>
             </div>
