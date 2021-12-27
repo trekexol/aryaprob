@@ -28,7 +28,7 @@
               id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="false"
               aria-expanded="false">
               <i class="fas fa-bars"></i>
-              Opciones
+              Opciones 
           </button>
           <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
               
@@ -40,7 +40,7 @@
           </div> 
       </div> 
       <div class="col-sm-3">
-        <a href="{{ route('products.create')}}" class="btn btn-primary float-md-right" role="button" aria-pressed="true">Registrar un Producto</a>
+        <a href="{{ route('products.create')}}" class="btn btn-primary float-md-right" role="button" aria-pressed="true">Registrar un Producto </a>
       </div>
     </div>
   </div>
@@ -138,9 +138,75 @@
       </div>
   </div>
 </div>
+<div class="modal modal-danger fade" id="movementModal" tabindex="-1" role="dialog" aria-labelledby="Delete" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Movimiento Contable</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            <form action="{{ route('import_product_procesar') }}" method="post">
+                @csrf
+                
+                <input id="file_form" type="file" value="import" accept=".xlsx" name="file_form" class="file">
+                
+                <div class="form-group row">
+                    <label for="contrapartida" class="col-sm-12 col-form-label text-md-center">La carga de estos productos es de: {{number_format($total_amount_for_import ?? 0, 2, ',', '.')}}</label>
+                </div>
+                <div class="form-group row">
+                    @if (isset($contrapartidas))      
+                    <label for="contrapartida" class="col-sm-4 col-form-label text-md-right">Contrapartida:</label>
+                
+                    <div class="col-sm-4">
+                    <select id="contrapartida"  name="contrapartida" class="form-control">
+                        <option value="">Seleccionar</option>
+                        @foreach($contrapartidas as $index => $value)
+                            <option value="{{ $index }}" {{ old('Contrapartida') == $index ? 'selected' : '' }}>
+                                {{ $value }}
+                            </option>
+                        @endforeach
+                        </select>
+
+                        @if ($errors->has('contrapartida_id'))
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('contrapartida_id') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                    @endif
+                    <div class="col-sm-4">
+                            <select  id="subcontrapartida"  name="Subcontrapartida" class="form-control">
+                                <option value="">Seleccionar</option>
+                            </select>
+
+                            @if ($errors->has('subcontrapartida_id'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('subcontrapartida_id') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                </div>  
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-info">Aceptar</button>
+            </div>
+            </form>
+        </div>
+    </div>
+  </div>
   
 @endsection
 @section('javascript')
+    <script>
+        if("{{isset($total_amount_for_import)}}"){
+            $('#movementModal').modal('show');
+        }
+        
+    </script>
      <script>
         $('#dataTable').DataTable({
             "ordering": false,
@@ -176,5 +242,51 @@
             }            
                
         });
+
+
+        $("#contrapartida").on('change',function(){
+            var contrapartida_id = $(this).val();
+            $("#subcontrapartida").val("");
+            
+            getSubcontrapartida(contrapartida_id);
+        });
+
+        function getSubcontrapartida(contrapartida_id){
+            
+            $.ajax({
+                url:"{{ route('directpaymentorders.listcontrapartida') }}" + '/' + contrapartida_id,
+                beforSend:()=>{
+                    alert('consultando datos');
+                },
+                success:(response)=>{
+                    let subcontrapartida = $("#subcontrapartida");
+                    let htmlOptions = `<option value='' >Seleccione..</option>`;
+                    // console.clear();
+                    if(response.length > 0){
+                        response.forEach((item, index, object)=>{
+                            let {id,description} = item;
+                            htmlOptions += `<option value='${id}' {{ old('Subcontrapartida') == '${id}' ? 'selected' : '' }}>${description}</option>`
+
+                        });
+                    }
+                    //console.clear();
+                    // console.log(htmlOptions);
+                    subcontrapartida.html('');
+                    subcontrapartida.html(htmlOptions);
+                
+                    
+                
+                },
+                error:(xhr)=>{
+                    alert('Presentamos inconvenientes al consultar los datos');
+                }
+            })
+        }
+
+        $("#subcontrapartida").on('change',function(){
+                var subcontrapartida_id = $(this).val();
+                var contrapartida_id    = document.getElementById("contrapartida").value;
+                
+            });
         </script> 
 @endsection

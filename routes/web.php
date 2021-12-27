@@ -897,6 +897,7 @@ Route::group(["prefix"=>'export'],function(){
 
     Route::get('products','ExcelController@export_product')->name('export.product_template');
     Route::post('productsimport','ExcelController@import_product')->name('import_product');
+    Route::post('productsimportprocess','ExcelController@import_product_procesar')->name('import_product_procesar');
 
     Route::get('clients','ExcelController@export_client')->name('export.client_template');
     Route::post('clientsimport','ExcelController@import_client')->name('import_client');
