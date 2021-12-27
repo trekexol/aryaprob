@@ -9,6 +9,7 @@ use App\Imports\AccountImport;
 use App\Imports\ClientImport;
 use App\Imports\ExpensesImport;
 use App\Imports\ProductImport;
+use App\Imports\ProductReadImport;
 use App\Imports\ProviderImport;
 use App\Inventory;
 use App\Product;
@@ -193,7 +194,33 @@ class ExcelController extends Controller
 
    public function import_product(Request $request) 
    {
-       $file = $request->file('file');
+        $file = $request->file('file');
+
+        $rows = Excel::toArray(new ProductReadImport, $file);
+      
+        $total_amount_for_import = 0;
+       
+        foreach ($rows[0] as $row) {
+            $total_amount_for_import += $row['precio_compra'] * $row['cantidad_en_inventario'];
+        }
+
+        $products = Product::on(Auth::user()->database_name)->orderBy('id' ,'DESC')->where('status',1)->get();
+
+        $contrapartidas     = Account::on(Auth::user()->database_name)
+        ->orWhere('description', 'LIKE','Bancos')
+        ->orWhere('description', 'LIKE','Caja')
+        ->orWhere('description', 'LIKE','Cuentas por Pagar Comerciales')
+        ->orWhere('description', 'LIKE','Capital Social Suscrito y Pagado')
+        ->orWhere('description', 'LIKE','Capital Social Suscripto y No Pagado')
+        ->orderBY('description','asc')->pluck('description','id')->toArray();
+
+        
+        return view('admin.products.index',compact('products','total_amount_for_import','contrapartidas'))->with(compact('file'));
+   }
+
+   public function import_product_procesar(Request $request) 
+   {
+       $file = $request->file('file_form');
        
        Excel::import(new ProductImport, $file);
        
