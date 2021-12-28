@@ -85,7 +85,7 @@ determindados bienes muebles y los receptores de ciertos servicios, a quienes la
 <?php 
 
   $oper = 1;
-  $total = $expense->amount_with_iva + ($expense->retencion_iva ?? 0) + ($expense->retencion_islr ?? 0) + ($expense->anticipo ?? 0);
+  $total = $expense->amount_with_iva;
 ?>
 
 <br>

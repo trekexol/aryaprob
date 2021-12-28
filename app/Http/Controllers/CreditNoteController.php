@@ -591,6 +591,7 @@ class CreditNoteController extends Controller
         }else{
             $var->exento = "1";
         }
+
         if(request('islr') == null){
             $var->islr = "0";
         }else{
@@ -609,10 +610,6 @@ class CreditNoteController extends Controller
        
         return redirect('/creditnotes')->withSuccess('Actualizacion Exitosa!');
     }
-
-
-
-        
 
     public function updatecreditnoteproduct(Request $request, $id)
     { 
@@ -660,7 +657,7 @@ class CreditNoteController extends Controller
                 $var->exento = false;
             }else{
                 $var->exento = true;
-
+            }
 
             if($value_return != 'exito'){
                 return redirect('creditnotes/creditnoteproduct/'.$var->id.'/'.$coin.'/edit')->withDanger('La cantidad de este producto excede a la cantidad puesta en inventario! ');
