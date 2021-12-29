@@ -45,13 +45,20 @@
     <th style="text-align: center; ">Serie</th>
     <th style="text-align: center; ">Monto</th>
     <th style="text-align: center; ">Base Imponible</th>
+    <th style="text-align: center; ">Monto Exento</th>
     <th style="text-align: center; ">Ret.Iva</th>
     <th style="text-align: center; ">Ret.Islr</th>
     <th style="text-align: center; ">Anticipo</th>
     <th style="text-align: center; ">IVA</th>
     <th style="text-align: center; ">Total</th>
   </tr> 
+  <?php
+    $total_base_imponible = 0;
+  ?>
   @foreach ($quotations as $quotation)
+      <?php
+        $total_base_imponible += $quotation->base_imponible;
+      ?>
     <tr>
       
       <td style="text-align: center; ">{{ $quotation->id ?? ''}}</td>
@@ -63,6 +70,7 @@
       @if (isset($coin) && ($coin == 'bolivares'))
         <td style="text-align: right; font-weight: normal;">{{ number_format(($quotation->amount ?? 0), 2, ',', '.') }}</td>
         <td style="text-align: right; font-weight: normal;">{{ number_format(($quotation->base_imponible ?? 0), 2, ',', '.') }}</td>
+        <td style="text-align: right; font-weight: normal;">{{ number_format(($quotation->amount_exento ?? 0), 2, ',', '.') }}</td>
         <td style="text-align: right; font-weight: normal;">{{ number_format(($quotation->retencion_iva ?? 0), 2, ',', '.') }}</td>
         <td style="text-align: right; font-weight: normal;">{{ number_format(($quotation->retencion_islr ?? 0), 2, ',', '.') }}</td>
         <td style="text-align: right; font-weight: normal;">{{ number_format(($quotation->anticipo ?? 0), 2, ',', '.') }}</td>
@@ -71,6 +79,7 @@
       @else
         <td style="text-align: right; font-weight: normal;">{{ number_format(($quotation->amount / $quotation->bcv), 2, ',', '.') }}</td>
         <td style="text-align: right; font-weight: normal;">{{ number_format(($quotation->base_imponible / $quotation->bcv), 2, ',', '.') }}</td>
+        <td style="text-align: right; font-weight: normal;">{{ number_format(($quotation->amount_exento ?? 0 / $quotation->bcv), 2, ',', '.') }}</td>
         <td style="text-align: right; font-weight: normal;">{{ number_format(($quotation->retencion_iva / $quotation->bcv), 2, ',', '.') }}</td>
         <td style="text-align: right; font-weight: normal;">{{ number_format(($quotation->retencion_islr / $quotation->bcv), 2, ',', '.') }}</td>
         <td style="text-align: right; font-weight: normal;">{{ number_format(($quotation->anticipo / $quotation->bcv), 2, ',', '.') }}</td>
@@ -81,7 +90,20 @@
     </tr> 
   @endforeach 
 
-  
+  <tr>
+    <th style="text-align: center; font-weight: normal; border-color: white;"></th>
+    <th style="text-align: center; font-weight: normal; border-color: white;"></th>
+    <th style="text-align: center; font-weight: normal; border-color: white;"></th>
+    <th style="text-align: center; font-weight: normal; border-color: white;"></th>
+    <th style="text-align: center; font-weight: normal; border-color: white;"></th> 
+    <th style="text-align: center; font-weight: normal; border-color: white; border-right-color: black;"></th>
+    <th style="text-align: right; font-weight: normal;">{{ number_format($total_base_imponible, 2, ',', '.') }}</th>
+    <th style="text-align: center; font-weight: normal; border-color: white;"></th>
+    <th style="text-align: center; font-weight: normal; border-color: white;"></th>
+    <th style="text-align: center; font-weight: normal; border-color: white;"></th>
+    <th style="text-align: center; font-weight: normal; border-color: white;"></th>
+    <th style="text-align: center; font-weight: normal; border-color: white;"></th>
+  </tr> 
 </table>
 
 </body>

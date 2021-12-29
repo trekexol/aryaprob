@@ -220,6 +220,7 @@ class ExcelController extends Controller
 
    public function import_product_procesar(Request $request) 
    {
+       
        $file = $request->file('file_form');
        
        Excel::import(new ProductImport, $file);

@@ -295,7 +295,9 @@
                         <!--CANTIDAD DE PAGOS QUE QUIERO ENVIAR-->
                         <input type="hidden" id="amount_of_payments" name="amount_of_payments"  readonly>
 
-                        
+                         <!--CANTIDAD DE PAGOS QUE QUIERO ENVIAR-->
+                         <input type="hidden" id="amount_exento" name="amount_exento" value="{{$retiene_iva ?? 0 / ($bcv ?? 1)}}" readonly>
+
                         <!--Total del pago que se va a realizar-->
                         <input type="hidden" id="base_imponible_form" name="base_imponible_form"  readonly>
 
@@ -308,7 +310,7 @@
                         <!--Total del pago que se va a realizar-->
                         <input type="hidden" id="total_pay_form" name="total_pay_form"  readonly>
 
-                      
+                        
 
                         <!--Porcentaje de iva aplicado que se va a realizar-->
                         <input type="hidden" id="iva_form" name="iva_form"  readonly>

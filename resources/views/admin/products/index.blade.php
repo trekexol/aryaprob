@@ -150,9 +150,11 @@
             <div class="modal-body">
             <form action="{{ route('import_product_procesar') }}" method="post">
                 @csrf
-                
-                <input id="file_form" type="file" value="import" accept=".xlsx" name="file_form" class="file">
-                
+                <div class="form-group row">
+                    <div class="offset-sm-1">
+                        <input id="file_form" type="file" value="import" accept=".xlsx" name="file_form" class="file">
+                    </div>
+                </div>
                 <div class="form-group row">
                     <label for="contrapartida" class="col-sm-12 col-form-label text-md-center">La carga de estos productos es de: {{number_format($total_amount_for_import ?? 0, 2, ',', '.')}}</label>
                 </div>
