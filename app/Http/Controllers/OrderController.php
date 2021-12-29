@@ -162,6 +162,9 @@ class OrderController extends Controller
     
         $quotation->status = 'X';
         $quotation->save();
+
+        $detail = DetailVoucher::on(Auth::user()->database_name)->where('id_invoice',$id_quotation)
+        ->update(['status' => 'X']);
        
         return redirect('orders')->withSuccess('Reverso de Pedido Exitoso!');
 

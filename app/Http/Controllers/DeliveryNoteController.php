@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Client;
+use App\DetailVoucher;
 use App\Http\Controllers\Historial\HistorialQuotationController;
 use App\Http\Controllers\UserAccess\UserAccessController;
 use App\Quotation;
@@ -160,6 +161,9 @@ class DeliveryNoteController extends Controller
     
         $quotation->status = 'X';
         $quotation->save();
+
+        $detail = DetailVoucher::on(Auth::user()->database_name)->where('id_invoice',$id_quotation)
+        ->update(['status' => 'X']);
 
         $historial_quotation = new HistorialQuotationController();
 
