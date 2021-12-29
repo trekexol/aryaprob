@@ -9,9 +9,12 @@ use App\Account;
 use App\AccountHistorial;
 use App\Client;
 use App\Company;
+use App\DetailVoucher;
 use App\ExpensePayment;
 use App\ExpensesAndPurchase;
 use App\ExpensesDetail;
+use App\HeaderVoucher;
+use App\Http\Controllers\Validations\FacturaValidationController;
 use App\Inventory;
 use App\Quotation;
 use App\QuotationPayment;
@@ -306,8 +309,13 @@ class PDF2Controller extends Controller
                         $retiene_islr += ($var->price * $var->amount_quotation) - $percentage; 
 
                     }
+                    //me suma todos los precios de costo de los productos
+                    if(($var->money == 'Bs') && (($var->type == "MERCANCIA") || ($var->type == "COMBO"))){
+                        $price_cost_total += $var->price_buy * $var->amount_quotation;
+                    }else if(($var->money != 'Bs') && (($var->type == "MERCANCIA") || ($var->type == "COMBO"))){
+                        $price_cost_total += $var->price_buy * $var->amount_quotation * $quotation->bcv;
+                    }
 
-                
                 }
 
                 $rate = null;
@@ -358,6 +366,8 @@ class PDF2Controller extends Controller
 
                 
                 $company = Company::on(Auth::user()->database_name)->find(1);
+
+                $this->aggregate_movement_mercancia($quotation,$price_cost_total);
                 
                 $pdf = $pdf->loadView('pdf.deliverynote',compact('quotation','inventories_quotations','bcv','company'
                                                                 ,'total_retiene_iva','total_retiene_islr','coin','retiene_iva'));
@@ -367,10 +377,86 @@ class PDF2Controller extends Controller
                 return redirect('/invoices')->withDanger('La nota de entrega no existe');
             } 
              
-        
-
-        
     }
+
+    public function aggregate_movement_mercancia($quotation,$price_cost_total){
+     
+        if(isset($quotation)){
+            $validation_factura = new FacturaValidationController($quotation);
+
+            $return_validation_factura = $validation_factura->validate_movement_mercancia();
+    
+            
+            if($return_validation_factura == true){
+                
+                if((isset($price_cost_total)) && ($price_cost_total != 0)){
+                    $header_voucher  = new HeaderVoucher();
+                    $header_voucher->setConnection(Auth::user()->database_name);
+                    $date = Carbon::now();
+                    $datenow = $date->format('Y-m-d');
+                    $user       =   auth()->user();    
+            
+                    $header_voucher->description = "Ventas de Bienes o servicios.";
+                    $header_voucher->date = $datenow;
+                    
+                
+                    $header_voucher->status =  "1";
+                
+                    $header_voucher->save();
+                    $account_mercancia_venta = Account::on(Auth::user()->database_name)->where('description', 'like', 'Mercancia para la Venta')->first();
+    
+                    if(isset($account_mercancia_venta)){
+                        $this->add_movement($quotation->bcv,$header_voucher->id,$account_mercancia_venta->id,$quotation->id,$user->id,0,$price_cost_total);
+                    }
+    
+                    //Costo de Mercancia
+    
+                    $account_costo_mercancia = Account::on(Auth::user()->database_name)->where('description', 'like', 'Costo de Mercancia')->first();
+    
+                    if(isset($account_costo_mercancia)){
+                        $this->add_movement($quotation->bcv,$header_voucher->id,$account_costo_mercancia->id,$quotation->id,$user->id,$price_cost_total,0);
+                    }
+                }
+            }
+        }
+    }
+
+    public function add_movement($bcv,$id_header,$id_account,$id_invoice,$id_user,$debe,$haber){
+
+        $detail = new DetailVoucher();
+        $detail->setConnection(Auth::user()->database_name);
+
+
+        $detail->id_account = $id_account;
+        $detail->id_header_voucher = $id_header;
+        $detail->user_id = $id_user;
+        $detail->tasa = $bcv;
+        $detail->id_invoice = $id_invoice;
+
+      /*  $valor_sin_formato_debe = str_replace(',', '.', str_replace('.', '', $debe));
+        $valor_sin_formato_haber = str_replace(',', '.', str_replace('.', '', $haber));*/
+
+       
+        $detail->debe = $debe;
+        $detail->haber = $haber;
+       
+      
+        $detail->status =  "C";
+
+         /*Le cambiamos el status a la cuenta a M, para saber que tiene Movimientos en detailVoucher */
+         
+            $account = Account::on(Auth::user()->database_name)->findOrFail($detail->id_account);
+
+            if($account->status != "M"){
+                $account->status = "M";
+                $account->save();
+            }
+         
+    
+        $detail->save();
+
+    }
+
 
     function order($id_quotation,$coin,$iva,$date)
     {
@@ -459,7 +545,12 @@ class PDF2Controller extends Controller
                         $retiene_islr += ($var->price * $var->amount_quotation) - $percentage; 
 
                     }
-
+                    //me suma todos los precios de costo de los productos
+                    if(($var->money == 'Bs') && (($var->type == "MERCANCIA") || ($var->type == "COMBO"))){
+                        $price_cost_total += $var->price_buy * $var->amount_quotation;
+                    }else if(($var->money != 'Bs') && (($var->type == "MERCANCIA") || ($var->type == "COMBO"))){
+                        $price_cost_total += $var->price_buy * $var->amount_quotation * $quotation->bcv;
+                    }
                 
                 }
                 $rate = null;
@@ -509,7 +600,8 @@ class PDF2Controller extends Controller
                 /*Aqui revisamos el porcentaje de retencion de iva que tiene el cliente, para aplicarlo a productos que retengan iva */
                 $client = Client::on(Auth::user()->database_name)->find($quotation->id_client);
 
-                
+                $this->aggregate_movement_mercancia($quotation,$price_cost_total);
+
                 $company = Company::on(Auth::user()->database_name)->find(1);
                 
                 $pdf = $pdf->loadView('pdf.order',compact('quotation','inventories_quotations','bcv','company'
@@ -632,7 +724,12 @@ class PDF2Controller extends Controller
                         $retiene_islr += ($var->price * $var->amount_quotation) - $percentage; 
 
                     }
-
+                    //me suma todos los precios de costo de los productos
+                    if(($var->money == 'Bs') && (($var->type == "MERCANCIA") || ($var->type == "COMBO"))){
+                        $price_cost_total += $var->price_buy * $var->amount_quotation;
+                    }else if(($var->money != 'Bs') && (($var->type == "MERCANCIA") || ($var->type == "COMBO"))){
+                        $price_cost_total += $var->price_buy * $var->amount_quotation * $quotation->bcv;
+                    }
                 
                 }
 
@@ -664,6 +761,8 @@ class PDF2Controller extends Controller
 
                 
                 $company = Company::on(Auth::user()->database_name)->find(1);
+
+                $this->aggregate_movement_mercancia($quotation,$price_cost_total);
                 
                 $pdf = $pdf->loadView('pdf.deliverynotemediacarta',compact('quotation','inventories_quotations','bcv','company'
                                                                 ,'retiene_iva','total_retiene_islr'));
@@ -838,8 +937,6 @@ class PDF2Controller extends Controller
     
     function imprimirinventory(){
       
-        
-
         $pdf_inventory = App::make('dompdf.wrapper');
 
         $inventories = Inventory::on(Auth::user()->database_name)->where('status','1')->orderBy('id','desc')->get();

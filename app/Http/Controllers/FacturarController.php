@@ -9,6 +9,7 @@ use App\HeaderVoucher;
 use App\Inventory;
 use App\Client;
 use App\Http\Controllers\Historial\HistorialQuotationController;
+use App\Http\Controllers\Validations\FacturaValidationController;
 use Illuminate\Http\Request;
 
 use App\Quotation;
@@ -492,17 +493,21 @@ class FacturarController extends Controller
         
         if($sin_formato_amount_iva != 0){
            
-            if(isset($account_cuentas_por_cobrar)){
+            if(isset($account_debito_iva_fiscal)){
                 $this->add_movement($bcv,$header_voucher->id,$account_debito_iva_fiscal->id,$quotation->id,$user_id,0,$sin_formato_amount_iva);
             }
         }
 
-        if(empty($quotation->date_delivery_note) && empty($quotation->date_order)){
+        $validation_factura = new FacturaValidationController($quotation);
+
+        $return_validation_factura = $validation_factura->validate_movement_mercancia();
+
+        if($return_validation_factura == true){
             //Mercancia para la Venta
             if((isset($price_cost_total)) && ($price_cost_total != 0)){
                 $account_mercancia_venta = Account::on(Auth::user()->database_name)->where('description', 'like', 'Mercancia para la Venta')->first();
 
-                if(isset($account_cuentas_por_cobrar)){
+                if(isset( $account_mercancia_venta)){
                     $this->add_movement($bcv,$header_voucher->id,$account_mercancia_venta->id,$quotation->id,$user_id,0,$price_cost_total);
                 }
 
@@ -510,12 +515,11 @@ class FacturarController extends Controller
 
                 $account_costo_mercancia = Account::on(Auth::user()->database_name)->where('description', 'like', 'Costo de Mercancia')->first();
 
-                if(isset($account_cuentas_por_cobrar)){
+                if(isset($account_costo_mercancia)){
                     $this->add_movement($bcv,$header_voucher->id,$account_costo_mercancia->id,$quotation->id,$user_id,$price_cost_total,0);
                 }
             }
         }
-        
        
         
         $historial_quotation = new HistorialQuotationController();
@@ -1694,21 +1698,26 @@ class FacturarController extends Controller
                 }
                 
                 //Mercancia para la Venta
-                
-                if($price_cost_total != 0){
+                $validation_factura = new FacturaValidationController($quotation);
 
-                    $account_mercancia_venta = Account::on(Auth::user()->database_name)->where('description', 'like', 'Mercancia para la Venta')->first();
+                $return_validation_factura = $validation_factura->validate_movement_mercancia();
 
-                    if(isset($account_cuentas_por_cobrar)){
-                        $this->add_movement($bcv,$header_voucher->id,$account_mercancia_venta->id,$quotation->id,$user_id,0,$price_cost_total);
-                    }
+                if($return_validation_factura == true){
+                    if($price_cost_total != 0){
 
-                    //Costo de Mercancia
+                        $account_mercancia_venta = Account::on(Auth::user()->database_name)->where('description', 'like', 'Mercancia para la Venta')->first();
 
-                    $account_costo_mercancia = Account::on(Auth::user()->database_name)->where('description', 'like', 'Costo de Mercancía')->first();
+                        if(isset($account_cuentas_por_cobrar)){
+                            $this->add_movement($bcv,$header_voucher->id,$account_mercancia_venta->id,$quotation->id,$user_id,0,$price_cost_total);
+                        }
 
-                    if(isset($account_cuentas_por_cobrar)){
-                        $this->add_movement($bcv,$header_voucher->id,$account_costo_mercancia->id,$quotation->id,$user_id,$price_cost_total,0);
+                        //Costo de Mercancia
+
+                        $account_costo_mercancia = Account::on(Auth::user()->database_name)->where('description', 'like', 'Costo de Mercancía')->first();
+
+                        if(isset($account_cuentas_por_cobrar)){
+                            $this->add_movement($bcv,$header_voucher->id,$account_costo_mercancia->id,$quotation->id,$user_id,$price_cost_total,0);
+                        }
                     }
                 }
                 /*----------- */
