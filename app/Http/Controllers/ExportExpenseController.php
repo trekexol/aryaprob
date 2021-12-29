@@ -32,7 +32,8 @@ class ExportExpenseController extends Controller
                                         ->whereRaw(
                                             "(DATE_FORMAT(date, '%Y-%m-%d') >= ? AND DATE_FORMAT(date, '%Y-%m-%d') <= ?)", 
                                             [$date_begin, $date_end])
-                                            ->get();
+                                        ->where('status','C')
+                                        ->get();
         if(isset($expenses)){
             foreach ($expenses as  $expense) {
                 $expense->date = Carbon::parse($expense->date);
