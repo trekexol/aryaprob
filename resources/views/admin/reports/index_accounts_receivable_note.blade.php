@@ -51,7 +51,7 @@
                             @endif
                             @if ($typepersone == 'vendor' && isset($vendor->id))
                             <label id="client_label1" for="clients" class="col-sm-2">Vendedor:</label>
-                                <label id="vendor_label2" name="id_vendor" value="{{ $vendor->id }}" for="vendors" class="col-2>{{ $vendor->name }} {{ $vendor->surname }}</label>
+                                <label id="vendor_label2" name="id_vendor" value="{{ $vendor->id }}" for="vendors" class="col-2">{{ $vendor->name }} {{ $vendor->surname }}</label>
                             @endif
                             
                             <div id="client_label3" class="form-group col-sm-1 text-md-left">
@@ -92,8 +92,8 @@
                             <div class="col-sm-4">
                                 <select class="form-control" name="typeinvoice" id="typeinvoice">
                                     @if (isset($typeinvoice))
-                                        @if ($typeinvoice == 'notat')
-                                            <option selected value="notat">Notas de Entrega</option>
+                                        @if ($typeinvoice == 'notast')
+                                            <option selected value="notast">Notas de Entrega</option>
                                         @elseif($typeinvoice == 'notas')
                                             <option selected value="notas">Notas Sin Facturar</option>                                            
                                         @elseif($typeinvoice == 'notase')
