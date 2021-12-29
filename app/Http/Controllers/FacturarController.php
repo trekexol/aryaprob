@@ -175,7 +175,7 @@ class FacturarController extends Controller
              return view('admin.quotations.createfacturar',compact('price_cost_total','coin','quotation'
                         ,'payment_quotations', 'accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta'
                         ,'datenow','bcv','anticipos_sum','total_retiene_islr','is_after'
-                        ,'total_mercancia','total_servicios','client'));
+                        ,'total_mercancia','total_servicios','client','retiene_iva'));
          }else{
              return redirect('/quotations')->withDanger('La cotizacion no existe');
          } 
@@ -368,6 +368,8 @@ class FacturarController extends Controller
      
         //precio de costo de los productos, vienen en bolivares
         $price_cost_total = request('price_cost_total');
+
+        $amount_exento = request('amount_exento');
         
         $total_retiene_iva = str_replace(',', '.', str_replace('.', '', request('iva_retencion')));
         $total_retiene_islr = str_replace(',', '.', str_replace('.', '', request('islr_retencion')));
@@ -412,6 +414,7 @@ class FacturarController extends Controller
         $quotation->anticipo =  $anticipo;
 
         $quotation->base_imponible = $sin_formato_base_imponible;
+        $quotation->amount_exento =  $amount_exento;
         $quotation->amount =  $sin_formato_amount;
         $quotation->amount_iva =  $sin_formato_amount_iva;
         $quotation->amount_with_iva = $sin_formato_grand_total;
@@ -583,6 +586,7 @@ class FacturarController extends Controller
 
         $sub_total = request('sub_total_form');
         $base_imponible = request('base_imponible_form');
+        $amount_exento = request('amount_exento');
         $sin_formato_amount = request('sub_total_form');
         $iva_percentage = request('iva_form');
         $sin_formato_total_pay = request('total_pay_form');
@@ -1629,6 +1633,7 @@ class FacturarController extends Controller
             $quotation->date_billing = $date_begin;
                 
             $quotation->base_imponible = $base_imponible;
+            $quotation->amount_exento =  $amount_exento;
             $quotation->amount =  $sin_formato_amount;
             $quotation->amount_iva =  $sin_formato_amount_iva;
             $quotation->amount_with_iva = $sin_formato_grandtotal;
