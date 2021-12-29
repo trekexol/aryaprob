@@ -842,7 +842,7 @@ class PDF2Controller extends Controller
 
         $pdf_inventory = App::make('dompdf.wrapper');
 
-        $inventories = Inventory::on(Auth::user()->database_name)->orderBy('id','desc')->get();
+        $inventories = Inventory::on(Auth::user()->database_name)->where('status','1')->orderBy('id','desc')->get();
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d'); 
 

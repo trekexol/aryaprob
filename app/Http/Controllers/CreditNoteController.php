@@ -487,7 +487,12 @@ class CreditNoteController extends Controller
         if(isset($creditnote->date_delivery_note) || isset($creditnote->date_billing)){
             $this->recalculatecreditnote($creditnote->id);
         }
+<<<<<<< HEAD
  
+=======
+
+
+>>>>>>> carlos
         return redirect('creditnotes/register/'.$var->id_credit_note.'/'.$coin.'')->withSuccess('Producto agregado Exitosamente!');
     }
    
@@ -658,14 +663,22 @@ class CreditNoteController extends Controller
             }else{
                 $var->exento = true;
             }
+<<<<<<< HEAD
 
             if($value_return != 'exito'){
                 return redirect('creditnotes/creditnoteproduct/'.$var->id.'/'.$coin.'/edit')->withDanger('La cantidad de este producto excede a la cantidad puesta en inventario! ');
+=======
+>>>>>>> carlos
 
             }
           
             $var->save();
+<<<<<<< HEAD
    
+=======
+
+          
+>>>>>>> carlos
             return redirect('/creditnotes/register/'.$var->id_credit_note.'/'.$coin.'')->withSuccess('Actualizacion Exitosa!');
         
     }
@@ -822,7 +835,7 @@ class CreditNoteController extends Controller
         if(isset($credit_note_products)){
             foreach($credit_note_products as $credit_note_product){
                 if(isset($credit_note_product) && $credit_note_product->status == "C"){
-                    credit_noteProduct::on(Auth::user()->database_name)
+                    CreditNoteDetail::on(Auth::user()->database_name)
                         ->join('inventories','inventories.id','credit_note_products.id_inventory')
                         ->join('products','products.id','inventories.product_id')
                         ->where(function ($query){
