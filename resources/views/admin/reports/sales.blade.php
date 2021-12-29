@@ -46,7 +46,18 @@
     <th style="text-align: center; ">Precio Venta</th>
     <th style="text-align: center; ">Total Precio Venta</th>
   </tr> 
+  <?php
+    $total = 0;
+  ?>
   @foreach ($sales as $sale)
+    <?php
+        if(isset($coin) && $coin == 'bolivares'){
+            $total += $sale->price_sales;
+        }else if(isset($coin) && $coin == 'dolares'){
+            $total += $sale->price_sales_dolar;
+        }
+    ?>
+
     <tr>
       <td style="text-align: center; ">{{ $sale->code ?? ''}}</td>
       <td style="text-align: center; font-weight: normal;">{{ $sale->description ?? '' }}</td>
@@ -74,7 +85,15 @@
     </tr> 
   @endforeach 
 
-  
+  <tr>
+    <th style="text-align: center; font-weight: normal; border-color: white;"></th>
+    <th style="text-align: center; font-weight: normal; border-color: white;"></th>
+    <th style="text-align: center; font-weight: normal; border-color: white;"></th>
+    <th style="text-align: center; font-weight: normal; border-color: white;"></th>
+    <th style="text-align: center; font-weight: normal; border-color: white;"></th>
+    <th style="text-align: center; font-weight: normal; border-color: white; border-right-color: black;"></th>
+    <th style="text-align: right; font-weight: normal;">{{ number_format($total, 2, ',', '.') }}</th>
+  </tr> 
 </table>
 
 </body>
