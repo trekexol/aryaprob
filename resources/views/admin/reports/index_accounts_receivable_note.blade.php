@@ -92,8 +92,10 @@
                             <div class="col-sm-4">
                                 <select class="form-control" name="typeinvoice" id="typeinvoice">
                                     @if (isset($typeinvoice))
-                                        @if ($typeinvoice == 'notas')
-                                            <option selected value="notas">Notas de Entrega</option>
+                                        @if ($typeinvoice == 'notat')
+                                            <option selected value="notat">Notas de Entrega</option>
+                                        @elseif($typeinvoice == 'notas')
+                                            <option selected value="notas">Notas Sin Facturar</option>                                            
                                         @elseif($typeinvoice == 'notase')
                                             <option selected value="notase">Notas Eliminadas</option>
                                         @elseif($typeinvoice == 'facturasc')
@@ -103,13 +105,15 @@
                                         @endif
                                         <option disabled value="todo">-----------------</option>
                                         <option value="todo">Todo</option>
-                                        <option value="notas">Notas de Entrega</option>
+                                        <option value="notast">Notas de Entrega</option>
+                                        <option value="notas">Notas Sin Facturar</option> 
                                         <option value="notase">Notas Eliminadas</option>
                                         <option value="facturasc">Notas Facturadas y Cobradas</option>
                                         <option value="facturas">Notas Facturadas Pendientes</option>
                                     @else
                                         <option selected value="todo">Todo</option>
-                                        <option value="notas">Notas de Entrega</option>
+                                        <option value="notast">Notas de Entrega</option>
+                                        <option value="notas">Notas Sin Facturar</option> 
                                         <option value="notase">Notas Eliminadas</option>
                                         <option value="facturasc">Notas Facturadas y Cobradas</option>
                                         <option value="facturas">Notas Facturadas Pendientes</option>
