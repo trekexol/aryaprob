@@ -46,6 +46,7 @@ class CreateExpensesAndPurchasesTable extends Migration
 
            
             $table->bigInteger('number_islr')->nullable();
+            $table->bigInteger('number_iva')->nullable();
             $table->string('status',1);
             $table->foreign('id_provider')->references('id')->on('providers');
             $table->foreign('id_user')->references('id')->on('users');
