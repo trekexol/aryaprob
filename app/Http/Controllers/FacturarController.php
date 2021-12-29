@@ -496,24 +496,27 @@ class FacturarController extends Controller
                 $this->add_movement($bcv,$header_voucher->id,$account_debito_iva_fiscal->id,$quotation->id,$user_id,0,$sin_formato_amount_iva);
             }
         }
-        
-        //Mercancia para la Venta
 
-        if((isset($price_cost_total)) && ($price_cost_total != 0)){
-            $account_mercancia_venta = Account::on(Auth::user()->database_name)->where('description', 'like', 'Mercancia para la Venta')->first();
+        if(empty($quotation->date_delivery_note) && empty($quotation->date_order)){
+            //Mercancia para la Venta
+            if((isset($price_cost_total)) && ($price_cost_total != 0)){
+                $account_mercancia_venta = Account::on(Auth::user()->database_name)->where('description', 'like', 'Mercancia para la Venta')->first();
 
-            if(isset($account_cuentas_por_cobrar)){
-                $this->add_movement($bcv,$header_voucher->id,$account_mercancia_venta->id,$quotation->id,$user_id,0,$price_cost_total);
-            }
-    
-            //Costo de Mercancia
-    
-            $account_costo_mercancia = Account::on(Auth::user()->database_name)->where('description', 'like', 'Costo de Mercancia')->first();
-    
-            if(isset($account_cuentas_por_cobrar)){
-                $this->add_movement($bcv,$header_voucher->id,$account_costo_mercancia->id,$quotation->id,$user_id,$price_cost_total,0);
+                if(isset($account_cuentas_por_cobrar)){
+                    $this->add_movement($bcv,$header_voucher->id,$account_mercancia_venta->id,$quotation->id,$user_id,0,$price_cost_total);
+                }
+
+                //Costo de Mercancia
+
+                $account_costo_mercancia = Account::on(Auth::user()->database_name)->where('description', 'like', 'Costo de Mercancia')->first();
+
+                if(isset($account_cuentas_por_cobrar)){
+                    $this->add_movement($bcv,$header_voucher->id,$account_costo_mercancia->id,$quotation->id,$user_id,$price_cost_total,0);
+                }
             }
         }
+        
+       
         
         $historial_quotation = new HistorialQuotationController();
 

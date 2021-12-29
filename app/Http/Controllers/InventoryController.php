@@ -314,7 +314,7 @@ class InventoryController extends Controller
                 $date = Carbon::now();
                 $datenow = $date->format('Y-m-d');   
 
-                $header_voucher  = new HeaderVoucher();
+                /*$header_voucher  = new HeaderVoucher();
 
                 $header_voucher->description = "Disminucion de Inventario";
                 $header_voucher->date = $datenow;
@@ -331,7 +331,7 @@ class InventoryController extends Controller
                 }
     
 
-            //$account = request('account');
+                //$account = request('account');
                 $account_mecancia_para_venta = Account::on(Auth::user()->database_name)->where('code_one',1)->where('code_two',1)->where('code_three',3)->where('code_four',1)->where('code_five',1)->first();  
 
                 $this->add_movement($valor_sin_formato_rate,$header_voucher->id,$account_mecancia_para_venta->id,
@@ -340,7 +340,7 @@ class InventoryController extends Controller
                 $account_gastos_ajuste_inventario = Account::on(Auth::user()->database_name)->where('code_one',6)->where('code_two',1)->where('code_three',3)->where('code_four',2)->where('code_five',1)->first();  
 
                 $this->add_movement($valor_sin_formato_rate,$header_voucher->id,$account_gastos_ajuste_inventario->id,
-                                    $id_user,$total,0);
+                                    $id_user,$total,0);*/
             
                 return redirect('/inventories')->withSuccess('Actualizado el inventario del producto: '.$inventory->products['description'].' Exitosamente!');
             
