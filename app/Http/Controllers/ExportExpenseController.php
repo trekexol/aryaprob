@@ -32,7 +32,8 @@ class ExportExpenseController extends Controller
                                         ->whereRaw(
                                             "(DATE_FORMAT(date, '%Y-%m-%d') >= ? AND DATE_FORMAT(date, '%Y-%m-%d') <= ?)", 
                                             [$date_begin, $date_end])
-                                            ->get();
+                                        ->where('status','C')
+                                        ->get();
         if(isset($expenses)){
             foreach ($expenses as  $expense) {
                 $expense->date = Carbon::parse($expense->date);
@@ -42,6 +43,7 @@ class ExportExpenseController extends Controller
                 .str_replace('-', '', $expense->providers['code_provider']).'	'.$expense->invoice.'	'.$expense->serie.'	'.$expense->amount+$expense->amount_iva.'	'.$expense->base_imponible
                 .'	'.$expense->retencion_iva.'	0	'.$expense->date->format('Ym').str_pad($expense->id, 8, "0", STR_PAD_LEFT).'	'.number_format($total_retiene_iva, 2, '.', '').'	'.number_format($expense->iva_percentage, 2, '.', '').'	0';
                 $content .= "\n";
+                
             }    
         }else{
             $content = "No hay Compras con Retencion de IVA";
