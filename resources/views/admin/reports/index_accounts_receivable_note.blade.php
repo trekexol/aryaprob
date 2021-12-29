@@ -47,11 +47,11 @@
                             </div>
                             @if ($typepersone == 'cliente' && isset($client->id))
                             <label id="client_label1" for="clients" class="col-sm-2">Cliente:</label>
-                            <label id="client_label2" name="id_client" value="{{ $client->id }}" for="clients" class="col-sm-3">{{ $client->name }} {{ $client->surname }}</label>
+                            <label id="client_label2" name="id_client" value="{{ $client->id }}" for="clients" class="col-2">{{ $client->name }} {{ $client->surname }}</label>
                             @endif
                             @if ($typepersone == 'vendor' && isset($vendor->id))
                             <label id="client_label1" for="clients" class="col-sm-2">Vendedor:</label>
-                                <label id="vendor_label2" name="id_vendor" value="{{ $vendor->id }}" for="vendors" class="col-sm-3">{{ $vendor->name }} {{ $vendor->surname }}</label>
+                                <label id="vendor_label2" name="id_vendor" value="{{ $vendor->id }}" for="vendors" class="col-2>{{ $vendor->name }} {{ $vendor->surname }}</label>
                             @endif
                             
                             <div id="client_label3" class="form-group col-sm-1 text-md-left">
