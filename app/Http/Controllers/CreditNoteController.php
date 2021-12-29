@@ -114,11 +114,7 @@ class CreditNoteController extends Controller
                                 ->join('credit_note_details', 'inventories.id', '=', 'credit_note_details.id_inventory')
                                 ->where('credit_note_details.id_credit_note',$id_creditnote)
                                 ->whereIn('credit_note_details.status',['1','C'])
-<<<<<<< HEAD
                                 ->select('products.*','credit_note_details.price as price','credit_note_details.id_inventory as id_inventory','credit_note_details.rate as rate','credit_note_details.id as credit_note_details_id','inventories.code as code','credit_note_details.discount as discount',
-=======
-                                ->select('products.*','credit_note_details.price as price','credit_note_details.rate as rate','credit_note_details.id as credit_note_details_id','inventories.code as code','credit_note_details.discount as discount',
->>>>>>> carlos
                                 'credit_note_details.amount as amount_creditnote','credit_note_details.exento as exento')
                                 ->get(); 
             
