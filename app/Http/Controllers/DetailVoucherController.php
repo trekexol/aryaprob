@@ -309,7 +309,7 @@ class DetailVoucherController extends Controller
                
             
             ]);
-
+           
             $var = new DetailVoucher();
             $var->setConnection(Auth::user()->database_name);
 
