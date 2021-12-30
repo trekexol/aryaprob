@@ -35,13 +35,30 @@ class ExportExpenseController extends Controller
                                         ->where('status','C')
                                         ->get();
         if(isset($expenses)){
+
+            $expense_amont=0;
+            $expense_amont_iva =0;             
+            $total_amont = 0;
+
             foreach ($expenses as  $expense) {
                 $expense->date = Carbon::parse($expense->date);
                 $total_retiene_iva = $this->calculatarTotalProductosSinIva($expense);
                 
-                $content .= str_replace('-', '', $company->code_rif).'	'.$expense->date->format('Ym').'	'.$expense->date->format('Y-m-d').'	C	01	'
-                .str_replace('-', '', $expense->providers['code_provider']).'	'.$expense->invoice.'	'.$expense->serie.'	'.$expense->amount+$expense->amount_iva.'	'.$expense->base_imponible
-                .'	'.$expense->retencion_iva.'	0	'.$expense->date->format('Ym').str_pad($expense->id, 8, "0", STR_PAD_LEFT).'	'.number_format($total_retiene_iva, 2, '.', '').'	'.number_format($expense->iva_percentage, 2, '.', '').'	0';
+                if($expense->amount < 0 || $expense->amount == null || $expense->amount == ''){
+                    $expense_amont = 0;  
+                } else {
+                    $expense_amont = $expense->amount;  
+                }
+                if($expense->amount_iva < 0 || $expense->amount_iva == null || $expense->amount_iva == ''){
+                    $expense_amont_iva = 0; 
+                } else {
+                    $expense_amont_iva = $expense->amount_iva;  
+                }  
+                
+                $total_amont = $expense_amont + $expense_amont_iva;
+                  
+
+                $content .= str_replace('-', '', $company->code_rif).'	'.$expense->date->format('Ym').'  '.$expense->date->format('Y-m-d').'	C	01	'.str_replace('-', '', $expense->providers['code_provider']).'	'.$expense->invoice.'	'.$expense->serie.'	'.bcdiv($total_amont,'1',2).'	'.bcdiv($expense->base_imponible,'1',2).'	'.bcdiv($expense->retencion_iva,'1',2).'	 0	'.$expense->date->format('Ym').str_pad($expense->id, 8, "0", STR_PAD_LEFT).'	'.bcdiv($total_retiene_iva,'1',2).'	'.bcdiv($expense->iva_percentage,'1',2).'	0';
                 $content .= "\n";
                 
             }    
