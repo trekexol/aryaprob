@@ -192,11 +192,15 @@ class AccountController extends Controller
             $detailvouchers = DetailVoucher::on(Auth::user()->database_name)->where('status','C')->where('id_account',$id_account)->orderBy('id','desc')->get();
             $account = Account::on(Auth::user()->database_name)->find($id_account);
 
+            if(empty($coin)){
+                $coin = "bolivares";
+            }
+
          }else if($users_role == '2'){
             return view('admin.index');
         }
         
-        return view('admin.accounts.index_account_movement',compact('detailvouchers','account'));
+        return view('admin.accounts.index_account_movement',compact('detailvouchers','account','coin'));
     }
 
     public function header_movements($id,$type,$id_account)
